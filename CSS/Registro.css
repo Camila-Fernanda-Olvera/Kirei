@@ -3,10 +3,53 @@ body {
     padding: 0;
     font-family: 'Inter', Arial, sans-serif;
     min-height: 100vh;
-    background: url('https://i.pinimg.com/736x/be/6c/bf/be6cbf612b172a13bc4bbf06fdb3faae.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: linear-gradient(120deg, #f857a6 0%, #ff5858 100%);
     background-repeat: no-repeat;
+    background-size: cover;
     background-position: center;
+}
+.header {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 32px 60px 0 60px;
+    z-index: 10;
+    gap: 32px;
+}
+.header .nav {
+    display: flex;
+    gap: 32px;
+    margin-right: 32px;
+}
+.header .nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.05rem;
+    font-weight: 500;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+}
+.header .nav a:hover {
+    opacity: 1;
+}
+.header .login-btn {
+    background: transparent;
+    border: 1.5px solid #fff;
+    color: #fff;
+    border-radius: 16px;
+    padding: 6px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.header .login-btn:hover {
+    background: #fff;
+    color: #d72660;
 }
 .container {
     min-height: 100vh;
@@ -15,12 +58,15 @@ body {
     justify-content: center;
 }
 .card-register {
-    background: #fff;
-    border-radius: 32px;
-    box-shadow: 0 8px 32px rgba(108,99,255,0.10);
-    max-width: 420px;
+    background: rgba(255,255,255,0.13);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    max-width: 350px;
     width: 100%;
-    padding: 36px 32px 32px 32px;
+    padding: 32px 28px 24px 28px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,32 +74,28 @@ body {
     margin: 32px 0;
     position: relative;
 }
-.card-register .img-medical {
-    width: 200px;
-    height: 200px;
-    object-fit: contain;
-    border-radius: 24px;
-    margin-bottom: 8px;
-    box-shadow: 0 2px 12px rgba(108,99,255,0.08);
-    background: #f6f8fc;
-    display: block;
-}
-.card-register .brand {
-    color: #6c63ff;
-    font-size: 2.1rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-align: center;
-    margin-bottom: 0;
-    margin-top: 0;
-}
-.card-register .subtitle {
-    color: #7b7f9e;
+.card-register .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
     font-size: 1.1rem;
-    font-weight: 500;
+    color: #fff;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.card-register .close-btn:hover {
+    opacity: 1;
+}
+.card-register h1 {
+    font-size: 1.35rem;
+    margin-bottom: 18px;
+    font-weight: 800;
+    color: #222;
+    letter-spacing: 1px;
     text-align: center;
-    margin-bottom: 12px;
-    margin-top: 0;
 }
 .register-form {
     width: 100%;
@@ -61,97 +103,86 @@ body {
     flex-direction: column;
     gap: 18px;
 }
-.register-form h1 {
-    font-size: 1.5rem;
-    margin-bottom: 8px;
-    font-weight: 900;
-    color: #222;
-    letter-spacing: 1px;
-    text-align: center;
-}
-.user-type {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 8px;
-    justify-content: center;
-}
 .input-group {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    background: rgba(255,255,255,0.25);
+    border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    padding: 0 12px;
+    margin-bottom: 0;
     position: relative;
-}
-.input-group label {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 2px;
 }
 .input-group input[type="text"],
 .input-group input[type="email"],
-.input-group input[type="password"],
-.input-group select {
-    padding: 12px 14px 12px 40px;
-    border: 1.5px solid #d1d9e6;
-    border-radius: 12px;
-    font-size: 1rem;
-    background: #f6f8fc;
-    transition: border 0.2s;
-    color: #222;
-    box-shadow: 0 1px 4px rgba(108,99,255,0.03);
-}
-.input-group input:focus, .input-group select:focus {
-    border: 1.5px solid #6c63ff;
+.input-group input[type="password"] {
+    border: none;
+    background: transparent;
     outline: none;
+    font-size: 1rem;
+    color: #222;
+    padding: 14px 0 14px 0;
+    flex: 1;
+}
+.input-group input::placeholder {
+    color: #888;
+    opacity: 1;
 }
 .input-group .icon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
     font-size: 1.2rem;
-    color: #b3b3cc;
-    pointer-events: none;
+    color: #d72660;
+    margin-left: 8px;
+}
+.terms {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.97rem;
+    color: #444;
+    margin-bottom: 0;
+}
+.terms input[type="checkbox"] {
+    accent-color: #d72660;
 }
 .btn-register {
-    background: linear-gradient(90deg, #6c63ff 0%, #38b6ff 100%);
+    background: linear-gradient(90deg, #d72660 0%, #7f53ac 100%);
     color: #fff;
     border: none;
-    border-radius: 12px;
-    padding: 14px 0;
-    font-size: 1.15rem;
-    font-weight: 800;
+    border-radius: 10px;
+    padding: 13px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
     cursor: pointer;
     margin-top: 8px;
     transition: background 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 12px rgba(108,99,255,0.10);
+    box-shadow: 0 2px 12px rgba(215,38,96,0.10);
     letter-spacing: 1px;
 }
 .btn-register:hover {
-    background: linear-gradient(90deg, #38b6ff 0%, #6c63ff 100%);
-    box-shadow: 0 4px 24px rgba(56,182,255,0.13);
+    background: linear-gradient(90deg, #7f53ac 0%, #d72660 100%);
+    box-shadow: 0 4px 24px rgba(127,83,172,0.13);
 }
 .login-link {
     text-align: center;
-    font-size: 1rem;
-    color: #888;
+    font-size: 0.97rem;
+    color: #222;
+    margin-top: 8px;
 }
 .login-link a {
-    color: #6c63ff;
+    color: #d72660;
     text-decoration: none;
     font-weight: 700;
 }
-.credit-medical {
-    font-size:0.8rem;
-    color:#7b7f9e;
-    text-align:center;
-    margin-top:4px;
-}
-@media (max-width: 900px) {
+@media (max-width: 600px) {
     .container {
-        flex-direction: column;
+        padding: 24px 0;
     }
     .card-register {
-        max-width: 100%;
-        border-radius: 0 0 32px 32px;
+        max-width: 98vw;
+        padding: 18px 6vw 18px 6vw;
+    }
+    .header {
+        padding: 18px 10px 0 10px;
+        gap: 12px;
     }
 }
