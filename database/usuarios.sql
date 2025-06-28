@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     tipo_usuario ENUM('paciente', 'familiar') NOT NULL,
+    padecimiento VARCHAR(100) DEFAULT NULL,
     imagen VARCHAR(255) DEFAULT NULL,
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ); 
