@@ -32,9 +32,9 @@
                     <input type="password" id="password" name="password" placeholder="Contraseña" required>
                     <i class="bi bi-lock icon"></i>
                 </div>
-                <div id="padecimiento-group">
-                    <select id="padecimiento" name="padecimiento" class="form-select form-select-lg mb-3" aria-label="Large select example">
-                        <option selected>Enfermedad o padecimiento</option>
+                <div class="input-group" id="padecimiento-group">
+                    <select id="padecimiento" name="padecimiento">
+                        <option value="" disabled selected>Enfermedad o padecimiento</option>
                         <option value="Diabetes">Diabetes</option>
                         <option value="Hipertensión">Hipertensión</option>
                         <option value="Asma">Asma</option>
@@ -42,9 +42,10 @@
                         <option value="Enfermedad cardíaca">Enfermedad cardíaca</option>
                         <option value="Epilepsia">Epilepsia</option>
                     </select>
+                    <i class="bi bi-heart-pulse icon"></i>
                 </div>
                 <button type="submit" class="btn-register">Registrarse</button>
-                <p class="login-link">¿Ya tienes cuenta? <a href="#">Inicia sesión</a></p>
+                <p class="login-link">¿Ya tienes cuenta? <a href="Index.html">Inicia sesión</a></p>
             </form>
         </div>
     </div>
