@@ -1,14 +1,6 @@
 <?php
-// Configuración de la base de datos
-$host = 'localhost';
-$user = 'root';
-$pass = '';
-$db = 'kirei';
-
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die('Error de conexión: ' . $conn->connect_error);
-}
+// Incluir archivo de conexión
+require_once 'Conexion.php';
 
 // Recibir datos del formulario
 $nombre = $_POST['nombre'] ?? '';
@@ -34,11 +26,13 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == 0) {
 if ($nombre && $email && $password && $tipo_usuario && ($tipo_usuario !== 'paciente' || $padecimiento)) {
     // Hashear contraseña
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
+    
     // Insertar en la base de datos
     $stmt = $conn->prepare('INSERT INTO usuarios (nombre, email, password, tipo_usuario, padecimiento, imagen) VALUES (?, ?, ?, ?, ?, ?)');
     $stmt->bind_param('ssssss', $nombre, $email, $password_hash, $tipo_usuario, $padecimiento, $imagen);
+    
     if ($stmt->execute()) {
-        echo '<script>alert("Registro exitoso. Ahora puedes iniciar sesión."); window.location.href="../Regristo.html";</script>';
+        echo '<script>alert("Registro exitoso. Ahora puedes iniciar sesión."); window.location.href="../Index.html";</script>';
     } else {
         echo '<script>alert("Error al registrar: ' . $stmt->error . '"); window.history.back();</script>';
     }
@@ -46,4 +40,5 @@ if ($nombre && $email && $password && $tipo_usuario && ($tipo_usuario !== 'pacie
 } else {
     echo '<script>alert("Todos los campos son obligatorios."); window.history.back();</script>';
 }
+
 $conn->close();
