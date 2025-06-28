@@ -1,12 +1,20 @@
 <?php
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
+
 session_start();
 
 // Incluir archivo de conexión
 require_once 'Conexion.php';
 
-// Recibir datos del formulario
-$email = $_POST['email'] ?? '';
-$password = $_POST['password'] ?? '';
+// Recibir datos JSON
+$data = json_decode(file_get_contents('php://input'), true);
+
+$email = $data['email'] ?? '';
+$password = $data['password'] ?? '';
 
 // Validar datos básicos
 if ($email && $password) {
@@ -27,86 +35,31 @@ if ($email && $password) {
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_type'] = $user['tipo_usuario'];
             
-            // Redirigir según el tipo de usuario
-            if ($user['tipo_usuario'] === 'paciente') {
-                echo '<script>
-                    Swal.fire({
-                        title: "¡Bienvenido!",
-                        text: "¡Bienvenido, ' . $user['nombre'] . '!",
-                        icon: "success",
-                        confirmButtonText: "Continuar",
-                        confirmButtonColor: "#d72660",
-                        background: "rgba(255,255,255,0.95)",
-                        backdrop: "rgba(0,0,0,0.4)",
-                        timer: 2000,
-                        timerProgressBar: true
-                    }).then(() => {
-                        window.location.href="../dashboard-paciente.html";
-                    });
-                </script>';
-            } else {
-                echo '<script>
-                    Swal.fire({
-                        title: "¡Bienvenido!",
-                        text: "¡Bienvenido, ' . $user['nombre'] . '!",
-                        icon: "success",
-                        confirmButtonText: "Continuar",
-                        confirmButtonColor: "#d72660",
-                        background: "rgba(255,255,255,0.95)",
-                        backdrop: "rgba(0,0,0,0.4)",
-                        timer: 2000,
-                        timerProgressBar: true
-                    }).then(() => {
-                        window.location.href="../dashboard-familiar.html";
-                    });
-                </script>';
-            }
+            echo json_encode([
+                'success' => true,
+                'message' => 'Login exitoso',
+                'nombre' => $user['nombre'],
+                'tipo_usuario' => $user['tipo_usuario']
+            ]);
         } else {
-            echo '<script>
-                Swal.fire({
-                    title: "Error de Acceso",
-                    text: "Contraseña incorrecta.",
-                    icon: "error",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#d72660",
-                    background: "rgba(255,255,255,0.95)",
-                    backdrop: "rgba(0,0,0,0.4)"
-                }).then(() => {
-                    window.history.back();
-                });
-            </script>';
+            echo json_encode([
+                'success' => false,
+                'message' => 'Contraseña incorrecta'
+            ]);
         }
     } else {
-        echo '<script>
-            Swal.fire({
-                title: "Usuario No Encontrado",
-                text: "No existe una cuenta con este correo electrónico.",
-                icon: "error",
-                confirmButtonText: "Entendido",
-                confirmButtonColor: "#d72660",
-                background: "rgba(255,255,255,0.95)",
-                backdrop: "rgba(0,0,0,0.4)"
-            }).then(() => {
-                window.history.back();
-            });
-        </script>';
+        echo json_encode([
+            'success' => false,
+            'message' => 'Usuario no encontrado'
+        ]);
     }
     
     $stmt->close();
 } else {
-    echo '<script>
-        Swal.fire({
-            title: "Campos Requeridos",
-            text: "Todos los campos son obligatorios.",
-            icon: "warning",
-            confirmButtonText: "Entendido",
-            confirmButtonColor: "#d72660",
-            background: "rgba(255,255,255,0.95)",
-            backdrop: "rgba(0,0,0,0.4)"
-        }).then(() => {
-            window.history.back();
-        });
-    </script>';
+    echo json_encode([
+        'success' => false,
+        'message' => 'Todos los campos son obligatorios'
+    ]);
 }
 
 $conn->close();

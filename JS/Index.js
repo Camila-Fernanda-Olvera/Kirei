@@ -1,47 +1,131 @@
 // Validación del formulario de login con SweetAlert2
 const form = document.getElementById('loginForm');
 
-if (form) {
-    form.addEventListener('submit', function(e) {
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        let valid = true;
-        let msg = '';
-        let icon = 'error';
-
-        if (!email) {
-            valid = false;
-            msg = 'El correo es obligatorio.';
-        } else if (!isValidEmail(email)) {
-            valid = false;
-            msg = 'Ingresa un correo válido.';
-        } else if (!password || password.length < 6) {
-            valid = false;
-            msg = 'La contraseña debe tener al menos 6 caracteres.';
-        }
-
-        if (!valid) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Error de Validación',
-                text: msg,
-                icon: icon,
-                confirmButtonText: 'Entendido',
-                confirmButtonColor: '#d72660',
-                background: 'rgba(255,255,255,0.95)',
-                backdrop: 'rgba(0,0,0,0.4)',
-                customClass: {
-                    popup: 'swal-custom-popup'
-                }
-            });
-        }
-    });
-}
-
 // Función para validar formato de email
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+}
+
+// Función principal de login
+const iniciarSesion = async () => {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    
+    // Validaciones
+    if (!email) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'El correo es obligatorio.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'Ingresa un correo válido.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
+    
+    if (!password || password.length < 6) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'La contraseña debe tener al menos 6 caracteres.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
+
+    // Mostrar loading
+    Swal.fire({
+        title: 'Iniciando sesión...',
+        text: 'Por favor espera',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        const response = await fetch('PHP/Index.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        Swal.close();
+
+        if (data.success) {
+            Swal.fire({
+                title: '¡Bienvenido!',
+                text: `¡Bienvenido, ${data.nombre}!`,
+                icon: 'success',
+                confirmButtonText: 'Continuar',
+                confirmButtonColor: '#d72660',
+                background: 'rgba(255,255,255,0.95)',
+                backdrop: 'rgba(0,0,0,0.4)',
+                timer: 2000,
+                timerProgressBar: true
+            }).then(() => {
+                if (data.tipo_usuario === 'paciente') {
+                    window.location.href = 'dashboard-paciente.html';
+                } else {
+                    window.location.href = 'dashboard-familiar.html';
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Error de Acceso',
+                text: data.message || 'Credenciales incorrectas',
+                icon: 'error',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#d72660',
+                background: 'rgba(255,255,255,0.95)',
+                backdrop: 'rgba(0,0,0,0.4)'
+            });
+        }
+    } catch (error) {
+        Swal.close();
+        Swal.fire({
+            title: 'Error de Conexión',
+            text: 'No se pudo conectar con el servidor',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        console.error('Error:', error);
+    }
+};
+
+// Event listener para el formulario
+if (form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        iniciarSesion();
+    });
 }
 
 // Función para mostrar mensajes de éxito

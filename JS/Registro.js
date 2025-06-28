@@ -23,126 +23,175 @@ familiarRadio.addEventListener('change', togglePadecimiento);
 // Inicializar estado
 togglePadecimiento();
 
-// Validación del formulario
-if (form) {
-    form.addEventListener('submit', function(e) {
-        const nombre = document.getElementById('nombre').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const tipoUsuario = document.querySelector('input[name="tipo_usuario"]:checked').value;
-        const padecimiento = padecimientoSelect.value;
-        
-        let valid = true;
-        let msg = '';
-        let icon = 'error';
-
-        // Validar nombre
-        if (!nombre) {
-            valid = false;
-            msg = 'El nombre es obligatorio.';
-        } else if (nombre.length < 2) {
-            valid = false;
-            msg = 'El nombre debe tener al menos 2 caracteres.';
-        }
-        // Validar email
-        else if (!email) {
-            valid = false;
-            msg = 'El correo es obligatorio.';
-        } else if (!isValidEmail(email)) {
-            valid = false;
-            msg = 'Ingresa un correo válido.';
-        }
-        // Validar contraseña
-        else if (!password || password.length < 6) {
-            valid = false;
-            msg = 'La contraseña debe tener al menos 6 caracteres.';
-        }
-        // Validar padecimiento si es paciente
-        else if (tipoUsuario === 'paciente' && !padecimiento) {
-            valid = false;
-            msg = 'Debes seleccionar una enfermedad o padecimiento.';
-        }
-
-        if (!valid) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Error de Validación',
-                text: msg,
-                icon: icon,
-                confirmButtonText: 'Entendido',
-                confirmButtonColor: '#d72660',
-                background: 'rgba(255,255,255,0.95)',
-                backdrop: 'rgba(0,0,0,0.4)',
-                customClass: {
-                    popup: 'swal-custom-popup'
-                }
-            });
-        } else {
-            // Mostrar loading antes de enviar
-            Swal.fire({
-                title: 'Registrando...',
-                text: 'Por favor espera mientras procesamos tu registro',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-        }
-    });
-}
-
 // Función para validar formato de email
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-// Función para mostrar mensajes de éxito
-function showSuccess(message) {
-    Swal.fire({
-        title: '¡Registro Exitoso!',
-        text: message,
-        icon: 'success',
-        confirmButtonText: 'Continuar',
-        confirmButtonColor: '#d72660',
-        background: 'rgba(255,255,255,0.95)',
-        backdrop: 'rgba(0,0,0,0.4)',
-        timer: 3000,
-        timerProgressBar: true
-    });
-}
+// Función principal de registro
+const crearCuenta = async () => {
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const tipoUsuario = document.querySelector('input[name="tipo_usuario"]:checked').value;
+    const padecimiento = padecimientoSelect.value;
+    
+    // Validaciones
+    if (!nombre) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'El nombre es obligatorio.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
+    
+    if (nombre.length < 2) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'El nombre debe tener al menos 2 caracteres.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
+    
+    if (!email) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'El correo es obligatorio.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'Ingresa un correo válido.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
+    
+    if (!password || password.length < 6) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'La contraseña debe tener al menos 6 caracteres.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
+    
+    if (tipoUsuario === 'paciente' && !padecimiento) {
+        Swal.fire({
+            title: 'Error de Validación',
+            text: 'Debes seleccionar una enfermedad o padecimiento.',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        return;
+    }
 
-// Función para mostrar mensajes de error
-function showError(message) {
+    // Mostrar loading
     Swal.fire({
-        title: 'Error en el Registro',
-        text: message,
-        icon: 'error',
-        confirmButtonText: 'Entendido',
-        confirmButtonColor: '#d72660',
-        background: 'rgba(255,255,255,0.95)',
-        backdrop: 'rgba(0,0,0,0.4)'
-    });
-}
-
-// Función para mostrar confirmación
-function showConfirmation(message, callback) {
-    Swal.fire({
-        title: 'Confirmar Acción',
-        text: message,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, continuar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#d72660',
-        cancelButtonColor: '#6c757d',
-        background: 'rgba(255,255,255,0.95)',
-        backdrop: 'rgba(0,0,0,0.4)'
-    }).then((result) => {
-        if (result.isConfirmed && callback) {
-            callback();
+        title: 'Registrando...',
+        text: 'Por favor espera mientras procesamos tu registro',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
         }
+    });
+
+    try {
+        const userData = {
+            nombre,
+            email,
+            password,
+            tipo_usuario: tipoUsuario,
+            padecimiento: tipoUsuario === 'paciente' ? padecimiento : ''
+        };
+
+        const response = await fetch('PHP/Registro.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        });
+
+        const data = await response.json();
+        Swal.close();
+
+        if (data.success) {
+            Swal.fire({
+                title: '¡Registro Exitoso!',
+                text: 'Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión.',
+                icon: 'success',
+                confirmButtonText: 'Iniciar Sesión',
+                confirmButtonColor: '#d72660',
+                background: 'rgba(255,255,255,0.95)',
+                backdrop: 'rgba(0,0,0,0.4)',
+                timer: 3000,
+                timerProgressBar: true
+            }).then(() => {
+                window.location.href = 'Index.html';
+            });
+        } else {
+            Swal.fire({
+                title: 'Error en el Registro',
+                text: data.message || 'Hubo un problema al crear tu cuenta. Por favor intenta nuevamente.',
+                icon: 'error',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#d72660',
+                background: 'rgba(255,255,255,0.95)',
+                backdrop: 'rgba(0,0,0,0.4)'
+            });
+        }
+    } catch (error) {
+        Swal.close();
+        Swal.fire({
+            title: 'Error de Conexión',
+            text: 'No se pudo conectar con el servidor',
+            icon: 'error',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#d72660',
+            background: 'rgba(255,255,255,0.95)',
+            backdrop: 'rgba(0,0,0,0.4)'
+        });
+        console.error('Error:', error);
+    }
+};
+
+// Event listener para el formulario
+if (form) {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        crearCuenta();
     });
 }
