@@ -2,89 +2,68 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Inter', Arial, sans-serif;
-    background: linear-gradient(120deg, #e3f0ff 0%, #f6f8fc 100%);
+    min-height: 100vh;
+    background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+    /* Fondo paisaje: puedes usar una imagen SVG o PNG si lo deseas */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 .container {
-    display: flex;
     min-height: 100vh;
-}
-.left-panel {
-    flex: 1.2;
-    background: linear-gradient(135deg, #e3f0ff 0%, #f6f8fc 100%);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-top-left-radius: 32px;
-    border-bottom-left-radius: 32px;
-    box-shadow: 0 4px 32px rgba(0,0,0,0.10);
-    overflow: hidden;
-}
-.left-panel .brand {
-    color: #6c63ff;
-    font-size: 3.2rem;
-    font-weight: 900;
-    letter-spacing: 3px;
-    text-shadow: 0 2px 16px rgba(108,99,255,0.10);
-    font-family: 'Inter', Arial, sans-serif;
-    text-align: center;
-    margin-bottom: 12px;
-    margin-top: 0;
-    z-index: 2;
-}
-.left-panel .subtitle {
-    color: #7b7f9e;
-    font-size: 1.2rem;
-    font-weight: 500;
-    text-align: center;
-    margin-bottom: 32px;
-    margin-top: 0;
-    z-index: 2;
-}
-.left-panel .img-circle-bg {
-    background: rgba(255,255,255,0.7);
-    border-radius: 50%;
-    width: 240px;
-    height: 240px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 32px rgba(108,99,255,0.10);
-    margin-bottom: 24px;
 }
-.left-panel .img-circle-bg img {
-    width: 170px;
-    height: 170px;
-    object-fit: contain;
-    border-radius: 50%;
-    background: #e3f0ff;
-    box-shadow: 0 2px 12px rgba(108,99,255,0.08);
-}
-.right-panel {
-    flex: 1;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-top-right-radius: 32px;
-    border-bottom-right-radius: 32px;
-    box-shadow: none;
-}
-.register-form {
-    width: 100%;
-    max-width: 400px;
-    padding: 40px 32px 32px 32px;
+.card-register {
     background: #fff;
     border-radius: 32px;
     box-shadow: 0 8px 32px rgba(108,99,255,0.10);
+    max-width: 420px;
+    width: 100%;
+    padding: 36px 32px 32px 32px;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    align-items: center;
+    gap: 18px;
     margin: 32px 0;
+    position: relative;
+}
+.card-register .img-medical {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 24px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 12px rgba(108,99,255,0.08);
+    background: #f6f8fc;
+    display: block;
+}
+.card-register .brand {
+    color: #6c63ff;
+    font-size: 2.1rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.card-register .subtitle {
+    color: #7b7f9e;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 12px;
+    margin-top: 0;
+}
+.register-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 .register-form h1 {
-    font-size: 2.3rem;
+    font-size: 1.5rem;
     margin-bottom: 8px;
     font-weight: 900;
     color: #222;
@@ -135,7 +114,7 @@ body {
     pointer-events: none;
 }
 .btn-register {
-    background: linear-gradient(90deg, #6c63ff 0%, #ff7e67 100%);
+    background: linear-gradient(90deg, #6c63ff 0%, #38b6ff 100%);
     color: #fff;
     border: none;
     border-radius: 12px;
@@ -149,8 +128,8 @@ body {
     letter-spacing: 1px;
 }
 .btn-register:hover {
-    background: linear-gradient(90deg, #ff7e67 0%, #6c63ff 100%);
-    box-shadow: 0 4px 24px rgba(255,126,103,0.13);
+    background: linear-gradient(90deg, #38b6ff 0%, #6c63ff 100%);
+    box-shadow: 0 4px 24px rgba(56,182,255,0.13);
 }
 .login-link {
     text-align: center;
@@ -162,24 +141,18 @@ body {
     text-decoration: none;
     font-weight: 700;
 }
+.credit-medical {
+    font-size:0.8rem;
+    color:#7b7f9e;
+    text-align:center;
+    margin-top:4px;
+}
 @media (max-width: 900px) {
     .container {
         flex-direction: column;
     }
-    .left-panel, .right-panel {
-        border-radius: 0;
-        min-height: 250px;
-    }
-    .register-form {
+    .card-register {
         max-width: 100%;
         border-radius: 0 0 32px 32px;
-    }
-    .left-panel .img-circle-bg {
-        width: 140px;
-        height: 140px;
-    }
-    .left-panel .img-circle-bg img {
-        width: 90px;
-        height: 90px;
     }
 }
