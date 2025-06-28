@@ -3,9 +3,9 @@ body {
     padding: 0;
     font-family: 'Inter', Arial, sans-serif;
     min-height: 100vh;
-    background: linear-gradient(120deg, #f857a6 0%, #ff5858 100%);
-    background-repeat: no-repeat;
+    background: url('https://i.pinimg.com/736x/be/6c/bf/be6cbf612b172a13bc4bbf06fdb3faae.jpg') no-repeat center center fixed;
     background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
 }
 .header {
@@ -133,6 +133,21 @@ body {
     color: #d72660;
     margin-left: 8px;
 }
+.input-group select {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 1rem;
+    color: #222;
+    padding: 14px 0 14px 0;
+    flex: 1;
+    appearance: none;
+    -webkit-appearance: none;
+    margin-left: 0;
+}
+.input-group select:focus {
+    outline: none;
+}
 .terms {
     display: flex;
     align-items: center;
@@ -143,6 +158,44 @@ body {
 }
 .terms input[type="checkbox"] {
     accent-color: #d72660;
+}
+.user-type {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-bottom: 0;
+    margin-top: 0;
+    font-size: 1rem;
+    color: #222;
+}
+.user-type label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.user-type input[type="radio"] {
+    accent-color: #d72660;
+}
+#padecimiento-group {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.25);
+    border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    padding: 0 12px;
+    margin-bottom: 0;
+    position: relative;
+    margin-top: 0;
+}
+#padecimiento-group label {
+    margin-right: 8px;
+    color: #444;
+    font-size: 1rem;
+}
+#padecimiento-group .icon {
+    margin-left: 8px;
 }
 .btn-register {
     background: linear-gradient(90deg, #d72660 0%, #7f53ac 100%);
