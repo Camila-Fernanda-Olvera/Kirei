@@ -29,20 +29,84 @@ if ($email && $password) {
             
             // Redirigir según el tipo de usuario
             if ($user['tipo_usuario'] === 'paciente') {
-                echo '<script>alert("¡Bienvenido, ' . $user['nombre'] . '!"); window.location.href="../dashboard-paciente.html";</script>';
+                echo '<script>
+                    Swal.fire({
+                        title: "¡Bienvenido!",
+                        text: "¡Bienvenido, ' . $user['nombre'] . '!",
+                        icon: "success",
+                        confirmButtonText: "Continuar",
+                        confirmButtonColor: "#d72660",
+                        background: "rgba(255,255,255,0.95)",
+                        backdrop: "rgba(0,0,0,0.4)",
+                        timer: 2000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        window.location.href="../dashboard-paciente.html";
+                    });
+                </script>';
             } else {
-                echo '<script>alert("¡Bienvenido, ' . $user['nombre'] . '!"); window.location.href="../dashboard-familiar.html";</script>';
+                echo '<script>
+                    Swal.fire({
+                        title: "¡Bienvenido!",
+                        text: "¡Bienvenido, ' . $user['nombre'] . '!",
+                        icon: "success",
+                        confirmButtonText: "Continuar",
+                        confirmButtonColor: "#d72660",
+                        background: "rgba(255,255,255,0.95)",
+                        backdrop: "rgba(0,0,0,0.4)",
+                        timer: 2000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        window.location.href="../dashboard-familiar.html";
+                    });
+                </script>';
             }
         } else {
-            echo '<script>alert("Contraseña incorrecta."); window.history.back();</script>';
+            echo '<script>
+                Swal.fire({
+                    title: "Error de Acceso",
+                    text: "Contraseña incorrecta.",
+                    icon: "error",
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#d72660",
+                    background: "rgba(255,255,255,0.95)",
+                    backdrop: "rgba(0,0,0,0.4)"
+                }).then(() => {
+                    window.history.back();
+                });
+            </script>';
         }
     } else {
-        echo '<script>alert("Usuario no encontrado."); window.history.back();</script>';
+        echo '<script>
+            Swal.fire({
+                title: "Usuario No Encontrado",
+                text: "No existe una cuenta con este correo electrónico.",
+                icon: "error",
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#d72660",
+                background: "rgba(255,255,255,0.95)",
+                backdrop: "rgba(0,0,0,0.4)"
+            }).then(() => {
+                window.history.back();
+            });
+        </script>';
     }
     
     $stmt->close();
 } else {
-    echo '<script>alert("Todos los campos son obligatorios."); window.history.back();</script>';
+    echo '<script>
+        Swal.fire({
+            title: "Campos Requeridos",
+            text: "Todos los campos son obligatorios.",
+            icon: "warning",
+            confirmButtonText: "Entendido",
+            confirmButtonColor: "#d72660",
+            background: "rgba(255,255,255,0.95)",
+            backdrop: "rgba(0,0,0,0.4)"
+        }).then(() => {
+            window.history.back();
+        });
+    </script>';
 }
 
 $conn->close();

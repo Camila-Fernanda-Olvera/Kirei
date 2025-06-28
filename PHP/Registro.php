@@ -32,13 +32,51 @@ if ($nombre && $email && $password && $tipo_usuario && ($tipo_usuario !== 'pacie
     $stmt->bind_param('ssssss', $nombre, $email, $password_hash, $tipo_usuario, $padecimiento, $imagen);
     
     if ($stmt->execute()) {
-        echo '<script>alert("Registro exitoso. Ahora puedes iniciar sesión."); window.location.href="../Index.html";</script>';
+        echo '<script>
+            Swal.fire({
+                title: "¡Registro Exitoso!",
+                text: "Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión.",
+                icon: "success",
+                confirmButtonText: "Iniciar Sesión",
+                confirmButtonColor: "#d72660",
+                background: "rgba(255,255,255,0.95)",
+                backdrop: "rgba(0,0,0,0.4)",
+                timer: 3000,
+                timerProgressBar: true
+            }).then(() => {
+                window.location.href="../Index.html";
+            });
+        </script>';
     } else {
-        echo '<script>alert("Error al registrar: ' . $stmt->error . '"); window.history.back();</script>';
+        echo '<script>
+            Swal.fire({
+                title: "Error en el Registro",
+                text: "Hubo un problema al crear tu cuenta. Por favor intenta nuevamente.",
+                icon: "error",
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#d72660",
+                background: "rgba(255,255,255,0.95)",
+                backdrop: "rgba(0,0,0,0.4)"
+            }).then(() => {
+                window.history.back();
+            });
+        </script>';
     }
     $stmt->close();
 } else {
-    echo '<script>alert("Todos los campos son obligatorios."); window.history.back();</script>';
+    echo '<script>
+        Swal.fire({
+            title: "Campos Requeridos",
+            text: "Todos los campos son obligatorios. Por favor completa todos los datos.",
+            icon: "warning",
+            confirmButtonText: "Entendido",
+            confirmButtonColor: "#d72660",
+            background: "rgba(255,255,255,0.95)",
+            backdrop: "rgba(0,0,0,0.4)"
+        }).then(() => {
+            window.history.back();
+        });
+    </script>';
 }
 
 $conn->close();

@@ -239,3 +239,70 @@ body {
         gap: 12px;
     }
 }
+
+/* Estilos personalizados para SweetAlert2 */
+.swal2-popup {
+    border-radius: 18px !important;
+    font-family: 'Inter', sans-serif !important;
+}
+
+.swal2-title {
+    font-weight: 700 !important;
+    color: #222 !important;
+}
+
+.swal2-content {
+    color: #444 !important;
+}
+
+.swal2-confirm {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 12px 24px !important;
+    transition: all 0.2s !important;
+}
+
+.swal2-confirm:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(215,38,96,0.3) !important;
+}
+
+.swal2-cancel {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 12px 24px !important;
+}
+
+.swal2-timer-progress-bar {
+    background: linear-gradient(90deg, #d72660 0%, #7f53ac 100%) !important;
+}
+
+.swal2-icon {
+    border-width: 3px !important;
+}
+
+.swal2-icon.swal2-success {
+    border-color: #d72660 !important;
+}
+
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+    background-color: #d72660 !important;
+}
+
+.swal2-icon.swal2-error {
+    border-color: #d72660 !important;
+}
+
+.swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
+    background-color: #d72660 !important;
+}
+
+.swal2-icon.swal2-warning {
+    border-color: #ffc107 !important;
+    color: #ffc107 !important;
+}
+
+.swal2-icon.swal2-info {
+    border-color: #17a2b8 !important;
+    color: #17a2b8 !important;
+}

@@ -22,17 +22,6 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `imagen` varchar(255) DEFAULT NULL,
   `fecha_registro` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insertar datos de ejemplo (opcional)
--- Usuario de prueba para pacientes
-INSERT INTO `usuarios` (`nombre`, `email`, `password`, `tipo_usuario`, `padecimiento`) VALUES
-('Juan Pérez', 'juan@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'paciente', 'Diabetes');
-
--- Usuario de prueba para familiares
-INSERT INTO `usuarios` (`nombre`, `email`, `password`, `tipo_usuario`) VALUES
-('María García', 'maria@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'familiar');
-
--- Mensaje de confirmación
-SELECT 'Base de datos Kirei creada exitosamente!' as mensaje;
