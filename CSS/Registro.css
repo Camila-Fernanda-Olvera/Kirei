@@ -306,3 +306,14 @@ body {
     border-color: #17a2b8 !important;
     color: #17a2b8 !important;
 }
+
+/* Efecto de resplandor discreto al enfocar inputs y selects */
+.input-group input[type="text"]:focus,
+.input-group input[type="email"]:focus,
+.input-group input[type="password"]:focus,
+.input-group select:focus {
+    border: 1.5px solid #d72660;
+    box-shadow: 0 0 0 3px rgba(215,38,96,0.15);
+    background: rgba(255,255,255,0.35);
+    transition: box-shadow 0.2s, border 0.2s, background 0.2s;
+}
