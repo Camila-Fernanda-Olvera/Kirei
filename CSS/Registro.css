@@ -29,8 +29,8 @@ body {
     position: relative;
 }
 .card-register .img-medical {
-    width: 120px;
-    height: 120px;
+    width: 200px;
+    height: 200px;
     object-fit: contain;
     border-radius: 24px;
     margin-bottom: 8px;
