@@ -80,6 +80,10 @@ async function cargarDatosPaciente() {
 
         if (data.success && data.perfil_completo && data.datos) {
             actualizarInterfaz(data.datos);
+            // Mostrar medicamentos reales
+            if (Array.isArray(data.medicamentos)) {
+                renderizarMedicamentos(data.medicamentos);
+            }
         } else {
             // Si no hay datos, cerrar sesión y mostrar mensaje
             Swal.fire({
@@ -370,4 +374,24 @@ actualizarContadores();
 // Escuchar cambios de idioma
 document.addEventListener('languageChanged', function(e) {
     actualizarIdiomaSelector();
-}); 
+});
+
+// Nueva función para renderizar medicamentos reales
+function renderizarMedicamentos(medicamentos) {
+    const lista = document.querySelector('.lista-meds');
+    if (!lista) return;
+    lista.innerHTML = '';
+    if (medicamentos.length === 0) {
+        lista.innerHTML = `<li class="text-muted">${window.i18n.isSpanish() ? 'Sin medicamentos registrados' : 'No medications registered'}</li>`;
+        return;
+    }
+    medicamentos.forEach(med => {
+        const li = document.createElement('li');
+        li.className = 'd-flex justify-content-between align-items-center mb-2';
+        li.innerHTML = `
+            <span class="med-nombre">${med.nombre}</span>
+            <span class="med-hora"><i class="bi bi-clock"></i> ${med.horarios ? med.horarios : ''}</span>
+        `;
+        lista.appendChild(li);
+    });
+} 
