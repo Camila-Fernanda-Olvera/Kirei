@@ -3,22 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Paciente - Kirei</title>
+    <title>Configuración de Perfil - Kirei</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="CSS/Registro.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/wizard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="card-register">
-            <h1>Bienvenido Paciente</h1>
-            <div id="dashboard-content">
-                <p class="text-center">Cargando tu información...</p>
+    <div class="wizard-container">
+        <div class="wizard-header">
+            <h1 class="wizard-title">Configuración de Perfil</h1>
+            <p class="wizard-subtitle">Completa tu información para personalizar tu experiencia</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="step-indicator">
+                <div class="step-dot active" data-step="1">1</div>
+                <div class="step-dot" data-step="2">2</div>
+                <div class="step-dot" data-step="3">3</div>
+                <div class="step-dot" data-step="4">4</div>
+            </div>
+        </div>
+        
+        <div class="wizard-card">
+            <!-- Paso 1: Datos Personales -->
+            <div class="step-content active" id="step1">
+                <h3 style="color: #d72660; margin-bottom: 25px;">Datos Personales</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha de nacimiento</label>
+                    <input type="date" class="form-control" id="fecha_nac" required>
+                    <div class="help-text">Selecciona tu fecha de nacimiento</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Género</label>
+                    <select class="form-select" id="genero" required>
+                        <option value="">Selecciona tu género</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">País</label>
+                    <input type="text" class="form-control" id="pais" placeholder="Ej: México" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Idioma preferido</label>
+                    <select class="form-select" id="idioma" required>
+                        <option value="es">Español</option>
+                        <option value="en">Inglés</option>
+                    </select>
+                </div>
+                
+                <div class="wizard-buttons">
+                    <div></div>
+                    <button class="btn-wizard" onclick="nextStep()">Siguiente</button>
+                </div>
+            </div>
+            
+            <!-- Paso 2: Información Médica -->
+            <div class="step-content" id="step2">
+                <h3 style="color: #d72660; margin-bottom: 25px;">Información Médica</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha de diagnóstico</label>
+                    <input type="date" class="form-control" id="fecha_diagnostico" required>
+                    <div class="help-text">¿Cuándo te diagnosticaron tu condición?</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Médico tratante</label>
+                    <input type="text" class="form-control" id="medico" placeholder="Nombre de tu médico" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Especialidad del médico</label>
+                    <select class="form-select" id="especialidad_medico" required>
+                        <option value="">Selecciona la especialidad</option>
+                        <option value="Medicina General">Medicina General</option>
+                        <option value="Cardiología">Cardiología</option>
+                        <option value="Endocrinología">Endocrinología</option>
+                        <option value="Neurología">Neurología</option>
+                        <option value="Oncología">Oncología</option>
+                        <option value="Neumología">Neumología</option>
+                        <option value="Gastroenterología">Gastroenterología</option>
+                        <option value="Otra">Otra</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Teléfono del médico</label>
+                    <input type="tel" class="form-control" id="telefono_medico" placeholder="Número de teléfono del médico">
+                    <div class="help-text">Opcional - Para contactos de emergencia</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tipo de sangre</label>
+                    <select class="form-select" id="tipo_sangre" required>
+                        <option value="">Selecciona tu tipo de sangre</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tipo de dieta</label>
+                    <select class="form-select" id="dieta" required>
+                        <option value="">Selecciona tu dieta</option>
+                        <option value="normal">Dieta normal</option>
+                        <option value="baja_sodio">Baja en sodio</option>
+                        <option value="baja_azucar">Baja en azúcar</option>
+                        <option value="sin_gluten">Sin gluten</option>
+                        <option value="vegetariana">Vegetariana</option>
+                        <option value="vegana">Vegana</option>
+                        <option value="otra">Otra</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Alergias</label>
+                    <textarea class="form-control" id="alergias" placeholder="Ej: penicilina, polen, mariscos..." rows="3"></textarea>
+                    <div class="help-text">Deja en blanco si no tienes alergias</div>
+                </div>
+                
+                <div class="wizard-buttons">
+                    <button class="btn-wizard btn-secondary" onclick="prevStep()">Anterior</button>
+                    <button class="btn-wizard" onclick="nextStep()">Siguiente</button>
+                </div>
+            </div>
+            
+            <!-- Paso 3: Medicación y Contactos -->
+            <div class="step-content" id="step3">
+                <h3 style="color: #d72660; margin-bottom: 25px;">Medicación y Contactos</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Medicamentos actuales</label>
+                    <div class="help-text" style="margin-bottom: 10px;">
+                        <strong>Ejemplo de formato:</strong><br>
+                        • Metformina 500mg - 1 tableta cada 8 horas<br>
+                        • Aspirina 100mg - 1 tableta diaria<br>
+                        • Vitamina D - 1 cápsula al día
+                    </div>
+                    <textarea class="form-control" id="medicacion" placeholder="Lista tus medicamentos con dosis y frecuencia..." rows="6"></textarea>
+                    <div class="help-text">Deja en blanco si no tomas medicamentos</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Contacto de emergencia - Nombre</label>
+                    <input type="text" class="form-control" id="contacto_nombre" placeholder="Nombre completo" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Contacto de emergencia - Teléfono</label>
+                    <input type="tel" class="form-control" id="contacto_telefono" placeholder="Número de teléfono" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Relación con el contacto</label>
+                    <select class="form-select" id="contacto_relacion" required>
+                        <option value="">Selecciona la relación</option>
+                        <option value="esposo">Esposo/a</option>
+                        <option value="hijo">Hijo/a</option>
+                        <option value="padre">Padre</option>
+                        <option value="madre">Madre</option>
+                        <option value="hermano">Hermano/a</option>
+                        <option value="amigo">Amigo/a</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="wizard-buttons">
+                    <button class="btn-wizard btn-secondary" onclick="prevStep()">Anterior</button>
+                    <button class="btn-wizard" onclick="nextStep()">Siguiente</button>
+                </div>
+            </div>
+            
+            <!-- Paso 4: Vinculación y Permisos -->
+            <div class="step-content" id="step4">
+                <h3 style="color: #d72660; margin-bottom: 25px;">Vinculación y Permisos</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">¿Quieres vincular tu cuenta con algún familiar?</label>
+                    <div style="margin-top: 10px;">
+                        <div class="checkbox-group">
+                            <input type="radio" id="vinculacion_si" name="vinculacion" value="si">
+                            <label for="vinculacion_si">Sí, quiero vincular</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="radio" id="vinculacion_no" name="vinculacion" value="no" checked>
+                            <label for="vinculacion_no">No, por ahora no</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="codigo_section" style="display: none;">
+                    <div class="vinculacion-section">
+                        <h5 style="color: #d72660; margin-bottom: 15px;">Código de Vinculación</h5>
+                        <p style="color: #666; margin-bottom: 15px;">Comparte este código con tu familiar para que pueda conectarse a tu cuenta:</p>
+                        <div class="codigo-generado" id="codigo_generado">
+                            <span id="codigo_texto">ABC123</span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px; text-align: center;">
+                            Tu familiar deberá ingresar este código al registrarse
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="permisos_section" style="margin-top: 30px; display: none;">
+                    <label class="form-label">Permisos para familiares</label>
+                    <div style="margin-top: 10px;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permiso_sintomas" checked>
+                            <label for="permiso_sintomas">Ver síntomas y progreso</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permiso_medicacion" checked>
+                            <label for="permiso_medicacion">Ver medicación</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permiso_citas" checked>
+                            <label for="permiso_citas">Ver citas médicas</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permiso_ubicacion">
+                            <label for="permiso_ubicacion">Compartir ubicación en emergencias</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notificaciones</label>
+                    <div style="margin-top: 10px;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="notif_recordatorios" checked>
+                            <label for="notif_recordatorios">Recordatorios de medicación</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="notif_citas" checked>
+                            <label for="notif_citas">Recordatorios de citas</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="notif_sugerencias">
+                            <label for="notif_sugerencias">Sugerencias de IA</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wizard-buttons">
+                    <button class="btn-wizard btn-secondary" onclick="prevStep()">Anterior</button>
+                    <button class="btn-wizard" onclick="completarRegistro()">Completar Registro</button>
+                </div>
             </div>
         </div>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="JS/dashboard-paciente.js"></script>
 </body>

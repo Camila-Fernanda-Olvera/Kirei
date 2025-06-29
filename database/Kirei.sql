@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS `datos_paciente` (
   `idioma` varchar(10) DEFAULT NULL,
   `fecha_diagnostico` date DEFAULT NULL,
   `medico` varchar(200) DEFAULT NULL,
+  `especialidad_medico` varchar(100) DEFAULT NULL,
+  `telefono_medico` varchar(20) DEFAULT NULL,
   `tipo_sangre` varchar(10) DEFAULT NULL,
   `dieta` varchar(50) DEFAULT NULL,
   `alergias` text DEFAULT NULL,
@@ -52,9 +54,16 @@ CREATE TABLE IF NOT EXISTS `datos_paciente` (
   FOREIGN KEY (`user_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insertar usuarios de prueba
-INSERT INTO `usuarios` (`nombre`, `email`, `password`, `tipo_usuario`, `padecimiento`) VALUES
-('Juan Pérez', 'juan@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'paciente', 'Diabetes'),
-('María García', 'maria@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'familiar', NULL)
-ON DUPLICATE KEY UPDATE `nombre` = VALUES(`nombre`);
+-- Crear tabla para códigos de vinculación
+CREATE TABLE IF NOT EXISTS `codigos_vinculacion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(10) NOT NULL UNIQUE,
+  `user_id` int(11) NOT NULL,
+  `fecha_creacion` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `fecha_expiracion` timestamp NULL DEFAULT NULL,
+  `usado` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 

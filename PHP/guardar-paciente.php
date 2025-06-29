@@ -47,6 +47,8 @@ $pais = $data['pais'] ?? '';
 $idioma = $data['idioma'] ?? '';
 $fecha_diagnostico = $data['fecha_diagnostico'] ?? '';
 $medico = $data['medico'] ?? '';
+$especialidad_medico = $data['especialidad_medico'] ?? '';
+$telefono_medico = $data['telefono_medico'] ?? '';
 $tipo_sangre = $data['tipo_sangre'] ?? '';
 $dieta = $data['dieta'] ?? '';
 $alergias = $data['alergias'] ?? '';
@@ -73,10 +75,10 @@ $permisos = json_encode($permisos_data);
 // Insertar o actualizar datos del paciente
 $stmt = $conn->prepare("INSERT INTO datos_paciente (
     user_id, fecha_nac, genero, pais, idioma, fecha_diagnostico, 
-    medico, tipo_sangre, dieta, alergias, medicacion, 
+    medico, especialidad_medico, telefono_medico, tipo_sangre, dieta, alergias, medicacion, 
     contacto_nombre, contacto_telefono, contacto_relacion, 
     documentos, familiar_email, codigo_vinculacion, permisos
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
 ON DUPLICATE KEY UPDATE 
     fecha_nac = VALUES(fecha_nac),
     genero = VALUES(genero),
@@ -84,6 +86,8 @@ ON DUPLICATE KEY UPDATE
     idioma = VALUES(idioma),
     fecha_diagnostico = VALUES(fecha_diagnostico),
     medico = VALUES(medico),
+    especialidad_medico = VALUES(especialidad_medico),
+    telefono_medico = VALUES(telefono_medico),
     tipo_sangre = VALUES(tipo_sangre),
     dieta = VALUES(dieta),
     alergias = VALUES(alergias),
@@ -96,9 +100,9 @@ ON DUPLICATE KEY UPDATE
     codigo_vinculacion = VALUES(codigo_vinculacion),
     permisos = VALUES(permisos)");
 
-$stmt->bind_param('isssssssssssssssss', 
+$stmt->bind_param('isssssssssssssssssss', 
     $user_id, $fecha_nac, $genero, $pais, $idioma, $fecha_diagnostico,
-    $medico, $tipo_sangre, $dieta, $alergias, $medicacion,
+    $medico, $especialidad_medico, $telefono_medico, $tipo_sangre, $dieta, $alergias, $medicacion,
     $contacto_nombre, $contacto_telefono, $contacto_relacion,
     $documentos, $familiar_email, $codigo_vinculacion, $permisos
 );
