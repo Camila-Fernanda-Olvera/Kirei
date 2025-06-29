@@ -89,7 +89,7 @@ const iniciarSesion = async () => {
                 timerProgressBar: true
             }).then(() => {
                 if (data.tipo_usuario === 'paciente') {
-                    flujoPostLoginPaciente();
+                    window.location.href = 'dashboard-paciente.html';
                 } else {
                     window.location.href = 'dashboard-familiar.html';
                 }
@@ -167,55 +167,4 @@ function showInfo(message) {
         background: 'rgba(255,255,255,0.95)',
         backdrop: 'rgba(0,0,0,0.4)'
     });
-}
-
-// Mostrar modal de datos personales tras login exitoso de paciente
-async function mostrarDatosPersonalesPaciente() {
-    const { value: formValues } = await Swal.fire({
-        title: 'Datos personales',
-        html:
-            `<input id="swal-fecha-nac" type="date" class="swal2-input" placeholder="Fecha de nacimiento">
-            <select id="swal-genero" class="swal2-input">
-                <option value="">Género</option>
-                <option value="femenino">Femenino</option>
-                <option value="masculino">Masculino</option>
-                <option value="otro">Otro</option>
-            </select>
-            <input id="swal-pais" class="swal2-input" placeholder="País">
-            <select id="swal-idioma" class="swal2-input">
-                <option value="es">Español</option>
-                <option value="en">Inglés</option>
-            </select>` ,
-        focusConfirm: false,
-        confirmButtonText: 'Guardar',
-        showCancelButton: false,
-        allowOutsideClick: false,
-        preConfirm: () => {
-            const fecha_nac = document.getElementById('swal-fecha-nac').value;
-            const genero = document.getElementById('swal-genero').value;
-            const pais = document.getElementById('swal-pais').value.trim();
-            const idioma = document.getElementById('swal-idioma').value;
-            if (!fecha_nac || !genero || !pais || !idioma) {
-                Swal.showValidationMessage('Completa todos los campos');
-                return false;
-            }
-            return { fecha_nac, genero, pais, idioma };
-        }
-    });
-    if (formValues) {
-        // Aquí puedes guardar los datos o pasar al siguiente paso
-        return formValues;
-    }
-    return null;
-}
-
-// Sobrescribir la función de redirección tras login exitoso de paciente
-async function flujoPostLoginPaciente() {
-    const datosPersonales = await mostrarDatosPersonalesPaciente();
-    // Aquí irá el siguiente paso del cuestionario
-    // Por ahora solo mostramos los datos en consola
-    if (datosPersonales) {
-        console.log('Datos personales:', datosPersonales);
-        // Aquí puedes llamar al siguiente paso del wizard
-    }
 }
