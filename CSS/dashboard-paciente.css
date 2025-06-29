@@ -1,56 +1,315 @@
 /* Dashboard del Paciente - Kirei */
 :root {
-    --primary-color: #d72660;
-    --secondary-color: #7f53ac;
+    --agua-claro: #E6F7F7;
+    --celeste: #B3E5FC;
+    --verde-agua: #4DBFC9;
+    --petróleo: #197074;
+    --azul-oscuro: #0A2342;
+    --azul-medio: #31487A;
+    --azul-pastel: #8FB3E2;
+    --blanco: #F8FAFF;
+    --texto-oscuro: #23404a;
+    --texto-claro: #F8FAFF;
+    --acento: #4DBFC9;
+    --borde-card: #86DDE4;
+    --background-gradient: linear-gradient(120deg, var(--agua-claro) 0%, var(--celeste) 100%);
+    --background-dark-gradient: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--petróleo) 60%, var(--verde-agua) 100%);
+    --glass-bg: rgba(255,255,255,0.85);
+    --glass-border: var(--borde-card);
+    --border-radius: 20px;
+    --box-shadow: 0 4px 24px rgba(77,191,201,0.10);
+    --transition: all 0.3s ease;
+    --primary-color: #197074;
+    --primary-light: #86DDE4;
+    --primary-dark: #082D36;
+    --accent-cereza: #C43556;
+    --accent-vino: #7B182F;
+    --accent-rosado: #F9CCCB;
+    --accent-petroleo: #082D36;
+    --text-main: #23404a;
+    --text-accent: #450A18;
     --success-color: #28a745;
     --warning-color: #ffc107;
     --danger-color: #dc3545;
     --info-color: #17a2b8;
     --light-color: #f8f9fa;
     --dark-color: #343a40;
-    --border-radius: 12px;
-    --box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    --transition: all 0.3s ease;
+    --pastel-1: #F0F8FF;
+    --pastel-2: #E6F3FF;
+    --pastel-3: #D4EDFF;
+    --pastel-4: #C7E6FF;
+    --pastel-5: #4DBFC9;
+    --text-dark: #23404a;
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+body, .dashboard-paciente-bg {
+    background: var(--background-gradient) !important;
+    color: var(--texto-oscuro);
     min-height: 100vh;
     margin: 0;
     padding: 0;
 }
 
+/* Fondo modo oscuro: azul intermedio más claro que las cards (selector correcto) */
+body.modo-oscuro,
+.modo-oscuro.dashboard-paciente-bg {
+    background: #1E3446 !important;
+    color: var(--texto-claro) !important;
+}
+
 /* Header */
-.dashboard-header {
+.paciente-header {
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    padding: 1rem 0;
+    border-bottom: 1.5px solid var(--borde-card);
+    padding: 1.5rem 0 1.2rem 0;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
 }
-
-.logo {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--primary-color);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.modo-oscuro .paciente-header {
+    background: rgba(25,112,116,0.92);
+    border-bottom: 1.5px solid var(--verde-agua);
+    box-shadow: 0 2px 20px rgba(25,112,116,0.18);
 }
-
-.logo i {
+.logo-area {
     font-size: 2rem;
+    color: var(--petróleo);
+    font-weight: 800;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.10);
+}
+.modo-oscuro .logo-area {
+    color: var(--blanco);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.18);
 }
 
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+/* Offcanvas usuario */
+.offcanvas.offcanvas-end {
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(10px);
+    border-left: 1.5px solid var(--borde-card);
+    box-shadow: -4px 0 24px rgba(77,191,201,0.10);
+}
+.modo-oscuro .offcanvas.offcanvas-end {
+    background: rgba(25,112,116,0.97);
+    border-left: 1.5px solid var(--verde-agua);
+    box-shadow: -4px 0 24px rgba(77,191,201,0.18);
+}
+.offcanvas-title {
+    font-weight: 700;
+    color: var(--petróleo);
+    font-size: 1.3rem;
+}
+.modo-oscuro .offcanvas-title {
+    color: var(--blanco);
+}
+.offcanvas .list-group-item {
+    color: var(--petróleo);
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+}
+.modo-oscuro .offcanvas .list-group-item {
+    color: var(--blanco);
+}
+.offcanvas .list-group-item:hover {
+    background: var(--agua-claro);
+    color: var(--verde-agua);
+}
+.modo-oscuro .offcanvas .list-group-item:hover {
+    background: var(--azul-medio);
+    color: var(--verde-agua);
+}
+
+/* Tarjetas (cards) */
+.tarjeta {
+    background: var(--glass-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 2px solid var(--borde-card);
+    transition: var(--transition);
+    color: var(--texto-oscuro);
+}
+.modo-oscuro .tarjeta {
+    background: #223A4E !important;
+    border: 2px solid #4DBFC9;
+    color: #F8FAFF !important;
+    box-shadow: 0 8px 32px 0 rgba(26,43,74,0.25);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+}
+.tarjeta:hover {
+    box-shadow: 0 12px 40px 0 rgba(77,191,201,0.18);
+    transform: translateY(-3px) scale(1.02);
+    border-color: var(--verde-agua);
+}
+
+/* Cards pastel alternadas (modo claro) */
+.card-pastel-1 { background: linear-gradient(135deg, #F0F8FF 0%, #F8FBFF 100%) !important; border-color: var(--borde-card); }
+.card-pastel-2 { background: linear-gradient(135deg, #E6F3FF 0%, #F0F8FF 100%) !important; border-color: var(--borde-card); }
+.card-pastel-3 { background: linear-gradient(135deg, #D4EDFF 0%, #E6F3FF 100%) !important; border-color: var(--borde-card); }
+.card-pastel-4 { background: linear-gradient(135deg, #C7E6FF 0%, #D4EDFF 100%) !important; border-color: var(--borde-card); }
+
+/* Cards azul alternadas (modo oscuro) */
+.modo-oscuro .dark-card-1 { background: linear-gradient(135deg, var(--azul-pastel) 0%, var(--blanco) 100%) !important; color: var(--azul-oscuro) !important; border-color: var(--verde-agua); }
+.modo-oscuro .dark-card-2 { background: linear-gradient(135deg, var(--blanco) 0%, #E8F4FD 100%) !important; color: var(--azul-oscuro) !important; border-color: var(--verde-agua); }
+.modo-oscuro .dark-card-3 { background: linear-gradient(135deg, var(--azul-pastel) 0%, var(--blanco) 100%) !important; color: var(--azul-oscuro) !important; border-color: var(--verde-agua); }
+.modo-oscuro .dark-card-4 { background: linear-gradient(135deg, var(--blanco) 0%, #E8F4FD 100%) !important; color: var(--azul-oscuro) !important; border-color: var(--verde-agua); }
+
+/* Títulos y textos */
+h1, h2, h3, h4, h5, .paciente-header, .logo-area, .perfil-info h2, .tarjeta h3 {
+    color: var(--petróleo) !important;
+    font-weight: 800;
+}
+.modo-oscuro h1, .modo-oscuro h2, .modo-oscuro h3, .modo-oscuro h4, .modo-oscuro h5, .modo-oscuro .paciente-header, .modo-oscuro .logo-area, .modo-oscuro .perfil-info h2, .modo-oscuro .tarjeta h3 {
+    color: var(--blanco) !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+.paciente-nombre, .perfil-info p, .tarjeta p, .tarjeta span, .info-item label, .info-item span {
+    color: var(--texto-oscuro);
+}
+.modo-oscuro .paciente-nombre, .modo-oscuro .perfil-info p, .modo-oscuro .tarjeta p, .modo-oscuro .tarjeta span, .modo-oscuro .info-item label, .modo-oscuro .info-item span {
+    color: var(--blanco);
+}
+
+/* Iconos */
+.logo-area i, .btn i, .tarjeta i, .perfil-info i {
+    color: var(--acento) !important;
+}
+.modo-oscuro .logo-area i, .modo-oscuro .btn i, .modo-oscuro .tarjeta i, .modo-oscuro .perfil-info i {
+    color: var(--azul-pastel) !important;
+}
+
+/* Botones */
+.btn-outline-primary {
+    color: var(--texto-oscuro) !important;
+    background: linear-gradient(135deg, var(--acento) 0%, #6DD5ED 100%);
+    border: 2px solid var(--acento);
+    box-shadow: 0 4px 15px rgba(77,191,201,0.18);
+    font-weight: 700;
+    font-size: 1.08rem;
+    border-radius: 1.5rem;
+    padding: 0.55rem 1.5rem;
+    letter-spacing: 0.2px;
+    transition: var(--transition);
+}
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+    background: linear-gradient(135deg, #6DD5ED 0%, var(--acento) 100%);
+    color: var(--texto-oscuro) !important;
+    border-color: #6DD5ED;
+    box-shadow: 0 6px 20px rgba(109,213,237,0.25);
+    transform: translateY(-2px);
+}
+.modo-oscuro .btn-outline-primary {
+    color: var(--azul-oscuro) !important;
+    background: linear-gradient(135deg, var(--azul-pastel) 0%, var(--verde-agua) 100%);
+    border: 2px solid var(--azul-pastel);
+    box-shadow: 0 4px 15px rgba(143,179,226,0.18);
+}
+.modo-oscuro .btn-outline-primary:hover, .modo-oscuro .btn-outline-primary:focus {
+    background: linear-gradient(135deg, var(--verde-agua) 0%, var(--azul-pastel) 100%);
+    color: var(--azul-oscuro) !important;
+    border-color: var(--verde-agua);
+    box-shadow: 0 6px 20px rgba(143,179,226,0.25);
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    color: var(--texto-oscuro) !important;
+    background: linear-gradient(135deg, #E6F7F7 0%, #B3E5FC 100%);
+    border: 2px solid #B3E5FC;
+    box-shadow: 0 4px 15px rgba(179,229,252,0.18);
+    font-weight: 700;
+    font-size: 1.08rem;
+    border-radius: 1.5rem;
+    padding: 0.55rem 1.5rem;
+    letter-spacing: 0.2px;
+    transition: var(--transition);
+}
+.btn-outline-secondary:hover, .btn-outline-secondary:focus {
+    background: linear-gradient(135deg, #B3E5FC 0%, #E6F7F7 100%);
+    color: var(--texto-oscuro) !important;
+    border-color: #E6F7F7;
+    box-shadow: 0 6px 20px rgba(179,229,252,0.25);
+    transform: translateY(-2px);
+}
+.modo-oscuro .btn-outline-secondary {
+    color: var(--blanco) !important;
+    background: linear-gradient(135deg, var(--azul-medio) 0%, var(--azul-pastel) 100%);
+    border: 2px solid var(--azul-pastel);
+    box-shadow: 0 4px 15px rgba(143,179,226,0.18);
+}
+.modo-oscuro .btn-outline-secondary:hover, .modo-oscuro .btn-outline-secondary:focus {
+    background: linear-gradient(135deg, var(--azul-pastel) 0%, var(--azul-medio) 100%);
+    color: var(--blanco) !important;
+    border-color: var(--azul-medio);
+    box-shadow: 0 6px 20px rgba(143,179,226,0.25);
+    transform: translateY(-2px);
+}
+
+.btn-danger.btn-lg {
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 0.9rem 2.2rem;
+    border-radius: 2rem;
+    background: linear-gradient(135deg, #FF4757 0%, #FF6B7A 100%);
+    border: none;
+    box-shadow: 0 6px 25px rgba(255,71,87,0.3);
+    color: #fff;
+    letter-spacing: 0.5px;
+    transition: var(--transition);
+}
+.btn-danger.btn-lg:hover {
+    background: linear-gradient(135deg, #FF6B7A 0%, #FF4757 100%);
+    box-shadow: 0 8px 30px rgba(255,71,87,0.4);
+    transform: translateY(-3px);
+}
+.modo-oscuro .btn-danger.btn-lg {
+    background: linear-gradient(135deg, #FF6B9D 0%, #FF8FB1 100%);
+    color: var(--azul-oscuro);
+}
+.modo-oscuro .btn-danger.btn-lg:hover {
+    background: linear-gradient(135deg, #FF8FB1 0%, #FF6B9D 100%);
+    color: var(--azul-oscuro);
+}
+
+/* Listas internas */
+.lista-citas li, .lista-meds li, .lista-notis li, .lista-familia li {
+    background: linear-gradient(135deg, rgba(77,191,201,0.1) 0%, rgba(179,229,252,0.1) 100%);
+    border: 1px solid rgba(77,191,201,0.15);
+    transition: var(--transition);
+    color: var(--texto-oscuro);
+}
+.lista-citas li:hover, .lista-meds li:hover, .lista-notis li:hover, .lista-familia li:hover {
+    background: linear-gradient(135deg, rgba(77,191,201,0.15) 0%, rgba(179,229,252,0.15) 100%);
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(77,191,201,0.18);
+}
+.modo-oscuro .lista-citas li, .modo-oscuro .lista-meds li, .modo-oscuro .lista-notis li, .modo-oscuro .lista-familia li {
+    background: #223A4E !important;
+    color: #F8FAFF;
+    border: 1px solid #31487A;
+    backdrop-filter: blur(5px);
+}
+
+.cita-fecha, .med-hora, .noti-hora, .fam-estado {
+    color: var(--acento);
+    font-weight: 600;
+}
+.modo-oscuro .cita-fecha, .modo-oscuro .med-hora, .modo-oscuro .noti-hora, .modo-oscuro .fam-estado {
+    color: var(--azul-pastel);
+}
+
+.cita-desc, .med-nombre, .noti-txt, .fam-nombre {
+    font-weight: 600;
+    color: var(--texto-oscuro);
+}
+.modo-oscuro .cita-desc, .modo-oscuro .med-nombre, .modo-oscuro .noti-txt, .modo-oscuro .fam-nombre {
+    color: var(--blanco);
 }
 
 /* Contenido principal */
@@ -99,43 +358,6 @@ body {
     margin: 0;
     color: #666;
     font-weight: 500;
-}
-
-/* Tarjetas del dashboard */
-.dashboard-card {
-    background: rgba(255,255,255,0.95);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    border: none;
-    overflow: hidden;
-    transition: var(--transition);
-}
-
-.dashboard-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-}
-
-.dashboard-card .card-header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    color: white;
-    border: none;
-    padding: 1rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.dashboard-card .card-header h5 {
-    margin: 0;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.dashboard-card .card-body {
-    padding: 1.5rem;
 }
 
 /* Información del perfil */
@@ -509,9 +731,40 @@ body {
     transform: translateY(-1px);
 }
 
-.btn-outline-primary:hover {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
+.btn-outline-primary {
+    color: var(--text-dark) !important;
+    background: var(--pastel-5);
+    border: 2px solid var(--pastel-5);
+    box-shadow: 0 2px 8px rgba(77,191,201,0.10);
+    font-weight: 700;
+    font-size: 1.08rem;
+    border-radius: 1.5rem;
+    padding: 0.55rem 1.5rem;
+    letter-spacing: 0.2px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+    background: var(--pastel-3);
+    color: var(--text-dark) !important;
+    border-color: var(--pastel-3);
+    box-shadow: 0 4px 16px rgba(170,224,210,0.18);
+}
+
+.btn-outline-secondary {
+    color: var(--text-dark) !important;
+    background: var(--pastel-4);
+    border: 2px solid var(--pastel-4);
+    font-weight: 700;
+    font-size: 1.08rem;
+    border-radius: 1.5rem;
+    padding: 0.55rem 1.5rem;
+    letter-spacing: 0.2px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.btn-outline-secondary:hover, .btn-outline-secondary:focus {
+    background: var(--pastel-1);
+    color: var(--text-dark) !important;
+    border-color: var(--pastel-1);
 }
 
 .btn-outline-success:hover {
@@ -528,4 +781,547 @@ body {
 .btn-outline-danger:hover {
     background: var(--danger-color);
     border-color: var(--danger-color);
+}
+
+/* --- NUEVO DASHBOARD PACIENTE (GLASSMORPHISM) --- */
+.dashboard-paciente-bg {
+    background: var(--background-gradient);
+    min-height: 100vh;
+}
+
+.paciente-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2.5rem 1.5rem 2.5rem;
+    background: transparent;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 1px;
+}
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 2rem;
+    color: var(--text-dark);
+    font-weight: 800;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+.paciente-nombre {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    opacity: 0.85;
+}
+
+.paciente-main {
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.tarjeta {
+    background: var(--glass-bg);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(77,191,201,0.10);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid var(--accent);
+    transition: box-shadow 0.2s, transform 0.2s;
+    color: var(--text-dark);
+}
+.tarjeta:hover {
+    box-shadow: 0 12px 40px 0 rgba(77,191,201,0.18);
+    transform: translateY(-2px) scale(1.01);
+}
+
+/* Perfil */
+.perfil-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.perfil-img img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #7f53ac;
+    box-shadow: 0 2px 12px rgba(127,83,172,0.18);
+    background: #fff;
+}
+.perfil-info h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+.perfil-info p {
+    color: var(--text-dark);
+    font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.perfil-info button {
+    font-weight: 600;
+    border-radius: 16px;
+    padding: 8px 22px;
+    font-size: 1rem;
+}
+
+/* Tarjetas de contenido */
+.citas, .medicamentos, .notificaciones, .familia {
+    margin-bottom: 1.5rem;
+}
+.citas h3, .medicamentos h3, .notificaciones h3, .familia h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Listas internas */
+.lista-citas li, .lista-meds li, .lista-notis li, .lista-familia li {
+    background: var(--pastel-2);
+    border-radius: 14px;
+    padding: 0.7rem 1.1rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 8px rgba(77,191,201,0.07);
+    font-size: 1.05rem;
+    color: var(--text-dark);
+}
+.cita-fecha, .med-hora, .noti-hora, .fam-estado {
+    font-size: 0.98rem;
+    color: var(--accent);
+}
+.cita-desc, .med-nombre, .noti-txt, .fam-nombre {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* Botón de emergencia */
+.btn-danger.btn-lg {
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 0.9rem 2.2rem;
+    border-radius: 2rem;
+    background: linear-gradient(90deg, #d72660 0%, #ff5858 100%);
+    border: none;
+    box-shadow: 0 4px 24px rgba(215,38,96,0.18);
+    color: #fff;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.btn-danger.btn-lg:hover {
+    background: linear-gradient(90deg, #ff5858 0%, #d72660 100%);
+    box-shadow: 0 8px 32px rgba(215,38,96,0.22);
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .paciente-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.2rem 1rem 1rem 1rem;
+        font-size: 1.1rem;
+    }
+    .paciente-main {
+        padding: 0 0.5rem;
+    }
+}
+@media (max-width: 767px) {
+    .paciente-header {
+        font-size: 1rem;
+        padding: 1rem 0.5rem 0.7rem 0.5rem;
+    }
+    .tarjeta {
+        padding: 1.2rem 0.7rem !important;
+    }
+    .perfil-info h2 {
+        font-size: 1.3rem;
+    }
+    .btn-danger.btn-lg {
+        font-size: 1rem;
+        padding: 0.7rem 1.2rem;
+    }
+}
+
+/* Eliminar bordes y fondos de Bootstrap para listas */
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+    background: none;
+    border: none;
+}
+
+/* --- Botón usuario y offcanvas --- */
+.paciente-header .btn-primary.btn-sm {
+    background: linear-gradient(90deg, #7f53ac 0%, #667eea 100%);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(127,83,172,0.13);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.paciente-header .btn-primary.btn-sm:hover {
+    background: linear-gradient(90deg, #667eea 0%, #7f53ac 100%);
+    color: #fff;
+}
+.paciente-header .btn-light.btn-sm {
+    background: rgba(255,255,255,0.7);
+    color: #7f53ac;
+    border: none;
+    box-shadow: 0 2px 8px rgba(127,83,172,0.10);
+}
+.paciente-header .btn-light.btn-sm:hover {
+    background: #fff;
+    color: #764ba2;
+}
+.paciente-header .form-switch .form-check-input {
+    width: 2.2em;
+    height: 1.2em;
+    background: #e0e0e0;
+    border: none;
+    box-shadow: 0 1px 4px rgba(127,83,172,0.10);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.paciente-header .form-switch .form-check-input:checked {
+    background: linear-gradient(90deg, #7f53ac 0%, #667eea 100%);
+}
+.paciente-header .form-switch .form-check-label {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-left: 0.3rem;
+}
+
+/* Offcanvas usuario */
+.offcanvas.offcanvas-end {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-left: 1.5px solid rgba(127,83,172,0.10);
+    box-shadow: -4px 0 24px rgba(127,83,172,0.10);
+}
+.offcanvas-title {
+    font-weight: 700;
+    color: #7f53ac;
+    font-size: 1.3rem;
+}
+.offcanvas .list-group-item {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+}
+.offcanvas .list-group-item:hover {
+    background: #f3f0fa;
+    color: #7f53ac;
+}
+
+@media (max-width: 767px) {
+    .paciente-header .d-flex.position-absolute {
+        position: static !important;
+        justify-content: flex-end;
+        padding-right: 0.5rem !important;
+        padding-top: 0.5rem !important;
+    }
+    .offcanvas {
+        width: 90vw !important;
+    }
+}
+
+/* Tarjetas pastel aleatorias: asignar una de estas clases a cada tarjeta en el HTML */
+.card-pastel-1 { background: var(--pastel-1) !important; }
+.card-pastel-2 { background: var(--pastel-2) !important; }
+.card-pastel-3 { background: var(--pastel-3) !important; }
+.card-pastel-4 { background: var(--pastel-4) !important; }
+.card-pastel-5 { background: var(--pastel-5) !important; }
+
+/* MODO OSCURO - MEJORADO */
+.modo-oscuro {
+    --dark-1: #1a2b4a;
+    --dark-2: #2d4a7a;
+    --dark-3: #4a6fa8;
+    --dark-4: #8FB3E2;
+    --dark-5: #D9E1F1;
+    --text-light: #F8FAFF;
+    --accent-dark: #4DBFC9;
+    --accent-vibrant: #FF6B9D;
+    --accent-blue: #4FC3F7;
+    --background-dark-gradient: linear-gradient(135deg, #1a2b4a 0%, #2d4a7a 40%, #4a6fa8 70%, #8FB3E2 100%);
+}
+
+.modo-oscuro body,
+.modo-oscuro .dashboard-paciente-bg {
+    background: #1E3446 !important;
+    color: var(--texto-claro) !important;
+}
+
+.modo-oscuro .tarjeta,
+.modo-oscuro .dark-card-1,
+.modo-oscuro .dark-card-2,
+.modo-oscuro .dark-card-3,
+.modo-oscuro .dark-card-4 {
+    background: #223A4E !important;
+    border: 2px solid #4DBFC9;
+    color: #F8FAFF !important;
+    box-shadow: 0 8px 32px 0 rgba(26,43,74,0.25);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+}
+
+.modo-oscuro .dark-card-1,
+.modo-oscuro .dark-card-2,
+.modo-oscuro .dark-card-3,
+.modo-oscuro .dark-card-4 {
+    background: #223A4E !important;
+    color: #F8FAFF !important;
+    border-color: #4DBFC9 !important;
+}
+
+.modo-oscuro .tarjeta:hover {
+    box-shadow: 0 12px 40px 0 rgba(77,191,201,0.18);
+    transform: translateY(-3px) scale(1.02);
+    border-color: #86DDE4;
+}
+
+/* Textos más vibrantes en modo oscuro */
+.modo-oscuro .paciente-header, 
+.modo-oscuro .paciente-nombre, 
+.modo-oscuro .tarjeta h3, 
+.modo-oscuro .perfil-info h2 {
+    color: var(--text-light) !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.modo-oscuro .lista-citas li, 
+.modo-oscuro .lista-meds li, 
+.modo-oscuro .lista-notis li, 
+.modo-oscuro .lista-familia li {
+    background: #223A4E !important;
+    color: #F8FAFF;
+    border: 1px solid #31487A;
+    backdrop-filter: blur(5px);
+}
+
+.modo-oscuro .cita-fecha, 
+.modo-oscuro .med-hora, 
+.modo-oscuro .noti-hora, 
+.modo-oscuro .fam-estado {
+    color: var(--accent-blue);
+    font-weight: 600;
+}
+
+.modo-oscuro .cita-desc, 
+.modo-oscuro .med-nombre, 
+.modo-oscuro .noti-txt, 
+.modo-oscuro .fam-nombre {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+/* Botón de emergencia más vibrante */
+.modo-oscuro .btn-danger.btn-lg {
+    background: linear-gradient(135deg, #FF4757 0%, #FF6B7A 100%);
+    border: none;
+    box-shadow: 0 6px 25px rgba(255,71,87,0.4);
+    color: #fff;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.modo-oscuro .btn-danger.btn-lg:hover {
+    background: linear-gradient(135deg, #FF6B7A 0%, #FF4757 100%);
+    box-shadow: 0 8px 30px rgba(255,71,87,0.5);
+    transform: translateY(-3px);
+}
+
+/* Iconos más vibrantes */
+.modo-oscuro .btn i, 
+.modo-oscuro .tarjeta i, 
+.modo-oscuro .perfil-info i {
+    color: var(--accent-blue) !important;
+}
+
+.modo-oscuro .btn-outline-secondary i {
+    color: var(--accent-vibrant) !important;
+}
+
+/* MODO CLARO - MEJORADO */
+/* Tarjetas más claras y suaves */
+.card-pastel-1 { 
+    background: linear-gradient(135deg, var(--pastel-1) 0%, #F8FBFF 100%) !important; 
+    border-color: rgba(77,191,201,0.2);
+}
+.card-pastel-2 { 
+    background: linear-gradient(135deg, var(--pastel-2) 0%, #F0F8FF 100%) !important; 
+    border-color: rgba(255,107,157,0.2);
+}
+.card-pastel-3 { 
+    background: linear-gradient(135deg, var(--pastel-3) 0%, #E6F3FF 100%) !important; 
+    border-color: rgba(77,191,201,0.2);
+}
+.card-pastel-4 { 
+    background: linear-gradient(135deg, var(--pastel-4) 0%, #D4EDFF 100%) !important; 
+    border-color: rgba(255,107,157,0.2);
+}
+
+/* Botones más vibrantes en modo claro */
+.btn-outline-primary {
+    color: var(--text-dark) !important;
+    background: linear-gradient(135deg, var(--accent) 0%, #6DD5ED 100%);
+    border: 2px solid var(--accent);
+    box-shadow: 0 4px 15px rgba(77,191,201,0.25);
+    font-weight: 700;
+    font-size: 1.08rem;
+    border-radius: 1.5rem;
+    padding: 0.55rem 1.5rem;
+    letter-spacing: 0.2px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover, 
+.btn-outline-primary:focus {
+    background: linear-gradient(135deg, #6DD5ED 0%, var(--accent) 100%);
+    color: var(--text-dark) !important;
+    border-color: #6DD5ED;
+    box-shadow: 0 6px 20px rgba(109,213,237,0.35);
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    color: var(--text-dark) !important;
+    background: linear-gradient(135deg, #FF8FB1 0%, #FFB3D1 100%);
+    border: 2px solid #FF8FB1;
+    box-shadow: 0 4px 15px rgba(255,143,177,0.25);
+    font-weight: 700;
+    font-size: 1.08rem;
+    border-radius: 1.5rem;
+    padding: 0.55rem 1.5rem;
+    letter-spacing: 0.2px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover, 
+.btn-outline-secondary:focus {
+    background: linear-gradient(135deg, #FFB3D1 0%, #FF8FB1 100%);
+    color: var(--text-dark) !important;
+    border-color: #FFB3D1;
+    box-shadow: 0 6px 20px rgba(255,179,209,0.35);
+    transform: translateY(-2px);
+}
+
+/* Botón de emergencia más vibrante en modo claro */
+.btn-danger.btn-lg {
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 0.9rem 2.2rem;
+    border-radius: 2rem;
+    background: linear-gradient(135deg, #FF4757 0%, #FF6B7A 100%);
+    border: none;
+    box-shadow: 0 6px 25px rgba(255,71,87,0.3);
+    color: #fff;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-danger.btn-lg:hover {
+    background: linear-gradient(135deg, #FF6B7A 0%, #FF4757 100%);
+    box-shadow: 0 8px 30px rgba(255,71,87,0.4);
+    transform: translateY(-3px);
+}
+
+/* Efectos hover mejorados para tarjetas */
+.tarjeta:hover {
+    box-shadow: 0 12px 40px 0 rgba(77,191,201,0.2);
+    transform: translateY(-3px) scale(1.02);
+    border-color: rgba(77,191,201,0.4);
+}
+
+/* Textos más vibrantes */
+.tarjeta h3, .perfil-info h2, .paciente-header, .paciente-nombre {
+    color: var(--text-dark) !important;
+    font-weight: 700;
+}
+
+.btn, .btn-outline-primary, .btn-outline-secondary {
+    color: var(--text-dark) !important;
+}
+
+.btn i, .tarjeta i, .perfil-info i {
+    color: var(--accent) !important;
+}
+
+/* Listas más vibrantes */
+.lista-citas li, .lista-meds li, .lista-notis li, .lista-familia li {
+    background: linear-gradient(135deg, rgba(77,191,201,0.1) 0%, rgba(255,143,177,0.1) 100%);
+    border: 1px solid rgba(77,191,201,0.15);
+    transition: all 0.3s ease;
+}
+
+.lista-citas li:hover, .lista-meds li:hover, .lista-notis li:hover, .lista-familia li:hover {
+    background: linear-gradient(135deg, rgba(77,191,201,0.15) 0%, rgba(255,143,177,0.15) 100%);
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(77,191,201,0.18);
+}
+
+/* --- AJUSTES FINALES MODO OSCURO --- */
+
+/* 1. Fondo completamente oscuro en modo oscuro */
+.modo-oscuro body, .modo-oscuro .dashboard-paciente-bg {
+    background: #1E3446 !important;
+    color: var(--texto-claro) !important;
+}
+
+/* 2. Listas internas 'Sin información' más claras en modo oscuro */
+.modo-oscuro .lista-citas li.text-muted,
+.modo-oscuro .lista-meds li.text-muted,
+.modo-oscuro .lista-notis li.text-muted,
+.modo-oscuro .lista-familia li.text-muted {
+    background: #31487A !important;
+    color: #F8FAFF !important;
+    border: none !important;
+    opacity: 1 !important;
+}
+
+/* 3. Botón Invitar Familiar y secundarios menos vibrantes en modo oscuro */
+.modo-oscuro .btn-outline-primary,
+.modo-oscuro .btn-outline-secondary {
+    background: #31487A !important;
+    color: #F8FAFF !important;
+    border: 2px solid #4DBFC9 !important;
+    box-shadow: none !important;
+}
+.modo-oscuro .btn-outline-primary:hover,
+.modo-oscuro .btn-outline-secondary:hover {
+    background: #223A4E !important;
+    color: #F8FAFF !important;
+    border-color: #86DDE4 !important;
+}
+
+/* 4. Botón de emergencia claro con letras negras en modo oscuro */
+.modo-oscuro .btn-danger.btn-lg {
+    background: #F8FAFF !important;
+    color: #1E3446 !important;
+    border: none !important;
+    box-shadow: 0 6px 25px rgba(255,71,87,0.18) !important;
+    font-weight: 700;
+}
+.modo-oscuro .btn-danger.btn-lg i {
+    color: #C43556 !important;
+}
+.modo-oscuro .btn-danger.btn-lg:hover {
+    background: #E6F7F7 !important;
+    color: #1E3446 !important;
 } 
