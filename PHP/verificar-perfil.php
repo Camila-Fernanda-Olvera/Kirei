@@ -57,6 +57,18 @@ if ($datos_paciente) {
     }
     $stmt->close();
 
+    // Obtener el padecimiento del usuario
+    $stmt = $conn->prepare('SELECT padecimiento FROM usuarios WHERE id = ?');
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $resultP = $stmt->get_result();
+    $padecimiento = '';
+    if ($row = $resultP->fetch_assoc()) {
+        $padecimiento = $row['padecimiento'];
+    }
+    $stmt->close();
+    $datos_paciente['padecimiento'] = $padecimiento;
+
     // El paciente ya tiene datos completos
     echo json_encode([
         'success' => true,
