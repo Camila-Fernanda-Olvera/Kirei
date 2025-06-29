@@ -125,7 +125,7 @@ function actualizarInterfaz(datos) {
     // Utilidad para setear texto si existe el elemento
     function setText(id, value) {
         const el = document.getElementById(id);
-        if (el) el.textContent = value;
+        if (el) el.textContent = value && value.trim() !== '' ? value : (window.i18n.isSpanish() ? 'No especificado' : 'Not specified');
     }
 
     setText('patientName', datos.nombre || '');
@@ -139,10 +139,26 @@ function actualizarInterfaz(datos) {
     setText('doctorName', datos.medico || '');
     setText('doctorSpecialty', datos.especialidad_medico || '');
     setText('doctorPhone', datos.telefono_medico || '');
-    setText('patientDiet', datos.dieta || '');
+    // Traducir dieta
+    setText('patientDiet', traducirDieta(datos.dieta));
     setText('allergies', datos.alergias || (window.i18n.isSpanish() ? 'Ninguna' : 'None'));
     setText('emergencyContact', `${datos.contacto_nombre || ''} (${datos.contacto_relacion || ''})`);
     setText('emergencyPhone', datos.contacto_telefono || '');
+}
+
+// Traducción de valores de dieta
+function traducirDieta(valor) {
+    if (!valor || valor.trim() === '') return window.i18n.isSpanish() ? 'No especificado' : 'Not specified';
+    const map = {
+        'normal': window.i18n.isSpanish() ? 'Dieta normal' : 'Normal diet',
+        'baja_sodio': window.i18n.isSpanish() ? 'Baja en sodio' : 'Low sodium',
+        'baja_azucar': window.i18n.isSpanish() ? 'Baja en azúcar' : 'Low sugar',
+        'sin_gluten': window.i18n.isSpanish() ? 'Sin gluten' : 'Gluten free',
+        'vegetariana': window.i18n.isSpanish() ? 'Vegetariana' : 'Vegetarian',
+        'vegana': window.i18n.isSpanish() ? 'Vegana' : 'Vegan',
+        'otra': window.i18n.isSpanish() ? 'Otra' : 'Other'
+    };
+    return map[valor] || valor;
 }
 
 // Funciones del dashboard
