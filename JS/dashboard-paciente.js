@@ -78,11 +78,34 @@ async function cargarDatosPaciente() {
 
         const data = await response.json();
 
-        if (data.success && data.perfil_completo) {
+        if (data.success && data.perfil_completo && data.datos) {
             actualizarInterfaz(data.datos);
+        } else {
+            // Si no hay datos, cerrar sesión y mostrar mensaje
+            Swal.fire({
+                title: window.i18n.t('messages.error'),
+                text: window.i18n.isSpanish() ? 'Tu perfil no está completo. Por favor inicia sesión y completa tu información.' : 'Your profile is incomplete. Please log in and complete your information.',
+                icon: 'error',
+                confirmButtonText: window.i18n.t('messages.understood'),
+                confirmButtonColor: '#d72660'
+            }).then(() => {
+                // Cerrar sesión y redirigir
+                fetch('PHP/cerrar-sesion.php', { method: 'POST' }).then(() => {
+                    window.location.href = 'Index.html';
+                });
+            });
         }
     } catch (error) {
         console.error('Error al cargar datos del paciente:', error);
+        Swal.fire({
+            title: window.i18n.t('messages.error'),
+            text: window.i18n.isSpanish() ? 'Error de conexión. Por favor inicia sesión nuevamente.' : 'Connection error. Please log in again.',
+            icon: 'error',
+            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonColor: '#d72660'
+        }).then(() => {
+            window.location.href = 'Index.html';
+        });
     }
 }
 
