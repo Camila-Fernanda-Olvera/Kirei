@@ -57,16 +57,19 @@ if ($datos_paciente) {
     }
     $stmt->close();
 
-    // Obtener el padecimiento del usuario
-    $stmt = $conn->prepare('SELECT padecimiento FROM usuarios WHERE id = ?');
+    // Obtener el nombre y padecimiento del usuario
+    $stmt = $conn->prepare('SELECT nombre, padecimiento FROM usuarios WHERE id = ?');
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $resultP = $stmt->get_result();
+    $nombre = '';
     $padecimiento = '';
     if ($row = $resultP->fetch_assoc()) {
+        $nombre = $row['nombre'];
         $padecimiento = $row['padecimiento'];
     }
     $stmt->close();
+    $datos_paciente['nombre'] = $nombre;
     $datos_paciente['padecimiento'] = $padecimiento;
 
     // El paciente ya tiene datos completos
