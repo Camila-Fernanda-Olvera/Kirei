@@ -12,14 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <!-- Selector de idioma -->
-    <div class="language-selector">
-        <button class="btn btn-outline-light btn-sm" onclick="toggleLanguage()">
-            <i class="bi bi-globe"></i>
-            <span id="currentLanguage">ES</span>
-        </button>
-    </div>
-
     <div class="wizard-container">
         <div class="wizard-header">
             <h1 class="wizard-title" data-i18n="wizard.title">Configuración de Perfil</h1>
@@ -158,18 +150,6 @@
             <!-- Paso 3: Medicación y Contactos -->
             <div class="step-content" id="step3">
                 <h3 style="color: #d72660; margin-bottom: 25px;" data-i18n="wizard.step3.title">Medicación y Contactos</h3>
-                
-                <div class="form-group">
-                    <label class="form-label" data-i18n="wizard.medication">Medicamentos actuales</label>
-                    <div class="help-text" style="margin-bottom: 10px;">
-                        <strong data-i18n="wizard.medication.example">Ejemplo de formato:</strong><br>
-                        <span data-i18n="wizard.medication.example1">• Metformina 500mg - 1 tableta cada 8 horas</span><br>
-                        <span data-i18n="wizard.medication.example2">• Aspirina 100mg - 1 tableta diaria</span><br>
-                        <span data-i18n="wizard.medication.example3">• Vitamina D - 1 cápsula al día</span>
-                    </div>
-                    <textarea class="form-control" id="medicacion" data-i18n-placeholder="wizard.medication.placeholder" rows="6"></textarea>
-                    <div class="help-text" data-i18n="wizard.medication.help">Deja en blanco si no tomas medicamentos</div>
-                </div>
                 
                 <div class="form-group">
                     <label class="form-label" data-i18n="wizard.emergency.name">Contacto de emergencia - Nombre</label>

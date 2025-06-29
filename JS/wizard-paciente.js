@@ -3,10 +3,21 @@ let currentStep = 1;
 let totalSteps = 4;
 let datosCompletos = {};
 
+// Guardar la última fecha de expiración generada para poder re-formatearla
+let ultimaFechaExpiracion = null;
+
 // Inicializar el wizard cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
     inicializarWizard();
     actualizarIdiomaSelector();
+    // Listener para el select de idioma preferido
+    const idiomaSelect = document.getElementById('idioma');
+    if (idiomaSelect) {
+        idiomaSelect.addEventListener('change', function() {
+            window.i18n.setLanguage(this.value);
+            actualizarIdiomaSelector();
+        });
+    }
 });
 
 // Función para inicializar el wizard
@@ -138,23 +149,25 @@ function generarCodigoVinculacion() {
     // Calcular fecha de expiración (7 días desde ahora)
     const fechaActual = new Date();
     const fechaExpiracion = new Date(fechaActual.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 días
-    
-    // Formatear fecha para mostrar según el idioma
-    const opciones = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-    
-    const locale = window.i18n.isSpanish() ? 'es-ES' : 'en-US';
-    const fechaFormateada = fechaExpiracion.toLocaleDateString(locale, opciones);
-    
-    // Mostrar fecha de expiración
-    document.getElementById('fecha_expiracion').textContent = fechaFormateada;
-    
+    ultimaFechaExpiracion = fechaExpiracion; // Guardar para re-formatear si cambia el idioma
+    mostrarFechaExpiracion();
     return codigo;
+}
+
+// Nueva función para mostrar la fecha de expiración en el idioma actual
+function mostrarFechaExpiracion() {
+    if (!ultimaFechaExpiracion) return;
+    const locale = window.i18n.isSpanish() ? 'es-ES' : 'en-US';
+    const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
+    const opcionesHora = window.i18n.isSpanish()
+        ? { hour: '2-digit', minute: '2-digit', hour12: false }
+        : { hour: '2-digit', minute: '2-digit', hour12: true };
+    const fecha = ultimaFechaExpiracion.toLocaleDateString(locale, opcionesFecha);
+    const hora = ultimaFechaExpiracion.toLocaleTimeString(locale, opcionesHora);
+    const texto = window.i18n.isSpanish()
+        ? `${fecha} a las ${hora}`
+        : `${fecha} at ${hora}`;
+    document.getElementById('fecha_expiracion').textContent = texto;
 }
 
 // Función para completar el registro
@@ -181,8 +194,7 @@ async function completarRegistro() {
             dieta: document.getElementById('dieta').value,
             alergias: document.getElementById('alergias').value || (window.i18n.isSpanish() ? 'Ninguna' : 'None'),
             
-            // Paso 3: Medicación y contactos
-            medicacion: document.getElementById('medicacion').value || (window.i18n.isSpanish() ? 'Ninguna' : 'None'),
+            // Paso 3: Contactos (sin medicacion)
             contacto_nombre: document.getElementById('contacto_nombre').value,
             contacto_telefono: document.getElementById('contacto_telefono').value,
             contacto_relacion: document.getElementById('contacto_relacion').value,
@@ -302,4 +314,9 @@ async function guardarCodigoVinculacion(codigo) {
 // Escuchar cambios de idioma
 document.addEventListener('languageChanged', function(e) {
     actualizarIdiomaSelector();
+    // Si el código de vinculación está visible, actualizar la fecha
+    const codigoSection = document.getElementById('codigo_section');
+    if (codigoSection && codigoSection.style.display !== 'none') {
+        mostrarFechaExpiracion();
+    }
 }); 

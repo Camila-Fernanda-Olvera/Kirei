@@ -52,7 +52,6 @@ $telefono_medico = $data['telefono_medico'] ?? '';
 $tipo_sangre = $data['tipo_sangre'] ?? '';
 $dieta = $data['dieta'] ?? '';
 $alergias = $data['alergias'] ?? '';
-$medicacion = $data['medicacion'] ?? '';
 $contacto_nombre = $data['contacto_nombre'] ?? '';
 $contacto_telefono = $data['contacto_telefono'] ?? '';
 $contacto_relacion = $data['contacto_relacion'] ?? '';
@@ -107,22 +106,6 @@ $stmt->bind_param('issssssssssssssssss',
 );
 
 if ($stmt->execute()) {
-    // Procesar medicamentos: cada línea es un medicamento
-    if (!empty($medicacion)) {
-        // Eliminar medicamentos previos del paciente (para evitar duplicados)
-        $conn->query("DELETE FROM medicamentos WHERE id_paciente = $user_id");
-        $meds = preg_split('/\r?\n/', $medicacion);
-        foreach ($meds as $med) {
-            $med = trim($med);
-            if ($med !== '') {
-                // Por ahora, guardar todo en el campo nombre
-                $stmtMed = $conn->prepare("INSERT INTO medicamentos (id_paciente, nombre) VALUES (?, ?)");
-                $stmtMed->bind_param('is', $user_id, $med);
-                $stmtMed->execute();
-                $stmtMed->close();
-            }
-        }
-    }
     echo json_encode([
         'success' => true,
         'message' => 'Datos del paciente guardados correctamente'
