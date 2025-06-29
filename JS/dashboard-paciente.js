@@ -103,6 +103,24 @@ function setupVinculacionListener() {
 function generarCodigoVinculacion() {
     const codigo = Math.random().toString(36).substring(2, 8).toUpperCase();
     document.getElementById('codigo_texto').textContent = codigo;
+    
+    // Calcular fecha de expiración (7 días desde ahora)
+    const fechaActual = new Date();
+    const fechaExpiracion = new Date(fechaActual.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 días
+    
+    // Formatear fecha para mostrar
+    const opciones = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    const fechaFormateada = fechaExpiracion.toLocaleDateString('es-ES', opciones);
+    
+    // Mostrar fecha de expiración
+    document.getElementById('fecha_expiracion').textContent = fechaFormateada;
+    
     return codigo;
 }
 
