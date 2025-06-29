@@ -72,13 +72,13 @@ $permisos_data = [
 ];
 $permisos = json_encode($permisos_data);
 
-// Insertar o actualizar datos del paciente
+// Insertar o actualizar datos del paciente (sin medicacion)
 $stmt = $conn->prepare("INSERT INTO datos_paciente (
     user_id, fecha_nac, genero, pais, idioma, fecha_diagnostico, 
-    medico, especialidad_medico, telefono_medico, tipo_sangre, dieta, alergias, medicacion, 
+    medico, especialidad_medico, telefono_medico, tipo_sangre, dieta, alergias, 
     contacto_nombre, contacto_telefono, contacto_relacion, 
     documentos, familiar_email, codigo_vinculacion, permisos
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
 ON DUPLICATE KEY UPDATE 
     fecha_nac = VALUES(fecha_nac),
     genero = VALUES(genero),
@@ -91,7 +91,6 @@ ON DUPLICATE KEY UPDATE
     tipo_sangre = VALUES(tipo_sangre),
     dieta = VALUES(dieta),
     alergias = VALUES(alergias),
-    medicacion = VALUES(medicacion),
     contacto_nombre = VALUES(contacto_nombre),
     contacto_telefono = VALUES(contacto_telefono),
     contacto_relacion = VALUES(contacto_relacion),
@@ -100,14 +99,30 @@ ON DUPLICATE KEY UPDATE
     codigo_vinculacion = VALUES(codigo_vinculacion),
     permisos = VALUES(permisos)");
 
-$stmt->bind_param('isssssssssssssssssss', 
+$stmt->bind_param('issssssssssssssssss', 
     $user_id, $fecha_nac, $genero, $pais, $idioma, $fecha_diagnostico,
-    $medico, $especialidad_medico, $telefono_medico, $tipo_sangre, $dieta, $alergias, $medicacion,
+    $medico, $especialidad_medico, $telefono_medico, $tipo_sangre, $dieta, $alergias,
     $contacto_nombre, $contacto_telefono, $contacto_relacion,
     $documentos, $familiar_email, $codigo_vinculacion, $permisos
 );
 
 if ($stmt->execute()) {
+    // Procesar medicamentos: cada línea es un medicamento
+    if (!empty($medicacion)) {
+        // Eliminar medicamentos previos del paciente (para evitar duplicados)
+        $conn->query("DELETE FROM medicamentos WHERE id_paciente = $user_id");
+        $meds = preg_split('/\r?\n/', $medicacion);
+        foreach ($meds as $med) {
+            $med = trim($med);
+            if ($med !== '') {
+                // Por ahora, guardar todo en el campo nombre
+                $stmtMed = $conn->prepare("INSERT INTO medicamentos (id_paciente, nombre) VALUES (?, ?)");
+                $stmtMed->bind_param('is', $user_id, $med);
+                $stmtMed->execute();
+                $stmtMed->close();
+            }
+        }
+    }
     echo json_encode([
         'success' => true,
         'message' => 'Datos del paciente guardados correctamente'
