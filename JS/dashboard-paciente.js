@@ -122,18 +122,27 @@ function actualizarInterfaz(datos) {
     const mes = hoy.getMonth() - fechaNac.getMonth();
     const edadFinal = mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate()) ? edad - 1 : edad;
     
-    // Actualizar información del perfil
-    document.getElementById('patientName').textContent = datos.nombre || 'Juan Pérez';
-    document.getElementById('patientAge').textContent = `${edadFinal} ${window.i18n.isSpanish() ? 'años' : 'years'}`;
-    document.getElementById('bloodType').textContent = datos.tipo_sangre || 'O+';
-    document.getElementById('doctorName').textContent = datos.medico || 'Dr. García';
-    document.getElementById('condition').textContent = datos.padecimiento || 'Diabetes';
-    document.getElementById('allergies').textContent = datos.alergias || 'Penicilina';
-    document.getElementById('emergencyContact').textContent = `${datos.contacto_nombre} (${datos.contacto_relacion})`;
-    document.getElementById('emergencyPhone').textContent = datos.contacto_telefono || '+52 55 1234 5678';
-    
-    // Actualizar nombre en el header
-    document.getElementById('userName').textContent = datos.nombre || 'Juan Pérez';
+    // Utilidad para setear texto si existe el elemento
+    function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    }
+
+    setText('patientName', datos.nombre || '');
+    setText('patientAge', `${edadFinal} ${window.i18n.isSpanish() ? 'años' : 'years'}`);
+    setText('patientGender', datos.genero || '');
+    setText('patientCountry', datos.pais || '');
+    setText('patientLanguage', datos.idioma === 'en' ? 'Inglés' : 'Español');
+    setText('bloodType', datos.tipo_sangre || '');
+    setText('condition', datos.padecimiento || '');
+    setText('diagnosisDate', datos.fecha_diagnostico || '');
+    setText('doctorName', datos.medico || '');
+    setText('doctorSpecialty', datos.especialidad_medico || '');
+    setText('doctorPhone', datos.telefono_medico || '');
+    setText('patientDiet', datos.dieta || '');
+    setText('allergies', datos.alergias || (window.i18n.isSpanish() ? 'Ninguna' : 'None'));
+    setText('emergencyContact', `${datos.contacto_nombre || ''} (${datos.contacto_relacion || ''})`);
+    setText('emergencyPhone', datos.contacto_telefono || '');
 }
 
 // Funciones del dashboard
