@@ -46,11 +46,23 @@ $datos_paciente = $result->fetch_assoc();
 $stmt->close();
 
 if ($datos_paciente) {
+    // Obtener medicamentos reales del paciente
+    $stmt = $conn->prepare('SELECT * FROM medicamentos WHERE id_paciente = ?');
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $resultMeds = $stmt->get_result();
+    $medicamentos = [];
+    while ($row = $resultMeds->fetch_assoc()) {
+        $medicamentos[] = $row;
+    }
+    $stmt->close();
+
     // El paciente ya tiene datos completos
     echo json_encode([
         'success' => true,
         'perfil_completo' => true,
-        'datos' => $datos_paciente
+        'datos' => $datos_paciente,
+        'medicamentos' => $medicamentos
     ]);
 } else {
     // El paciente no tiene datos completos
