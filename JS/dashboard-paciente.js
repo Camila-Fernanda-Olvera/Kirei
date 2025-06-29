@@ -385,7 +385,7 @@ async function mostrarPermisos() {
         preConfirm: () => {
             const permisos_data = {
                 sintomas: document.getElementById('permiso-sintomas').checked,
-                medicacion: document.getElementById('permiso-medicacion').checked,
+                medicacion_permiso: document.getElementById('permiso-medicacion').checked,
                 citas: document.getElementById('permiso-citas').checked,
                 ubicacion: document.getElementById('permiso-ubicacion').checked,
                 notif_recordatorios: document.getElementById('notif-recordatorios').checked,

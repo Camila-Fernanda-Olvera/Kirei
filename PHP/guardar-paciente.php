@@ -24,7 +24,23 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Extraer todos los datos del flujo
+// Verificar que el usuario sea un paciente
+$stmt = $conn->prepare('SELECT tipo_usuario FROM usuarios WHERE id = ?');
+$stmt->bind_param('i', $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+$stmt->close();
+
+if (!$user || $user['tipo_usuario'] !== 'paciente') {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Solo los pacientes pueden guardar datos médicos'
+    ]);
+    exit();
+}
+
+// Extraer solo los datos necesarios (no incluir permisos en los datos principales)
 $fecha_nac = $data['fecha_nac'] ?? '';
 $genero = $data['genero'] ?? '';
 $pais = $data['pais'] ?? '';
@@ -41,42 +57,18 @@ $contacto_relacion = $data['contacto_relacion'] ?? '';
 $documentos = $data['documentos'] ?? '';
 $familiar_email = $data['familiar_email'] ?? '';
 $codigo_vinculacion = $data['codigo_vinculacion'] ?? '';
-$permisos = json_encode($data);
 
-// Crear tabla de datos del paciente si no existe
-$create_table = "CREATE TABLE IF NOT EXISTS `datos_paciente` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `user_id` int(11) NOT NULL,
-    `fecha_nac` date DEFAULT NULL,
-    `genero` varchar(20) DEFAULT NULL,
-    `pais` varchar(100) DEFAULT NULL,
-    `idioma` varchar(10) DEFAULT NULL,
-    `fecha_diagnostico` date DEFAULT NULL,
-    `medico` varchar(200) DEFAULT NULL,
-    `tipo_sangre` varchar(10) DEFAULT NULL,
-    `dieta` varchar(50) DEFAULT NULL,
-    `alergias` text DEFAULT NULL,
-    `medicacion` text DEFAULT NULL,
-    `contacto_nombre` varchar(200) DEFAULT NULL,
-    `contacto_telefono` varchar(20) DEFAULT NULL,
-    `contacto_relacion` varchar(50) DEFAULT NULL,
-    `documentos` varchar(255) DEFAULT NULL,
-    `familiar_email` varchar(200) DEFAULT NULL,
-    `codigo_vinculacion` varchar(10) DEFAULT NULL,
-    `permisos` text DEFAULT NULL,
-    `fecha_registro` timestamp DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `user_id` (`user_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
-
-if (!$conn->query($create_table)) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Error al crear tabla: ' . $conn->error
-    ]);
-    exit();
-}
+// Extraer solo los permisos específicos
+$permisos_data = [
+    'sintomas' => $data['sintomas'] ?? false,
+    'medicacion' => $data['medicacion_permiso'] ?? false,
+    'citas' => $data['citas'] ?? false,
+    'ubicacion' => $data['ubicacion'] ?? false,
+    'notif_recordatorios' => $data['notif_recordatorios'] ?? false,
+    'notif_citas' => $data['notif_citas'] ?? false,
+    'notif_sugerencias' => $data['notif_sugerencias'] ?? false
+];
+$permisos = json_encode($permisos_data);
 
 // Insertar o actualizar datos del paciente
 $stmt = $conn->prepare("INSERT INTO datos_paciente (
