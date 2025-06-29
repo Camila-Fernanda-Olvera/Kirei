@@ -35,11 +35,23 @@ if ($email && $password) {
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_type'] = $user['tipo_usuario'];
             
+            // Si es paciente, verificar si ya tiene datos completos
+            $perfil_completo = false;
+            if ($user['tipo_usuario'] === 'paciente') {
+                $stmt2 = $conn->prepare('SELECT id FROM datos_paciente WHERE user_id = ?');
+                $stmt2->bind_param('i', $user['id']);
+                $stmt2->execute();
+                $result2 = $stmt2->get_result();
+                $perfil_completo = $result2->num_rows > 0;
+                $stmt2->close();
+            }
+            
             echo json_encode([
                 'success' => true,
                 'message' => 'Login exitoso',
                 'nombre' => $user['nombre'],
-                'tipo_usuario' => $user['tipo_usuario']
+                'tipo_usuario' => $user['tipo_usuario'],
+                'perfil_completo' => $perfil_completo
             ]);
         } else {
             echo json_encode([

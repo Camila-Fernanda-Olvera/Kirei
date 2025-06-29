@@ -3,282 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración de Perfil - Kirei</title>
+    <title>Dashboard Paciente - Kirei</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="CSS/Registro.css">
-    <link rel="stylesheet" href="CSS/wizard.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/dashboard-paciente.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <div class="wizard-container">
-        <div class="wizard-header">
-            <h1 class="wizard-title">Configuración de Perfil</h1>
-            <p class="wizard-subtitle">Completa tu información para personalizar tu experiencia</p>
-        </div>
-        
-        <div class="progress-container">
-            <div class="progress">
-                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
-            </div>
-            <div class="step-indicator">
-                <div class="step-dot active" data-step="1">1</div>
-                <div class="step-dot" data-step="2">2</div>
-                <div class="step-dot" data-step="3">3</div>
-                <div class="step-dot" data-step="4">4</div>
-            </div>
-        </div>
-        
-        <div class="wizard-card">
-            <!-- Paso 1: Datos Personales -->
-            <div class="step-content active" id="step1">
-                <h3 style="color: #d72660; margin-bottom: 25px;">Datos Personales</h3>
-                
-                <div class="form-group">
-                    <label class="form-label">Fecha de nacimiento</label>
-                    <input type="date" class="form-control" id="fecha_nac" required>
-                    <div class="help-text">Selecciona tu fecha de nacimiento</div>
+    <!-- Header con navegación -->
+    <header class="dashboard-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="logo">
+                        <i class="bi bi-heart-pulse"></i>
+                        Kirei
+                    </h1>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Género</label>
-                    <select class="form-select" id="genero" required>
-                        <option value="">Selecciona tu género</option>
-                        <option value="femenino">Femenino</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">País</label>
-                    <input type="text" class="form-control" id="pais" placeholder="Ej: México" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Idioma preferido</label>
-                    <select class="form-select" id="idioma" required>
-                        <option value="es">Español</option>
-                        <option value="en">Inglés</option>
-                    </select>
-                </div>
-                
-                <div class="wizard-buttons">
-                    <div></div>
-                    <button class="btn-wizard" onclick="nextStep()">Siguiente</button>
-                </div>
-            </div>
-            
-            <!-- Paso 2: Información Médica -->
-            <div class="step-content" id="step2">
-                <h3 style="color: #d72660; margin-bottom: 25px;">Información Médica</h3>
-                
-                <div class="form-group">
-                    <label class="form-label">Fecha de diagnóstico</label>
-                    <input type="date" class="form-control" id="fecha_diagnostico" required>
-                    <div class="help-text">¿Cuándo te diagnosticaron tu condición?</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Médico tratante</label>
-                    <input type="text" class="form-control" id="medico" placeholder="Nombre de tu médico" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Especialidad del médico</label>
-                    <select class="form-select" id="especialidad_medico" required>
-                        <option value="">Selecciona la especialidad</option>
-                        <option value="Medicina General">Medicina General</option>
-                        <option value="Cardiología">Cardiología</option>
-                        <option value="Endocrinología">Endocrinología</option>
-                        <option value="Neurología">Neurología</option>
-                        <option value="Oncología">Oncología</option>
-                        <option value="Neumología">Neumología</option>
-                        <option value="Gastroenterología">Gastroenterología</option>
-                        <option value="Otra">Otra</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Teléfono del médico</label>
-                    <input type="tel" class="form-control" id="telefono_medico" placeholder="Número de teléfono del médico">
-                    <div class="help-text">Opcional - Para contactos de emergencia</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tipo de sangre</label>
-                    <select class="form-select" id="tipo_sangre" required>
-                        <option value="">Selecciona tu tipo de sangre</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tipo de dieta</label>
-                    <select class="form-select" id="dieta" required>
-                        <option value="">Selecciona tu dieta</option>
-                        <option value="normal">Dieta normal</option>
-                        <option value="baja_sodio">Baja en sodio</option>
-                        <option value="baja_azucar">Baja en azúcar</option>
-                        <option value="sin_gluten">Sin gluten</option>
-                        <option value="vegetariana">Vegetariana</option>
-                        <option value="vegana">Vegana</option>
-                        <option value="otra">Otra</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Alergias</label>
-                    <textarea class="form-control" id="alergias" placeholder="Ej: penicilina, polen, mariscos..." rows="3"></textarea>
-                    <div class="help-text">Deja en blanco si no tienes alergias</div>
-                </div>
-                
-                <div class="wizard-buttons">
-                    <button class="btn-wizard btn-secondary" onclick="prevStep()">Anterior</button>
-                    <button class="btn-wizard" onclick="nextStep()">Siguiente</button>
-                </div>
-            </div>
-            
-            <!-- Paso 3: Medicación y Contactos -->
-            <div class="step-content" id="step3">
-                <h3 style="color: #d72660; margin-bottom: 25px;">Medicación y Contactos</h3>
-                
-                <div class="form-group">
-                    <label class="form-label">Medicamentos actuales</label>
-                    <div class="help-text" style="margin-bottom: 10px;">
-                        <strong>Ejemplo de formato:</strong><br>
-                        • Metformina 500mg - 1 tableta cada 8 horas<br>
-                        • Aspirina 100mg - 1 tableta diaria<br>
-                        • Vitamina D - 1 cápsula al día
-                    </div>
-                    <textarea class="form-control" id="medicacion" placeholder="Lista tus medicamentos con dosis y frecuencia..." rows="6"></textarea>
-                    <div class="help-text">Deja en blanco si no tomas medicamentos</div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Contacto de emergencia - Nombre</label>
-                    <input type="text" class="form-control" id="contacto_nombre" placeholder="Nombre completo" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Contacto de emergencia - Teléfono</label>
-                    <input type="tel" class="form-control" id="contacto_telefono" placeholder="Número de teléfono" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Relación con el contacto</label>
-                    <select class="form-select" id="contacto_relacion" required>
-                        <option value="">Selecciona la relación</option>
-                        <option value="esposo">Esposo/a</option>
-                        <option value="hijo">Hijo/a</option>
-                        <option value="padre">Padre</option>
-                        <option value="madre">Madre</option>
-                        <option value="hermano">Hermano/a</option>
-                        <option value="amigo">Amigo/a</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-                
-                <div class="wizard-buttons">
-                    <button class="btn-wizard btn-secondary" onclick="prevStep()">Anterior</button>
-                    <button class="btn-wizard" onclick="nextStep()">Siguiente</button>
-                </div>
-            </div>
-            
-            <!-- Paso 4: Vinculación y Permisos -->
-            <div class="step-content" id="step4">
-                <h3 style="color: #d72660; margin-bottom: 25px;">Vinculación y Permisos</h3>
-                
-                <div class="form-group">
-                    <label class="form-label">¿Quieres vincular tu cuenta con algún familiar?</label>
-                    <div style="margin-top: 10px;">
-                        <div class="checkbox-group">
-                            <input type="radio" id="vinculacion_si" name="vinculacion" value="si">
-                            <label for="vinculacion_si">Sí, quiero vincular</label>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="radio" id="vinculacion_no" name="vinculacion" value="no" checked>
-                            <label for="vinculacion_no">No, por ahora no</label>
+                <div class="col-md-6 text-end">
+                    <div class="header-actions">
+                        <!-- Selector de idioma -->
+                        <button class="btn btn-outline-light btn-sm me-2" onclick="toggleLanguage()">
+                            <i class="bi bi-globe"></i>
+                            <span id="currentLanguage">ES</span>
+                        </button>
+                        <button class="btn btn-outline-light btn-sm me-2" id="notificationsBtn">
+                            <i class="bi bi-bell"></i>
+                            <span class="badge bg-danger">3</span>
+                        </button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i>
+                                <span id="userName">Juan Pérez</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="editarPerfil()">
+                                    <i class="bi bi-pencil"></i> <span data-i18n="dashboard.edit">Editar</span> <span data-i18n="dashboard.my.info">Mi Información</span>
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" onclick="configuracion()">
+                                    <i class="bi bi-gear"></i> <span data-i18n="functions.settings">Configuración</span>
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="cerrarSesion()">
+                                    <i class="bi bi-box-arrow-right"></i> <span data-i18n="functions.logout">Cerrar Sesión</span>
+                                </a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                
-                <div id="codigo_section" style="display: none;">
-                    <div class="vinculacion-section">
-                        <h5 style="color: #d72660; margin-bottom: 15px;">Código de Vinculación</h5>
-                        <p style="color: #666; margin-bottom: 15px;">Comparte este código con tu familiar para que pueda conectarse a tu cuenta:</p>
-                        <div class="codigo-generado" id="codigo_generado">
-                            <span id="codigo_texto">ABC123</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="dashboard-main">
+        <div class="container-fluid">
+            <!-- Resumen rápido -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="quick-card">
+                        <div class="quick-card-icon bg-primary">
+                            <i class="bi bi-calendar-check"></i>
                         </div>
-                        <div class="fecha-expiracion">
-                            <div class="label">Fecha de expiración:</div>
-                            <div class="fecha" id="fecha_expiracion">
-                                <!-- Se llenará dinámicamente -->
+                        <div class="quick-card-content">
+                            <h3>2</h3>
+                            <p data-i18n="dashboard.appointments">Próximas Citas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-card">
+                        <div class="quick-card-icon bg-success">
+                            <i class="bi bi-pills"></i>
+                        </div>
+                        <div class="quick-card-content">
+                            <h3>5</h3>
+                            <p data-i18n="dashboard.medications">Medicamentos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-card">
+                        <div class="quick-card-icon bg-warning">
+                            <i class="bi bi-bell"></i>
+                        </div>
+                        <div class="quick-card-content">
+                            <h3>3</h3>
+                            <p data-i18n="dashboard.notifications">Notificaciones</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="quick-card">
+                        <div class="quick-card-icon bg-info">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="quick-card-content">
+                            <h3>2</h3>
+                            <p data-i18n="dashboard.my.family">Familiares</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="row">
+                <!-- Columna izquierda -->
+                <div class="col-lg-8">
+                    <!-- Información del paciente -->
+                    <div class="dashboard-card mb-4">
+                        <div class="card-header">
+                            <h5><i class="bi bi-person-circle"></i> <span data-i18n="dashboard.my.info">Mi Información</span></h5>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editarPerfil()">
+                                <i class="bi bi-pencil"></i> <span data-i18n="dashboard.edit">Editar</span>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 text-center mb-3">
+                                    <div class="profile-image-container">
+                                        <img src="https://via.placeholder.com/120" alt="Foto de perfil" class="profile-image">
+                                        <button class="btn btn-sm btn-primary change-photo-btn">
+                                            <i class="bi bi-camera"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label data-i18n="dashboard.name">Nombre:</label>
+                                                <span id="patientName">Juan Pérez</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label data-i18n="dashboard.age">Edad:</label>
+                                                <span id="patientAge">73 años</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label data-i18n="dashboard.blood.type">Tipo de sangre:</label>
+                                                <span id="bloodType">O+</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label data-i18n="dashboard.doctor">Médico tratante:</label>
+                                                <span id="doctorName">Dr. García</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label data-i18n="dashboard.condition">Condición:</label>
+                                                <span id="condition">Diabetes</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label data-i18n="dashboard.allergies">Alergias:</label>
+                                                <span id="allergies">Penicilina</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label data-i18n="dashboard.emergency.contact">Contacto emergencia:</label>
+                                                <span id="emergencyContact">María Pérez (Hija)</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <label data-i18n="dashboard.phone">Teléfono:</label>
+                                                <span id="emergencyPhone">+52 55 1234 5678</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px; text-align: center;">
-                            Tu familiar deberá ingresar este código al registrarse antes de que expire
+                    </div>
+
+                    <!-- Calendario de citas -->
+                    <div class="dashboard-card mb-4">
+                        <div class="card-header">
+                            <h5><i class="bi bi-calendar-event"></i> <span data-i18n="dashboard.appointments">Próximas Citas</span></h5>
+                            <button class="btn btn-sm btn-primary" onclick="agregarCita()">
+                                <i class="bi bi-plus"></i> <span data-i18n="dashboard.new.appointment">Nueva Cita</span>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="appointments-list">
+                                <div class="appointment-item">
+                                    <div class="appointment-date">
+                                        <div class="date-number">15</div>
+                                        <div class="date-month">JUN</div>
+                                    </div>
+                                    <div class="appointment-details">
+                                        <h6>Consulta Cardiología</h6>
+                                        <p><i class="bi bi-clock"></i> 10:00 AM</p>
+                                        <p><i class="bi bi-person"></i> Dr. García</p>
+                                    </div>
+                                    <div class="appointment-actions">
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-alarm"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="appointment-item">
+                                    <div class="appointment-date">
+                                        <div class="date-number">20</div>
+                                        <div class="date-month">JUN</div>
+                                    </div>
+                                    <div class="appointment-details">
+                                        <h6>Control Diabetes</h6>
+                                        <p><i class="bi bi-clock"></i> 3:30 PM</p>
+                                        <p><i class="bi bi-person"></i> Dra. Martínez</p>
+                                    </div>
+                                    <div class="appointment-actions">
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-alarm"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medicamentos -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-pills"></i> <span data-i18n="dashboard.medications">Mis Medicamentos</span></h5>
+                            <button class="btn btn-sm btn-primary" onclick="agregarMedicamento()">
+                                <i class="bi bi-plus"></i> <span data-i18n="dashboard.add.medication">Agregar</span>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="medications-list">
+                                <div class="medication-item">
+                                    <div class="medication-info">
+                                        <h6>Metformina 500mg</h6>
+                                        <p><i class="bi bi-clock"></i> 8:00 AM y 8:00 PM</p>
+                                        <p><i class="bi bi-calendar"></i> Diario</p>
+                                    </div>
+                                    <div class="medication-status">
+                                        <span class="badge bg-success" data-i18n="status.taken">Tomado</span>
+                                    </div>
+                                    <div class="medication-actions">
+                                        <button class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-check"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="medication-item">
+                                    <div class="medication-info">
+                                        <h6>Aspirina 100mg</h6>
+                                        <p><i class="bi bi-clock"></i> 9:00 AM</p>
+                                        <p><i class="bi bi-calendar"></i> Diario</p>
+                                    </div>
+                                    <div class="medication-status">
+                                        <span class="badge bg-warning" data-i18n="status.pending">Pendiente</span>
+                                    </div>
+                                    <div class="medication-actions">
+                                        <button class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-check"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna derecha -->
+                <div class="col-lg-4">
+                    <!-- Notificaciones -->
+                    <div class="dashboard-card mb-4">
+                        <div class="card-header">
+                            <h5><i class="bi bi-bell"></i> <span data-i18n="dashboard.notifications">Notificaciones</span></h5>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-check-all"></i> <span data-i18n="dashboard.mark.all">Marcar todas</span>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="notifications-list">
+                                <div class="notification-item unread">
+                                    <div class="notification-icon bg-primary">
+                                        <i class="bi bi-pills"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <h6 data-i18n="notifications.medication.reminder">Recordatorio de medicación</h6>
+                                        <p data-i18n="notifications.medication.reminder.text">Es hora de tomar tu Aspirina</p>
+                                        <small data-i18n="notifications.ago.minutes">Hace 5 minutos</small>
+                                    </div>
+                                </div>
+                                <div class="notification-item unread">
+                                    <div class="notification-icon bg-success">
+                                        <i class="bi bi-calendar-check"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <h6 data-i18n="notifications.appointment.confirmed">Cita confirmada</h6>
+                                        <p data-i18n="notifications.appointment.confirmed.text">Tu cita con Dr. García está confirmada</p>
+                                        <small data-i18n="notifications.ago.hour">Hace 1 hora</small>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-icon bg-info">
+                                        <i class="bi bi-heart-pulse"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <h6 data-i18n="notifications.new.analysis">Nuevo análisis disponible</h6>
+                                        <p data-i18n="notifications.new.analysis.text">Revisa tus resultados de glucosa</p>
+                                        <small data-i18n="notifications.ago.hours">Hace 2 horas</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Familiares conectados -->
+                    <div class="dashboard-card mb-4">
+                        <div class="card-header">
+                            <h5><i class="bi bi-people"></i> <span data-i18n="dashboard.my.family">Mi Familia</span></h5>
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-plus"></i> <span data-i18n="dashboard.invite">Invitar</span>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="family-list">
+                                <div class="family-member">
+                                    <div class="member-avatar">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                    <div class="member-info">
+                                        <h6>María Pérez</h6>
+                                        <p>Hija</p>
+                                        <small class="text-success" data-i18n="status.online">En línea</small>
+                                    </div>
+                                    <div class="member-actions">
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-chat"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="family-member">
+                                    <div class="member-avatar">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                    <div class="member-info">
+                                        <h6>Carlos Pérez</h6>
+                                        <p>Hijo</p>
+                                        <small class="text-muted" data-i18n="status.last.seen">Última vez: hace 2h</small>
+                                    </div>
+                                    <div class="member-actions">
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-chat"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón de emergencia -->
+                    <div class="emergency-section">
+                        <button class="btn btn-danger btn-lg w-100 emergency-btn" onclick="emergencia()">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span data-i18n="dashboard.emergency">EMERGENCIA</span>
+                        </button>
+                        <p class="text-center mt-2 small text-muted" data-i18n="dashboard.emergency.help">
+                            Presiona en caso de emergencia médica
                         </p>
                     </div>
                 </div>
-                
-                <div class="form-group" id="permisos_section" style="margin-top: 30px; display: none;">
-                    <label class="form-label">Permisos para familiares</label>
-                    <div style="margin-top: 10px;">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="permiso_sintomas" checked>
-                            <label for="permiso_sintomas">Ver síntomas y progreso</label>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="permiso_medicacion" checked>
-                            <label for="permiso_medicacion">Ver medicación</label>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="permiso_citas" checked>
-                            <label for="permiso_citas">Ver citas médicas</label>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="permiso_ubicacion">
-                            <label for="permiso_ubicacion">Compartir ubicación en emergencias</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Notificaciones</label>
-                    <div style="margin-top: 10px;">
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="notif_recordatorios" checked>
-                            <label for="notif_recordatorios">Recordatorios de medicación</label>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="notif_citas" checked>
-                            <label for="notif_citas">Recordatorios de citas</label>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="notif_sugerencias">
-                            <label for="notif_sugerencias">Sugerencias de IA</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="wizard-buttons">
-                    <button class="btn-wizard btn-secondary" onclick="prevStep()">Anterior</button>
-                    <button class="btn-wizard" onclick="completarRegistro()">Completar Registro</button>
-                </div>
             </div>
         </div>
-    </div>
-    
+    </main>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="JS/i18n.js"></script>
     <script src="JS/dashboard-paciente.js"></script>
 </body>
 </html> 

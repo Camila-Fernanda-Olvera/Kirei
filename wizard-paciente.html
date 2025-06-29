@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Perfil - Kirei</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/Registro.css">
+    <link rel="stylesheet" href="CSS/wizard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- Selector de idioma -->
+    <div class="language-selector">
+        <button class="btn btn-outline-light btn-sm" onclick="toggleLanguage()">
+            <i class="bi bi-globe"></i>
+            <span id="currentLanguage">ES</span>
+        </button>
+    </div>
+
+    <div class="wizard-container">
+        <div class="wizard-header">
+            <h1 class="wizard-title" data-i18n="wizard.title">Configuración de Perfil</h1>
+            <p class="wizard-subtitle" data-i18n="wizard.subtitle">Completa tu información para personalizar tu experiencia</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="step-indicator">
+                <div class="step-dot active" data-step="1">1</div>
+                <div class="step-dot" data-step="2">2</div>
+                <div class="step-dot" data-step="3">3</div>
+                <div class="step-dot" data-step="4">4</div>
+            </div>
+        </div>
+        
+        <div class="wizard-card">
+            <!-- Paso 1: Datos Personales -->
+            <div class="step-content active" id="step1">
+                <h3 style="color: #d72660; margin-bottom: 25px;" data-i18n="wizard.step1.title">Datos Personales</h3>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.birthdate">Fecha de nacimiento</label>
+                    <input type="date" class="form-control" id="fecha_nac" required>
+                    <div class="help-text" data-i18n="wizard.birthdate.help">Selecciona tu fecha de nacimiento</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.gender">Género</label>
+                    <select class="form-select" id="genero" required>
+                        <option value="" data-i18n="wizard.gender.select">Selecciona tu género</option>
+                        <option value="femenino" data-i18n="wizard.gender.female">Femenino</option>
+                        <option value="masculino" data-i18n="wizard.gender.male">Masculino</option>
+                        <option value="otro" data-i18n="wizard.gender.other">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.country">País</label>
+                    <input type="text" class="form-control" id="pais" data-i18n-placeholder="wizard.country.placeholder" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.language">Idioma preferido</label>
+                    <select class="form-select" id="idioma" required>
+                        <option value="es" data-i18n="wizard.language.es">Español</option>
+                        <option value="en" data-i18n="wizard.language.en">Inglés</option>
+                    </select>
+                </div>
+                
+                <div class="wizard-buttons">
+                    <div></div>
+                    <button class="btn-wizard" onclick="nextStep()" data-i18n="wizard.next">Siguiente</button>
+                </div>
+            </div>
+            
+            <!-- Paso 2: Información Médica -->
+            <div class="step-content" id="step2">
+                <h3 style="color: #d72660; margin-bottom: 25px;" data-i18n="wizard.step2.title">Información Médica</h3>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.diagnosis.date">Fecha de diagnóstico</label>
+                    <input type="date" class="form-control" id="fecha_diagnostico" required>
+                    <div class="help-text" data-i18n="wizard.diagnosis.help">¿Cuándo te diagnosticaron tu condición?</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.doctor">Médico tratante</label>
+                    <input type="text" class="form-control" id="medico" data-i18n-placeholder="wizard.doctor.placeholder" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.specialty">Especialidad del médico</label>
+                    <select class="form-select" id="especialidad_medico" required>
+                        <option value="" data-i18n="wizard.specialty.select">Selecciona la especialidad</option>
+                        <option value="Medicina General" data-i18n="wizard.specialty.general">Medicina General</option>
+                        <option value="Cardiología" data-i18n="wizard.specialty.cardiology">Cardiología</option>
+                        <option value="Endocrinología" data-i18n="wizard.specialty.endocrinology">Endocrinología</option>
+                        <option value="Neurología" data-i18n="wizard.specialty.neurology">Neurología</option>
+                        <option value="Oncología" data-i18n="wizard.specialty.oncology">Oncología</option>
+                        <option value="Neumología" data-i18n="wizard.specialty.pulmonology">Neumología</option>
+                        <option value="Gastroenterología" data-i18n="wizard.specialty.gastroenterology">Gastroenterología</option>
+                        <option value="Otra" data-i18n="wizard.specialty.other">Otra</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.phone">Teléfono del médico</label>
+                    <input type="tel" class="form-control" id="telefono_medico" data-i18n-placeholder="wizard.phone.placeholder">
+                    <div class="help-text" data-i18n="wizard.phone.help">Opcional - Para contactos de emergencia</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.blood.type">Tipo de sangre</label>
+                    <select class="form-select" id="tipo_sangre" required>
+                        <option value="" data-i18n="wizard.blood.type.select">Selecciona tu tipo de sangre</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.diet">Tipo de dieta</label>
+                    <select class="form-select" id="dieta" required>
+                        <option value="" data-i18n="wizard.diet.select">Selecciona tu dieta</option>
+                        <option value="normal" data-i18n="wizard.diet.normal">Dieta normal</option>
+                        <option value="baja_sodio" data-i18n="wizard.diet.low.sodium">Baja en sodio</option>
+                        <option value="baja_azucar" data-i18n="wizard.diet.low.sugar">Baja en azúcar</option>
+                        <option value="sin_gluten" data-i18n="wizard.diet.gluten.free">Sin gluten</option>
+                        <option value="vegetariana" data-i18n="wizard.diet.vegetarian">Vegetariana</option>
+                        <option value="vegana" data-i18n="wizard.diet.vegan">Vegana</option>
+                        <option value="otra" data-i18n="wizard.diet.other">Otra</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.allergies">Alergias</label>
+                    <textarea class="form-control" id="alergias" data-i18n-placeholder="wizard.allergies.placeholder" rows="3"></textarea>
+                    <div class="help-text" data-i18n="wizard.allergies.help">Deja en blanco si no tienes alergias</div>
+                </div>
+                
+                <div class="wizard-buttons">
+                    <button class="btn-wizard btn-secondary" onclick="prevStep()" data-i18n="wizard.previous">Anterior</button>
+                    <button class="btn-wizard" onclick="nextStep()" data-i18n="wizard.next">Siguiente</button>
+                </div>
+            </div>
+            
+            <!-- Paso 3: Medicación y Contactos -->
+            <div class="step-content" id="step3">
+                <h3 style="color: #d72660; margin-bottom: 25px;" data-i18n="wizard.step3.title">Medicación y Contactos</h3>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.medication">Medicamentos actuales</label>
+                    <div class="help-text" style="margin-bottom: 10px;">
+                        <strong data-i18n="wizard.medication.example">Ejemplo de formato:</strong><br>
+                        <span data-i18n="wizard.medication.example1">• Metformina 500mg - 1 tableta cada 8 horas</span><br>
+                        <span data-i18n="wizard.medication.example2">• Aspirina 100mg - 1 tableta diaria</span><br>
+                        <span data-i18n="wizard.medication.example3">• Vitamina D - 1 cápsula al día</span>
+                    </div>
+                    <textarea class="form-control" id="medicacion" data-i18n-placeholder="wizard.medication.placeholder" rows="6"></textarea>
+                    <div class="help-text" data-i18n="wizard.medication.help">Deja en blanco si no tomas medicamentos</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.emergency.name">Contacto de emergencia - Nombre</label>
+                    <input type="text" class="form-control" id="contacto_nombre" data-i18n-placeholder="wizard.emergency.name.placeholder" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.emergency.phone">Contacto de emergencia - Teléfono</label>
+                    <input type="tel" class="form-control" id="contacto_telefono" data-i18n-placeholder="wizard.emergency.phone.placeholder" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.emergency.relation">Relación con el contacto</label>
+                    <select class="form-select" id="contacto_relacion" required>
+                        <option value="" data-i18n="wizard.emergency.relation.select">Selecciona la relación</option>
+                        <option value="esposo" data-i18n="wizard.emergency.relation.spouse">Esposo/a</option>
+                        <option value="hijo" data-i18n="wizard.emergency.relation.child">Hijo/a</option>
+                        <option value="padre" data-i18n="wizard.emergency.relation.father">Padre</option>
+                        <option value="madre" data-i18n="wizard.emergency.relation.mother">Madre</option>
+                        <option value="hermano" data-i18n="wizard.emergency.relation.sibling">Hermano/a</option>
+                        <option value="amigo" data-i18n="wizard.emergency.relation.friend">Amigo/a</option>
+                        <option value="otro" data-i18n="wizard.emergency.relation.other">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="wizard-buttons">
+                    <button class="btn-wizard btn-secondary" onclick="prevStep()" data-i18n="wizard.previous">Anterior</button>
+                    <button class="btn-wizard" onclick="nextStep()" data-i18n="wizard.next">Siguiente</button>
+                </div>
+            </div>
+            
+            <!-- Paso 4: Vinculación y Permisos -->
+            <div class="step-content" id="step4">
+                <h3 style="color: #d72660; margin-bottom: 25px;" data-i18n="wizard.step4.title">Vinculación y Permisos</h3>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.linking.question">¿Quieres vincular tu cuenta con algún familiar?</label>
+                    <div style="margin-top: 10px;">
+                        <div class="checkbox-group">
+                            <input type="radio" id="vinculacion_si" name="vinculacion" value="si">
+                            <label for="vinculacion_si" data-i18n="wizard.linking.yes">Sí, quiero vincular</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="radio" id="vinculacion_no" name="vinculacion" value="no" checked>
+                            <label for="vinculacion_no" data-i18n="wizard.linking.no">No, por ahora no</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="codigo_section" style="display: none;">
+                    <div class="vinculacion-section">
+                        <h5 style="color: #d72660; margin-bottom: 15px;" data-i18n="wizard.code.title">Código de Vinculación</h5>
+                        <p style="color: #666; margin-bottom: 15px;" data-i18n="wizard.code.description">Comparte este código con tu familiar para que pueda conectarse a tu cuenta:</p>
+                        <div class="codigo-generado" id="codigo_generado">
+                            <span id="codigo_texto">ABC123</span>
+                        </div>
+                        <div class="fecha-expiracion">
+                            <div class="label" data-i18n="wizard.code.expiration">Fecha de expiración:</div>
+                            <div class="fecha" id="fecha_expiracion">
+                                <!-- Se llenará dinámicamente -->
+                            </div>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px; text-align: center;" data-i18n="wizard.code.expiration.help">
+                            Tu familiar deberá ingresar este código al registrarse antes de que expire
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="permisos_section" style="margin-top: 30px; display: none;">
+                    <label class="form-label" data-i18n="wizard.permissions.title">Permisos para familiares</label>
+                    <div style="margin-top: 10px;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permiso_sintomas" checked>
+                            <label for="permiso_sintomas" data-i18n="wizard.permissions.symptoms">Ver síntomas y progreso</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permiso_medicacion" checked>
+                            <label for="permiso_medicacion" data-i18n="wizard.permissions.medication">Ver medicación</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permiso_citas" checked>
+                            <label for="permiso_citas" data-i18n="wizard.permissions.appointments">Ver citas médicas</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permiso_ubicacion">
+                            <label for="permiso_ubicacion" data-i18n="wizard.permissions.location">Compartir ubicación en emergencias</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" data-i18n="wizard.notifications.title">Notificaciones</label>
+                    <div style="margin-top: 10px;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="notif_recordatorios" checked>
+                            <label for="notif_recordatorios" data-i18n="wizard.notifications.medication">Recordatorios de medicación</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="notif_citas" checked>
+                            <label for="notif_citas" data-i18n="wizard.notifications.appointments">Recordatorios de citas</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="notif_sugerencias">
+                            <label for="notif_sugerencias" data-i18n="wizard.notifications.ai">Sugerencias de IA</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="wizard-buttons">
+                    <button class="btn-wizard btn-secondary" onclick="prevStep()" data-i18n="wizard.previous">Anterior</button>
+                    <button class="btn-wizard" onclick="completarRegistro()" data-i18n="wizard.complete">Completar Registro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="JS/i18n.js"></script>
+    <script src="JS/wizard-paciente.js"></script>
+</body>
+</html> 

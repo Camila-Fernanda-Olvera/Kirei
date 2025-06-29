@@ -89,7 +89,13 @@ const iniciarSesion = async () => {
                 timerProgressBar: true
             }).then(() => {
                 if (data.tipo_usuario === 'paciente') {
-                    window.location.href = 'dashboard-paciente.html';
+                    // Si el paciente ya tiene perfil completo, ir al dashboard
+                    if (data.perfil_completo) {
+                        window.location.href = 'dashboard-paciente.html';
+                    } else {
+                        // Si no tiene perfil completo, ir al wizard
+                        window.location.href = 'wizard-paciente.html';
+                    }
                 } else {
                     window.location.href = 'dashboard-familiar.html';
                 }

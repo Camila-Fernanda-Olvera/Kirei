@@ -1,296 +1,350 @@
-// Wizard Multipasos para Pacientes - Kirei
-let currentStep = 1;
-let totalSteps = 4;
-let datosCompletos = {};
-
-// Inicializar el wizard cuando se carga la página
+// Dashboard del Paciente - Kirei
 document.addEventListener('DOMContentLoaded', function() {
-    updateProgress();
-    setupVinculacionListener();
+    verificarPerfil();
+    cargarDatosPaciente();
+    actualizarIdiomaSelector();
 });
 
-// Función para actualizar la barra de progreso
-function updateProgress() {
-    const progressBar = document.getElementById('progressBar');
-    const progress = (currentStep / totalSteps) * 100;
-    progressBar.style.width = progress + '%';
-    
-    // Actualizar indicadores de pasos
-    document.querySelectorAll('.step-dot').forEach((dot, index) => {
-        dot.classList.remove('active', 'completed');
-        if (index + 1 < currentStep) {
-            dot.classList.add('completed');
-        } else if (index + 1 === currentStep) {
-            dot.classList.add('active');
-        }
-    });
-}
-
-// Función para ir al siguiente paso
-function nextStep() {
-    if (validateCurrentStep()) {
-        if (currentStep < totalSteps) {
-            document.getElementById('step' + currentStep).classList.remove('active');
-            currentStep++;
-            document.getElementById('step' + currentStep).classList.add('active');
-            updateProgress();
-        }
+// Función para actualizar el selector de idioma
+function actualizarIdiomaSelector() {
+    const currentLanguageSpan = document.getElementById('currentLanguage');
+    if (currentLanguageSpan) {
+        currentLanguageSpan.textContent = window.i18n.getCurrentLanguage().toUpperCase();
     }
 }
 
-// Función para ir al paso anterior
-function prevStep() {
-    if (currentStep > 1) {
-        document.getElementById('step' + currentStep).classList.remove('active');
-        currentStep--;
-        document.getElementById('step' + currentStep).classList.add('active');
-        updateProgress();
-    }
-}
-
-// Función para validar el paso actual
-function validateCurrentStep() {
-    const currentStepElement = document.getElementById('step' + currentStep);
-    const requiredFields = currentStepElement.querySelectorAll('[required]');
-    let isValid = true;
+// Función para cambiar idioma
+function toggleLanguage() {
+    const newLanguage = window.i18n.toggleLanguage();
+    actualizarIdiomaSelector();
     
-    requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-            field.style.borderColor = '#dc3545';
-            isValid = false;
-        } else {
-            field.style.borderColor = '#e0e0e0';
-        }
-    });
-    
-    if (!isValid) {
-        Swal.fire({
-            title: 'Campos Requeridos',
-            text: 'Por favor completa todos los campos obligatorios',
-            icon: 'warning',
-            confirmButtonText: 'Entendido',
-            confirmButtonColor: '#d72660'
-        });
-    }
-    
-    return isValid;
-}
-
-// Configurar listener para la vinculación
-function setupVinculacionListener() {
-    const vinculacionSi = document.getElementById('vinculacion_si');
-    const vinculacionNo = document.getElementById('vinculacion_no');
-    const codigoSection = document.getElementById('codigo_section');
-    const permisosSection = document.getElementById('permisos_section');
-    
-    vinculacionSi.addEventListener('change', function() {
-        if (this.checked) {
-            codigoSection.style.display = 'block';
-            permisosSection.style.display = 'block';
-            generarCodigoVinculacion();
-        }
-    });
-    
-    vinculacionNo.addEventListener('change', function() {
-        if (this.checked) {
-            codigoSection.style.display = 'none';
-            permisosSection.style.display = 'none';
-        }
+    // Mostrar notificación de cambio de idioma
+    Swal.fire({
+        title: newLanguage === 'es' ? 'Idioma Cambiado' : 'Language Changed',
+        text: newLanguage === 'es' ? 'El idioma ha sido cambiado a Español' : 'Language has been changed to English',
+        icon: 'success',
+        confirmButtonText: newLanguage === 'es' ? 'Entendido' : 'Understood',
+        confirmButtonColor: '#d72660',
+        timer: 2000,
+        timerProgressBar: true
     });
 }
 
-// Generar código de vinculación
-function generarCodigoVinculacion() {
-    const codigo = Math.random().toString(36).substring(2, 8).toUpperCase();
-    document.getElementById('codigo_texto').textContent = codigo;
-    
-    // Calcular fecha de expiración (7 días desde ahora)
-    const fechaActual = new Date();
-    const fechaExpiracion = new Date(fechaActual.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 días
-    
-    // Formatear fecha para mostrar
-    const opciones = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    };
-    const fechaFormateada = fechaExpiracion.toLocaleDateString('es-ES', opciones);
-    
-    // Mostrar fecha de expiración
-    document.getElementById('fecha_expiracion').textContent = fechaFormateada;
-    
-    return codigo;
-}
-
-// Función para completar el registro
-async function completarRegistro() {
-    if (!validateCurrentStep()) {
-        return;
-    }
-    
+// Función para verificar si el paciente ya tiene perfil completo
+async function verificarPerfil() {
     try {
-        // Recopilar todos los datos del wizard
-        datosCompletos = {
-            // Paso 1: Datos personales
-            fecha_nac: document.getElementById('fecha_nac').value,
-            genero: document.getElementById('genero').value,
-            pais: document.getElementById('pais').value,
-            idioma: document.getElementById('idioma').value,
-            
-            // Paso 2: Información médica
-            fecha_diagnostico: document.getElementById('fecha_diagnostico').value,
-            medico: document.getElementById('medico').value,
-            especialidad_medico: document.getElementById('especialidad_medico').value,
-            telefono_medico: document.getElementById('telefono_medico').value || '',
-            tipo_sangre: document.getElementById('tipo_sangre').value,
-            dieta: document.getElementById('dieta').value,
-            alergias: document.getElementById('alergias').value || 'Ninguna',
-            
-            // Paso 3: Medicación y contactos
-            medicacion: document.getElementById('medicacion').value || 'Ninguna',
-            contacto_nombre: document.getElementById('contacto_nombre').value,
-            contacto_telefono: document.getElementById('contacto_telefono').value,
-            contacto_relacion: document.getElementById('contacto_relacion').value,
-            
-            // Paso 4: Vinculación y permisos
-            familiar_email: document.getElementById('vinculacion_si').checked ? 'Vinculado' : 'No vinculado',
-            codigo_vinculacion: document.getElementById('vinculacion_si').checked ? 
-                document.getElementById('codigo_texto').textContent : 'No generado',
-            
-            // Permisos (solo si quiere vincular)
-            sintomas: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_sintomas').checked : false,
-            medicacion_permiso: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_medicacion').checked : false,
-            citas: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_citas').checked : false,
-            ubicacion: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_ubicacion').checked : false,
-            notif_recordatorios: document.getElementById('notif_recordatorios').checked,
-            notif_citas: document.getElementById('notif_citas').checked,
-            notif_sugerencias: document.getElementById('notif_sugerencias').checked
-        };
-        
-        // Mostrar loading
-        Swal.fire({
-            title: 'Guardando información...',
-            text: 'Por favor espera',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showConfirmButton: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-        
-        // Guardar en base de datos
-        await guardarDatosPaciente();
-        
-    } catch (error) {
-        console.error('Error en el registro:', error);
-        Swal.fire({
-            title: 'Error',
-            text: 'Hubo un problema durante el proceso. Por favor intenta nuevamente.',
-            icon: 'error',
-            confirmButtonText: 'Entendido',
-            confirmButtonColor: '#d72660'
-        });
-    }
-}
-
-// Función para guardar todos los datos en la base de datos
-async function guardarDatosPaciente() {
-    try {
-        const response = await fetch('PHP/guardar-paciente.php', {
-            method: 'POST',
+        const response = await fetch('PHP/verificar-perfil.php', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(datosCompletos)
+            }
         });
 
         const data = await response.json();
-        Swal.close();
 
         if (data.success) {
-            // Si se generó un código de vinculación, guardarlo en la base de datos
-            if (datosCompletos.codigo_vinculacion !== 'No generado') {
-                await guardarCodigoVinculacion(datosCompletos.codigo_vinculacion);
+            if (!data.perfil_completo) {
+                // El paciente no tiene perfil completo, redirigir al wizard
+                window.location.href = 'wizard-paciente.html';
             }
-            
-            Swal.fire({
-                title: '¡Registro Completado!',
-                text: 'Tu información ha sido guardada correctamente. Bienvenido a Kirei.',
-                icon: 'success',
-                confirmButtonText: 'Comenzar',
-                confirmButtonColor: '#d72660',
-                timer: 5000,
-                timerProgressBar: true
-            }).then(() => {
-                mostrarDashboardFinal();
-            });
         } else {
-            throw new Error(data.message || 'Error al guardar los datos');
+            // Error en la verificación, redirigir al login
+            Swal.fire({
+                title: window.i18n.t('messages.error'),
+                text: window.i18n.isSpanish() ? 'Por favor inicia sesión nuevamente' : 'Please log in again',
+                icon: 'error',
+                confirmButtonText: window.i18n.t('messages.understood'),
+                confirmButtonColor: '#d72660'
+            }).then(() => {
+                window.location.href = 'Index.html';
+            });
         }
     } catch (error) {
-        console.error('Error:', error);
-        Swal.fire({
-            title: 'Error',
-            text: 'No se pudieron guardar los datos. Por favor intenta nuevamente.',
-            icon: 'error',
-            confirmButtonText: 'Entendido',
-            confirmButtonColor: '#d72660'
-        });
+        console.error('Error al verificar perfil:', error);
+        // En caso de error, redirigir al login
+        window.location.href = 'Index.html';
     }
 }
 
-// Función para guardar el código de vinculación en la base de datos
-async function guardarCodigoVinculacion(codigo) {
+// Función para cargar los datos del paciente
+async function cargarDatosPaciente() {
     try {
-        const response = await fetch('PHP/guardar-codigo-vinculacion.php', {
-            method: 'POST',
+        const response = await fetch('PHP/verificar-perfil.php', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ codigo: codigo })
+            }
         });
 
         const data = await response.json();
-        if (!data.success) {
-            console.error('Error al guardar código de vinculación:', data.message);
+
+        if (data.success && data.perfil_completo) {
+            actualizarInterfaz(data.datos);
         }
     } catch (error) {
-        console.error('Error al guardar código de vinculación:', error);
+        console.error('Error al cargar datos del paciente:', error);
     }
 }
 
-// Función para mostrar el dashboard final
-function mostrarDashboardFinal() {
-    const wizardContainer = document.querySelector('.wizard-container');
-    wizardContainer.innerHTML = `
-        <div class="success-message">
-            <div class="success-icon">
-                <i class="bi bi-heart-pulse"></i>
-            </div>
-            <h2 class="success-title">¡Bienvenido a tu Dashboard!</h2>
-            <p class="success-text">Tu información ha sido registrada correctamente.</p>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Próximas Citas</h5>
-                            <p class="card-text">No tienes citas programadas</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Medicamentos</h5>
-                            <p class="card-text">Revisa tu medicación actual</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="btn-wizard" onclick="window.location.href='Index.html'">Cerrar Sesión</button>
-        </div>
-    `;
-} 
+// Función para actualizar la interfaz con los datos del paciente
+function actualizarInterfaz(datos) {
+    // Calcular edad
+    const fechaNac = new Date(datos.fecha_nac);
+    const hoy = new Date();
+    const edad = hoy.getFullYear() - fechaNac.getFullYear();
+    const mes = hoy.getMonth() - fechaNac.getMonth();
+    const edadFinal = mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate()) ? edad - 1 : edad;
+    
+    // Actualizar información del perfil
+    document.getElementById('patientName').textContent = datos.nombre || 'Juan Pérez';
+    document.getElementById('patientAge').textContent = `${edadFinal} ${window.i18n.isSpanish() ? 'años' : 'years'}`;
+    document.getElementById('bloodType').textContent = datos.tipo_sangre || 'O+';
+    document.getElementById('doctorName').textContent = datos.medico || 'Dr. García';
+    document.getElementById('condition').textContent = datos.padecimiento || 'Diabetes';
+    document.getElementById('allergies').textContent = datos.alergias || 'Penicilina';
+    document.getElementById('emergencyContact').textContent = `${datos.contacto_nombre} (${datos.contacto_relacion})`;
+    document.getElementById('emergencyPhone').textContent = datos.contacto_telefono || '+52 55 1234 5678';
+    
+    // Actualizar nombre en el header
+    document.getElementById('userName').textContent = datos.nombre || 'Juan Pérez';
+}
+
+// Funciones del dashboard
+function editarPerfil() {
+    Swal.fire({
+        title: window.i18n.t('functions.edit.profile'),
+        text: window.i18n.t('functions.edit.profile.text'),
+        icon: 'info',
+        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonColor: '#d72660'
+    });
+}
+
+function configuracion() {
+    Swal.fire({
+        title: window.i18n.t('functions.settings'),
+        text: window.i18n.t('functions.settings.text'),
+        icon: 'info',
+        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonColor: '#d72660'
+    });
+}
+
+function agregarCita() {
+    Swal.fire({
+        title: window.i18n.t('functions.add.appointment'),
+        text: window.i18n.t('functions.add.appointment.text'),
+        icon: 'info',
+        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonColor: '#d72660'
+    });
+}
+
+function agregarMedicamento() {
+    Swal.fire({
+        title: window.i18n.t('functions.add.medication'),
+        text: window.i18n.t('functions.add.medication.text'),
+        icon: 'info',
+        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonColor: '#d72660'
+    });
+}
+
+function emergencia() {
+    Swal.fire({
+        title: window.i18n.t('functions.emergency'),
+        text: window.i18n.t('functions.emergency.text'),
+        icon: 'warning',
+        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonColor: '#dc3545',
+        background: '#fff3cd',
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+        }
+    });
+}
+
+function cerrarSesion() {
+    Swal.fire({
+        title: window.i18n.t('functions.logout'),
+        text: window.i18n.t('functions.logout.text'),
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: window.i18n.isSpanish() ? 'Sí, Salir' : 'Yes, Exit',
+        cancelButtonText: window.i18n.t('functions.cancel'),
+        confirmButtonColor: '#d72660',
+        cancelButtonColor: '#6c757d'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch('PHP/cerrar-sesion.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    window.location.href = 'Index.html';
+                } else {
+                    // Si hay error, redirigir de todas formas
+                    window.location.href = 'Index.html';
+                }
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+                // Si hay error, redirigir de todas formas
+                window.location.href = 'Index.html';
+            }
+        }
+    });
+}
+
+// Event listeners para botones dinámicos
+document.addEventListener('click', function(e) {
+    // Botones de recordatorio de citas
+    if (e.target.closest('.appointment-actions .btn-outline-primary')) {
+        const appointmentItem = e.target.closest('.appointment-item');
+        const appointmentTitle = appointmentItem.querySelector('h6').textContent;
+        Swal.fire({
+            title: window.i18n.isSpanish() ? 'Recordatorio Configurado' : 'Reminder Set',
+            text: window.i18n.isSpanish() ? 
+                `Se configuró un recordatorio para: ${appointmentTitle}` : 
+                `Reminder set for: ${appointmentTitle}`,
+            icon: 'success',
+            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonColor: '#d72660'
+        });
+    }
+    
+    // Botones de eliminar citas
+    if (e.target.closest('.appointment-actions .btn-outline-danger')) {
+        const appointmentItem = e.target.closest('.appointment-item');
+        const appointmentTitle = appointmentItem.querySelector('h6').textContent;
+        
+        Swal.fire({
+            title: window.i18n.isSpanish() ? '¿Eliminar Cita?' : 'Delete Appointment?',
+            text: window.i18n.isSpanish() ? 
+                `¿Estás seguro de eliminar: ${appointmentTitle}?` : 
+                `Are you sure you want to delete: ${appointmentTitle}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: window.i18n.isSpanish() ? 'Sí, Eliminar' : 'Yes, Delete',
+            cancelButtonText: window.i18n.t('functions.cancel'),
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                appointmentItem.remove();
+                Swal.fire({
+                    title: window.i18n.isSpanish() ? 'Cita Eliminada' : 'Appointment Deleted',
+                    text: window.i18n.isSpanish() ? 
+                        'La cita ha sido eliminada correctamente' : 
+                        'The appointment has been deleted successfully',
+                    icon: 'success',
+                    confirmButtonText: window.i18n.t('messages.understood'),
+                    confirmButtonColor: '#d72660'
+                });
+            }
+        });
+    }
+    
+    // Botones de marcar medicamento como tomado
+    if (e.target.closest('.medication-actions .btn-outline-success')) {
+        const medicationItem = e.target.closest('.medication-item');
+        const medicationName = medicationItem.querySelector('h6').textContent;
+        const statusBadge = medicationItem.querySelector('.badge');
+        
+        statusBadge.textContent = window.i18n.t('status.taken');
+        statusBadge.className = 'badge bg-success';
+        
+        Swal.fire({
+            title: window.i18n.isSpanish() ? 'Medicamento Registrado' : 'Medication Recorded',
+            text: window.i18n.isSpanish() ? 
+                `${medicationName} marcado como tomado` : 
+                `${medicationName} marked as taken`,
+            icon: 'success',
+            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonColor: '#d72660'
+        });
+    }
+    
+    // Botones de editar medicamento
+    if (e.target.closest('.medication-actions .btn-outline-warning')) {
+        const medicationItem = e.target.closest('.medication-item');
+        const medicationName = medicationItem.querySelector('h6').textContent;
+        
+        Swal.fire({
+            title: window.i18n.isSpanish() ? 'Editar Medicamento' : 'Edit Medication',
+            text: window.i18n.isSpanish() ? 
+                `Editar configuración de: ${medicationName}` : 
+                `Edit configuration for: ${medicationName}`,
+            icon: 'info',
+            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonColor: '#d72660'
+        });
+    }
+    
+    // Botones de chat con familiares
+    if (e.target.closest('.member-actions .btn-outline-primary')) {
+        const memberItem = e.target.closest('.family-member');
+        const memberName = memberItem.querySelector('h6').textContent;
+        
+        Swal.fire({
+            title: window.i18n.isSpanish() ? 'Chat Familiar' : 'Family Chat',
+            text: window.i18n.isSpanish() ? 
+                `Iniciar chat con ${memberName}` : 
+                `Start chat with ${memberName}`,
+            icon: 'info',
+            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonColor: '#d72660'
+        });
+    }
+    
+    // Botón de marcar todas las notificaciones
+    if (e.target.closest('#notificationsBtn') || e.target.closest('.btn-outline-secondary')) {
+        const unreadNotifications = document.querySelectorAll('.notification-item.unread');
+        unreadNotifications.forEach(notification => {
+            notification.classList.remove('unread');
+        });
+        
+        Swal.fire({
+            title: window.i18n.isSpanish() ? 'Notificaciones Marcadas' : 'Notifications Marked',
+            text: window.i18n.isSpanish() ? 
+                'Todas las notificaciones han sido marcadas como leídas' : 
+                'All notifications have been marked as read',
+            icon: 'success',
+            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonColor: '#d72660'
+        });
+    }
+});
+
+// Función para actualizar contadores en tiempo real
+function actualizarContadores() {
+    // Contador de notificaciones no leídas
+    const unreadNotifications = document.querySelectorAll('.notification-item.unread').length;
+    const notificationBadge = document.querySelector('#notificationsBtn .badge');
+    if (notificationBadge) {
+        notificationBadge.textContent = unreadNotifications;
+        if (unreadNotifications === 0) {
+            notificationBadge.style.display = 'none';
+        } else {
+            notificationBadge.style.display = 'inline';
+        }
+    }
+}
+
+// Actualizar contadores cada 30 segundos
+setInterval(actualizarContadores, 30000);
+
+// Actualizar contadores al cargar la página
+actualizarContadores();
+
+// Escuchar cambios de idioma
+document.addEventListener('languageChanged', function(e) {
+    actualizarIdiomaSelector();
+}); 

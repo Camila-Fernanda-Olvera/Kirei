@@ -5,6 +5,35 @@
     padding: 20px;
 }
 
+/* Selector de idioma */
+.language-selector {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.language-selector .btn {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.language-selector .btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.language-selector .btn i {
+    margin-right: 5px;
+}
+
 .wizard-header {
     text-align: center;
     margin-bottom: 30px;
@@ -267,8 +296,137 @@
     margin-bottom: 30px;
 }
 
+/* Estilos para el Dashboard Completo */
+.dashboard-completo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, #d72660 0%, #7f53ac 100%);
+    border-radius: 20px;
+    color: white;
+}
+
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.dashboard-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.dashboard-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.dashboard-card .card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dashboard-card .card-title i {
+    font-size: 1.5rem;
+}
+
+.info-item {
+    margin-bottom: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.info-item strong {
+    color: #555;
+    font-weight: 600;
+}
+
+.medicacion-content {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #555;
+    white-space: pre-line;
+}
+
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+    border: none;
+}
+
+.btn-success {
+    background: linear-gradient(90deg, #28a745 0%, #1e7e34 100%);
+    border: none;
+}
+
+.btn-warning {
+    background: linear-gradient(90deg, #ffc107 0%, #e0a800 100%);
+    border: none;
+    color: #212529;
+}
+
+.btn-outline-danger {
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    background: transparent;
+}
+
+.btn-outline-danger:hover {
+    background: #dc3545;
+    color: white;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
+    .language-selector {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .language-selector .btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+    
     .wizard-container {
         padding: 10px;
     }
@@ -288,5 +446,17 @@
     
     .btn-wizard {
         margin: 0;
+    }
+    
+    .dashboard-completo {
+        padding: 10px;
+    }
+    
+    .dashboard-title {
+        font-size: 2rem;
+    }
+    
+    .dashboard-card {
+        margin-bottom: 20px;
     }
 } 
