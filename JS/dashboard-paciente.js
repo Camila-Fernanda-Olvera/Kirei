@@ -1,8 +1,37 @@
 // Dashboard del Paciente - Kirei
-document.addEventListener('DOMContentLoaded', function() {
-    verificarPerfil();
-    cargarDatosPaciente();
+document.addEventListener('DOMContentLoaded', async function() {
     actualizarIdiomaSelector();
+    try {
+        const response = await fetch('PHP/verificar-perfil.php', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const data = await response.json();
+        if (data.success && data.perfil_completo && data.datos) {
+            actualizarInterfaz(data.datos);
+            // Medicamentos
+            if (Array.isArray(data.medicamentos)) {
+                renderizarMedicamentos(data.medicamentos);
+            } else {
+                renderizarMedicamentos([]);
+            }
+            // Notificaciones (simulado, reemplazar por datos reales si existen)
+            renderizarNotificaciones(data.notificaciones || []);
+            // Familia (simulado, reemplazar por datos reales si existen)
+            renderizarFamilia(data.familia || []);
+        } else {
+            // Si no hay datos, mostrar "Sin información" en cada sección
+            renderizarMedicamentos([]);
+            renderizarNotificaciones([]);
+            renderizarFamilia([]);
+        }
+    } catch (error) {
+        renderizarMedicamentos([]);
+        renderizarNotificaciones([]);
+        renderizarFamilia([]);
+    }
 });
 
 // Función para actualizar el selector de idioma
@@ -28,89 +57,6 @@ function toggleLanguage() {
         timer: 2000,
         timerProgressBar: true
     });
-}
-
-// Función para verificar si el paciente ya tiene perfil completo
-async function verificarPerfil() {
-    try {
-        const response = await fetch('PHP/verificar-perfil.php', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            if (!data.perfil_completo) {
-                // El paciente no tiene perfil completo, redirigir al wizard
-                window.location.href = 'wizard-paciente.html';
-            }
-        } else {
-            // Error en la verificación, redirigir al login
-            Swal.fire({
-                title: window.i18n.t('messages.error'),
-                text: window.i18n.isSpanish() ? 'Por favor inicia sesión nuevamente' : 'Please log in again',
-                icon: 'error',
-                confirmButtonText: window.i18n.t('messages.understood'),
-                confirmButtonColor: '#d72660'
-            }).then(() => {
-                window.location.href = 'Index.html';
-            });
-        }
-    } catch (error) {
-        console.error('Error al verificar perfil:', error);
-        // En caso de error, redirigir al login
-        window.location.href = 'Index.html';
-    }
-}
-
-// Función para cargar los datos del paciente
-async function cargarDatosPaciente() {
-    try {
-        const response = await fetch('PHP/verificar-perfil.php', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        const data = await response.json();
-
-        if (data.success && data.perfil_completo && data.datos) {
-            actualizarInterfaz(data.datos);
-            // Mostrar medicamentos reales
-            if (Array.isArray(data.medicamentos)) {
-                renderizarMedicamentos(data.medicamentos);
-            }
-        } else {
-            // Si no hay datos, cerrar sesión y mostrar mensaje
-            Swal.fire({
-                title: window.i18n.t('messages.error'),
-                text: window.i18n.isSpanish() ? 'Tu perfil no está completo. Por favor inicia sesión y completa tu información.' : 'Your profile is incomplete. Please log in and complete your information.',
-                icon: 'error',
-                confirmButtonText: window.i18n.t('messages.understood'),
-                confirmButtonColor: '#d72660'
-            }).then(() => {
-                // Cerrar sesión y redirigir
-                fetch('PHP/cerrar-sesion.php', { method: 'POST' }).then(() => {
-                    window.location.href = 'Index.html';
-                });
-            });
-        }
-    } catch (error) {
-        console.error('Error al cargar datos del paciente:', error);
-        Swal.fire({
-            title: window.i18n.t('messages.error'),
-            text: window.i18n.isSpanish() ? 'Error de conexión. Por favor inicia sesión nuevamente.' : 'Connection error. Please log in again.',
-            icon: 'error',
-            confirmButtonText: window.i18n.t('messages.understood'),
-            confirmButtonColor: '#d72660'
-        }).then(() => {
-            window.location.href = 'Index.html';
-        });
-    }
 }
 
 // Función para actualizar la interfaz con los datos del paciente
@@ -161,14 +107,107 @@ function traducirDieta(valor) {
     return map[valor] || valor;
 }
 
-// Funciones del dashboard
+// Función para editar perfil médico
 function editarPerfil() {
+    // Obtener datos actuales del paciente (puedes ajustar según tu estructura)
+    const datos = window.datosPaciente || {};
     Swal.fire({
-        title: window.i18n.t('functions.edit.profile'),
-        text: window.i18n.t('functions.edit.profile.text'),
-        icon: 'info',
-        confirmButtonText: window.i18n.t('messages.understood'),
-        confirmButtonColor: '#d72660'
+        title: 'Editar información médica',
+        html: `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 1.2rem;">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <img id="preview-img" src="${datos.imagen || 'https://via.placeholder.com/110'}" alt="Foto de perfil" style="width: 110px; height: 110px; border-radius: 50%; border: 4px solid #ff9800; object-fit: cover; margin-bottom: 0.5rem;">
+                    <input type="file" id="input-img" accept="image/*" style="display:none">
+                    <button type="button" id="btn-img" class="btn btn-outline-primary" style="margin-top: 0.2rem; font-size: 1rem; padding: 0.4rem 1.2rem;">Cambiar foto</button>
+                </div>
+                <input type="date" id="fechaDiagnostico" class="swal2-input" value="${datos.fecha_diagnostico || ''}" placeholder="Fecha de diagnóstico">
+                <input type="text" id="padecimiento" class="swal2-input" value="${datos.padecimiento || ''}" placeholder="Padecimiento">
+                <select id="tipoSangre" class="swal2-input">
+                    <option value="">Tipo de sangre</option>
+                    <option value="A+">A+</option><option value="A-">A-</option>
+                    <option value="B+">B+</option><option value="B-">B-</option>
+                    <option value="O+">O+</option><option value="O-">O-</option>
+                    <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                </select>
+                <select id="tipoDieta" class="swal2-input">
+                    <option value="">Tipo de dieta</option>
+                    <option value="normal">Normal</option>
+                    <option value="baja_azucar">Baja en azúcar</option>
+                    <option value="baja_grasa">Baja en grasa</option>
+                    <option value="baja_sal">Baja en sal</option>
+                    <option value="vegetariana">Vegetariana</option>
+                    <option value="otra">Otra</option>
+                </select>
+                <input type="text" id="alergias" class="swal2-input" value="${datos.alergias || ''}" placeholder="Alergias">
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            popup: 'swal2-large-modal',
+            confirmButton: 'btn btn-outline-primary',
+            cancelButton: 'btn btn-secondary'
+        },
+        didOpen: () => {
+            // Preseleccionar valores
+            document.getElementById('tipoSangre').value = datos.tipo_sangre || '';
+            document.getElementById('tipoDieta').value = datos.dieta || '';
+            // Imagen de perfil
+            document.getElementById('btn-img').onclick = () => document.getElementById('input-img').click();
+            document.getElementById('input-img').onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        document.getElementById('preview-img').src = ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+        },
+        preConfirm: async () => {
+            const fechaDiagnostico = document.getElementById('fechaDiagnostico').value;
+            const tipoSangre = document.getElementById('tipoSangre').value;
+            const tipoDieta = document.getElementById('tipoDieta').value;
+            const alergias = document.getElementById('alergias').value;
+            const padecimiento = document.getElementById('padecimiento').value;
+            const imgInput = document.getElementById('input-img');
+            let imagen = null;
+            if (imgInput.files && imgInput.files[0]) {
+                imagen = imgInput.files[0];
+            }
+            if (!fechaDiagnostico || !tipoSangre || !tipoDieta || !padecimiento) {
+                Swal.showValidationMessage('Por favor completa todos los campos obligatorios');
+                return false;
+            }
+            // Enviar datos al backend
+            const formData = new FormData();
+            formData.append('fecha_diagnostico', fechaDiagnostico);
+            formData.append('tipo_sangre', tipoSangre);
+            formData.append('dieta', tipoDieta);
+            formData.append('alergias', alergias);
+            formData.append('padecimiento', padecimiento);
+            if (imagen) formData.append('imagen', imagen);
+            try {
+                const res = await fetch('PHP/actualizar-perfil-medico.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+                if (!result.success) throw new Error(result.message || 'Error al guardar');
+                return true;
+            } catch (err) {
+                Swal.showValidationMessage('Error al guardar: ' + err.message);
+                return false;
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire('¡Guardado!', 'Tu información médica ha sido actualizada.', 'success').then(() => {
+                location.reload();
+            });
+        }
     });
 }
 
@@ -418,5 +457,91 @@ function renderizarMedicamentos(medicamentos) {
             <span class="med-hora"><i class="bi bi-clock"></i> ${med.horarios ? med.horarios : ''}</span>
         `;
         lista.appendChild(li);
+    });
+}
+
+// Renderizar notificaciones
+function renderizarNotificaciones(notificaciones) {
+    const lista = document.querySelector('.lista-notis');
+    if (!lista) return;
+    lista.innerHTML = '';
+    if (!Array.isArray(notificaciones) || notificaciones.length === 0) {
+        lista.innerHTML = `<li class="text-muted">${window.i18n.isSpanish() ? 'Sin información' : 'No information'}</li>`;
+        return;
+    }
+    notificaciones.forEach(notif => {
+        const li = document.createElement('li');
+        li.className = 'd-flex justify-content-between align-items-center mb-2';
+        li.innerHTML = `
+            <span class="noti-txt">${notif.texto || ''}</span>
+            <span class="noti-hora">${notif.tiempo || ''}</span>
+        `;
+        lista.appendChild(li);
+    });
+}
+
+// Renderizar familia
+function renderizarFamilia(familia) {
+    const lista = document.querySelector('.lista-familia');
+    if (!lista) return;
+    lista.innerHTML = '';
+    if (!Array.isArray(familia) || familia.length === 0) {
+        lista.innerHTML = `<li class="text-muted">${window.i18n.isSpanish() ? 'Sin información' : 'No information'}</li>`;
+        return;
+    }
+    familia.forEach(fam => {
+        const li = document.createElement('li');
+        li.className = 'd-flex justify-content-between align-items-center mb-2';
+        li.innerHTML = `
+            <span class="fam-nombre">${fam.nombre || ''}${fam.parentesco ? ' (' + fam.parentesco + ')' : ''}</span>
+            <span class="fam-estado ${fam.en_linea ? 'text-success' : 'text-muted'}">${fam.en_linea ? (window.i18n.isSpanish() ? 'En línea' : 'Online') : (fam.ultimo_acceso || '')}</span>
+        `;
+        lista.appendChild(li);
+    });
+}
+
+// Modo oscuro: alternar clase en body y guardar preferencia
+const switchDarkMode = document.getElementById('switchDarkMode');
+if (switchDarkMode) {
+    // Al cargar, aplicar preferencia guardada
+    if (localStorage.getItem('modoOscuro') === 'true') {
+        document.body.classList.add('modo-oscuro');
+        switchDarkMode.checked = true;
+        aplicarClasesTarjetasOscuras();
+    }
+    switchDarkMode.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.add('modo-oscuro');
+            localStorage.setItem('modoOscuro', 'true');
+            aplicarClasesTarjetasOscuras();
+        } else {
+            document.body.classList.remove('modo-oscuro');
+            localStorage.setItem('modoOscuro', 'false');
+            removerClasesTarjetasOscuras();
+        }
+    });
+}
+
+// Función para aplicar clases de tarjetas oscuras
+function aplicarClasesTarjetasOscuras() {
+    const tarjetas = document.querySelectorAll('.tarjeta');
+    tarjetas.forEach((tarjeta, index) => {
+        // Remover clases pastel existentes
+        tarjeta.classList.remove('card-pastel-1', 'card-pastel-2', 'card-pastel-3', 'card-pastel-4', 'card-pastel-5');
+        // Agregar clase oscura correspondiente
+        const darkClass = `dark-card-${(index % 4) + 1}`;
+        tarjeta.classList.add(darkClass);
+    });
+}
+
+// Función para remover clases de tarjetas oscuras
+function removerClasesTarjetasOscuras() {
+    const tarjetas = document.querySelectorAll('.tarjeta');
+    tarjetas.forEach((tarjeta, index) => {
+        // Remover clases oscuras
+        tarjeta.classList.remove('dark-card-1', 'dark-card-2', 'dark-card-3', 'dark-card-4', 'dark-card-5');
+        // Restaurar clase pastel original
+        const pastelClass = `card-pastel-${(index % 4) + 1}`;
+        tarjeta.classList.add(pastelClass);
     });
 } 

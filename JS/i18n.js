@@ -17,6 +17,7 @@ class I18n {
                 'wizard.gender.male': 'Masculino',
                 'wizard.gender.female': 'Femenino',
                 'wizard.gender.other': 'Otro',
+                'wizard.gender.select': 'Selecciona tu género',
                 'wizard.country': 'País',
                 'wizard.country.placeholder': 'Ej: México',
                 'wizard.language': 'Idioma preferido',
@@ -25,6 +26,11 @@ class I18n {
                 'wizard.next': 'Siguiente',
                 'wizard.previous': 'Anterior',
                 'wizard.complete': 'Completar Registro',
+                'wizard.specialty.select': 'Selecciona la especialidad',
+                'wizard.phone.placeholder': 'Número de teléfono del médico',
+                'wizard.blood.type.select': 'Selecciona tu tipo de sangre',
+                'wizard.diet.select': 'Selecciona tu dieta',
+                'wizard.emergency.relation.select': 'Selecciona la relación',
 
                 // Wizard - Paso 2: Información Médica
                 'wizard.diagnosis.date': 'Fecha de diagnóstico',
@@ -175,6 +181,7 @@ class I18n {
                 'wizard.gender.male': 'Male',
                 'wizard.gender.female': 'Female',
                 'wizard.gender.other': 'Other',
+                'wizard.gender.select': 'Select your gender',
                 'wizard.country': 'Country',
                 'wizard.country.placeholder': 'Ex: United States',
                 'wizard.language': 'Preferred language',
@@ -183,6 +190,11 @@ class I18n {
                 'wizard.next': 'Next',
                 'wizard.previous': 'Previous',
                 'wizard.complete': 'Complete Registration',
+                'wizard.specialty.select': 'Select specialty',
+                'wizard.phone.placeholder': "Doctor's phone number",
+                'wizard.blood.type.select': 'Select your blood type',
+                'wizard.diet.select': 'Select your diet',
+                'wizard.emergency.relation.select': 'Select relationship',
 
                 // Wizard - Step 2: Medical Information
                 'wizard.diagnosis.date': 'Diagnosis date',
