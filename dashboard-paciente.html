@@ -50,64 +50,32 @@
     <main class="paciente-main container py-4">
         <div class="row g-4">
             <div class="col-12 col-md-4">
-                <section class="tarjeta perfil text-center p-4 mb-4">
+                <section class="tarjeta perfil text-center p-4 mb-4 card-pastel-1">
                     <div class="perfil-img mb-3">
-                        <img src="https://via.placeholder.com/100" alt="Foto de perfil" class="rounded-circle border border-3 border-primary shadow">
+                        <img src="https://ui-avatars.com/api/?name=Perfil&background=cccccc&color=222222&size=200" alt="Foto de perfil" class="rounded-circle border border-3 border-primary shadow">
                     </div>
                     <div class="perfil-info">
-                        <h2 id="patientName">Juan Pérez</h2>
-                        <p class="mb-1"><i class="bi bi-calendar"></i> <span id="patientAge">73 años</span></p>
-                        <p class="mb-1"><i class="bi bi-gender-ambiguous"></i> <span id="patientGender">Femenino</span></p>
-                        <p class="mb-1"><i class="bi bi-geo-alt"></i> <span id="patientCountry">México</span></p>
-                        <p class="mb-1"><i class="bi bi-translate"></i> <span id="patientLanguage">Español</span></p>
-                        <p class="mb-1"><i class="bi bi-droplet"></i> <span id="bloodType">O+</span></p>
-                        <p class="mb-1"><i class="bi bi-activity"></i> <span id="condition">Diabetes</span></p>
-                        <p class="mb-1"><i class="bi bi-calendar2-heart"></i> <span id="diagnosisDate">2022-01-01</span></p>
-                        <p class="mb-1"><i class="bi bi-person-badge"></i> <span id="doctorName">Dr. García</span></p>
-                        <p class="mb-1"><i class="bi bi-briefcase-medical"></i> <span id="doctorSpecialty">Cardiología</span></p>
-                        <p class="mb-1"><i class="bi bi-telephone"></i> <span id="doctorPhone">555-123-4567</span></p>
-                        <p class="mb-1"><i class="bi bi-egg-fried"></i> <span id="patientDiet">Normal</span></p>
-                        <p class="mb-1"><i class="bi bi-exclamation-triangle"></i> <span id="allergies">Ninguna</span></p>
-                        <p class="mb-1"><i class="bi bi-person-lines-fill"></i> <span id="emergencyContact">María Pérez (Hija)</span></p>
-                        <p class="mb-1"><i class="bi bi-telephone-forward"></i> <span id="emergencyPhone">+52 55 1234 5678</span></p>
+                        <h2 id="patientName"></h2>
+                        <p class="mb-1"><i class="bi bi-calendar"></i> <span id="patientAge"></span></p>
+                        <p class="mb-1"><i class="bi bi-gender-ambiguous"></i> <span id="patientGender"></span></p>
+                        <p class="mb-1"><i class="bi bi-geo-alt"></i> <span id="patientCountry"></span></p>
+                        <p class="mb-1"><i class="bi bi-translate"></i> <span id="patientLanguage"></span></p>
+                        <p class="mb-1"><i class="bi bi-droplet"></i> <span id="bloodType"></span></p>
+                        <p class="mb-1"><i class="bi bi-activity"></i> <span id="condition"></span></p>
+                        <p class="mb-1"><i class="bi bi-calendar2-heart"></i> <span id="diagnosisDate"></span></p>
+                        <p class="mb-1"><i class="bi bi-person-badge"></i> <span id="doctorName"></span></p>
+                        <p class="mb-1"><i class="bi bi-briefcase-medical"></i> <span id="doctorSpecialty"></span></p>
+                        <p class="mb-1"><i class="bi bi-telephone"></i> <span id="doctorPhone"></span></p>
+                        <p class="mb-1"><i class="bi bi-egg-fried"></i> <span id="patientDiet"></span></p>
+                        <p class="mb-1"><i class="bi bi-exclamation-triangle"></i> <span id="allergies"></span></p>
+                        <p class="mb-1"><i class="bi bi-person-lines-fill"></i> <span id="emergencyContact"></span></p>
+                        <p class="mb-1"><i class="bi bi-telephone-forward"></i> <span id="emergencyPhone"></span></p>
                         <button class="btn btn-outline-primary mt-3" onclick="editarPerfil()"><i class="bi bi-pencil"></i> Editar perfil</button>
                     </div>
                 </section>
             </div>
             <div class="col-12 col-md-8">
-                <section class="tarjeta citas p-4 mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3 class="mb-0"><i class="bi bi-calendar-check"></i> Próximas Citas</h3>
-                        <button class="btn btn-primary" onclick="agregarCita()"><i class="bi bi-plus"></i> Nueva Cita</button>
-                    </div>
-                    <ul class="lista-citas list-unstyled">
-                        <li class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="cita-fecha"><i class="bi bi-clock"></i> 15 Jun, 10:00 AM</span>
-                            <span class="cita-desc">Cardiología - Dr. García</span>
-                        </li>
-                        <li class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="cita-fecha"><i class="bi bi-clock"></i> 20 Jun, 3:30 PM</span>
-                            <span class="cita-desc">Control Diabetes - Dra. Martínez</span>
-                        </li>
-                    </ul>
-                </section>
-                <section class="tarjeta medicamentos p-4 mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3 class="mb-0"><i class="bi bi-capsule"></i> Medicamentos</h3>
-                        <button class="btn btn-primary" onclick="agregarMedicamento()"><i class="bi bi-plus"></i> Añadir Medicamento</button>
-                    </div>
-                    <ul class="lista-meds list-unstyled">
-                        <li class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="med-nombre">Metformina 500mg</span>
-                            <span class="med-hora"><i class="bi bi-clock"></i> 8:00 AM, 8:00 PM</span>
-                        </li>
-                        <li class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="med-nombre">Aspirina 100mg</span>
-                            <span class="med-hora"><i class="bi bi-clock"></i> 9:00 AM</span>
-                        </li>
-                    </ul>
-                </section>
-                <section class="tarjeta notificaciones p-4 mb-4">
+                <section class="tarjeta notificaciones p-4 mb-4 card-pastel-2">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3 class="mb-0"><i class="bi bi-bell"></i> Notificaciones</h3>
                     </div>
@@ -122,7 +90,7 @@
                         </li>
                     </ul>
                 </section>
-                <section class="tarjeta familia p-4 mb-4">
+                <section class="tarjeta familia p-4 mb-4 card-pastel-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3 class="mb-0"><i class="bi bi-people"></i> Familia</h3>
                         <button class="btn btn-outline-primary" onclick="invitarFamiliar()"><i class="bi bi-person-plus"></i> Invitar Familiar</button>
@@ -135,6 +103,21 @@
                         <li class="d-flex justify-content-between align-items-center mb-2">
                             <span class="fam-nombre">Carlos Pérez (Hijo)</span>
                             <span class="fam-estado text-muted">Última vez: hace 2h</span>
+                        </li>
+                    </ul>
+                </section>
+                <section class="tarjeta medicamentos p-4 mb-4 card-pastel-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0"><i class="bi bi-capsule"></i> Medicamentos</h3>
+                    </div>
+                    <ul class="lista-meds list-unstyled">
+                        <li class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="med-nombre">Metformina 500mg</span>
+                            <span class="med-hora"><i class="bi bi-clock"></i> 8:00 AM, 8:00 PM</span>
+                        </li>
+                        <li class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="med-nombre">Aspirina 100mg</span>
+                            <span class="med-hora"><i class="bi bi-clock"></i> 9:00 AM</span>
                         </li>
                     </ul>
                 </section>
