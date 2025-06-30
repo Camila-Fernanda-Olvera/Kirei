@@ -33,59 +33,53 @@ if (empty($codigo)) {
     exit();
 }
 
-// Verificar que el usuario sea un paciente
-$stmt = $conn->prepare('SELECT tipo_usuario FROM usuarios WHERE id = ?');
+// Verificar que el usuario es familiar
+$stmt = $conn->prepare('SELECT email, tipo_usuario FROM usuarios WHERE id = ?');
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
 
-if (!$user || $user['tipo_usuario'] !== 'paciente') {
+if (!$user || $user['tipo_usuario'] !== 'familiar') {
     echo json_encode([
         'success' => false,
-        'message' => 'Solo los pacientes pueden generar códigos de vinculación'
+        'message' => 'Solo familiares pueden vincularse'
     ]);
     exit();
 }
+$email_familiar = $user['email'];
 
-// Verificar si el código ya existe
-$stmt = $conn->prepare('SELECT id FROM codigos_vinculacion WHERE codigo = ?');
+// Buscar paciente con ese código de vinculación válido
+$stmt = $conn->prepare('SELECT user_id FROM datos_paciente WHERE codigo_vinculacion = ?');
 $stmt->bind_param('s', $codigo);
 $stmt->execute();
 $result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'El código ya existe, por favor genera uno nuevo'
-    ]);
-    $stmt->close();
-    exit();
-}
+$paciente = $result->fetch_assoc();
 $stmt->close();
 
-// Calcular fecha de expiración (7 días desde ahora)
-$fecha_expiracion = date('Y-m-d H:i:s', strtotime('+7 days'));
+if (!$paciente) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Código de vinculación incorrecto o expirado.'
+    ]);
+    exit();
+}
 
-// Insertar el código de vinculación
-$stmt = $conn->prepare('INSERT INTO codigos_vinculacion (codigo, user_id, fecha_expiracion) VALUES (?, ?, ?)');
-$stmt->bind_param('sis', $codigo, $user_id, $fecha_expiracion);
-
+// Actualizar familiar_email y eliminar el código de vinculación para que no se reutilice
+$stmt = $conn->prepare('UPDATE datos_paciente SET familiar_email = ?, codigo_vinculacion = NULL WHERE user_id = ?');
+$stmt->bind_param('si', $email_familiar, $paciente['user_id']);
 if ($stmt->execute()) {
     echo json_encode([
         'success' => true,
-        'message' => 'Código de vinculación guardado correctamente',
-        'codigo' => $codigo,
-        'fecha_expiracion' => $fecha_expiracion
+        'message' => 'Vinculación exitosa.'
     ]);
 } else {
     echo json_encode([
         'success' => false,
-        'message' => 'Error al guardar el código de vinculación: ' . $conn->error
+        'message' => 'No se pudo vincular el familiar.'
     ]);
 }
-
 $stmt->close();
 $conn->close();
 ?> 
