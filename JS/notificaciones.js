@@ -45,14 +45,8 @@ class SistemaNotificaciones {
         if (!document.getElementById('toast-container')) {
             const container = document.createElement('div');
             container.id = 'toast-container';
-            container.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 9999;
-                max-width: 400px;
-                pointer-events: none;
-            `;
+            container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+            container.style.zIndex = '10800';
             document.body.appendChild(container);
         }
     }
@@ -149,30 +143,15 @@ class SistemaNotificaciones {
     }
 
     mostrarNotificacion(notificacion) {
-        // Verificar si las notificaciones están activas para este tipo
-        if (!this.estaNotificacionActiva(notificacion.tipo)) {
-            return;
-        }
-
-        // Verificar horario de silencio
-        if (this.estaEnHorarioSilencio()) {
-            return;
-        }
-
-        // Crear y mostrar toast
-        const toast = this.crearToast(notificacion);
+        if (!this.estaNotificacionActiva(notificacion.tipo)) return;
+        if (this.estaEnHorarioSilencio()) return;
+        const toast = this.crearToastBootstrap(notificacion);
         this.agregarToastAlContainer(toast);
-
-        // Reproducir sonido
         this.reproducirSonido(notificacion.tipo);
-
-        // Vibración (si está disponible)
         this.vibrar(notificacion.tipo);
-
-        // Auto-ocultar después de 8 segundos
-        setTimeout(() => {
-            this.ocultarToast(toast);
-        }, 8000);
+        // Mostrar el toast con Bootstrap
+        const bsToast = new bootstrap.Toast(toast, { delay: 6000 });
+        bsToast.show();
     }
 
     estaNotificacionActiva(tipo) {
@@ -213,44 +192,28 @@ class SistemaNotificaciones {
         return horas * 60 + minutos;
     }
 
-    crearToast(notificacion) {
-        const toast = document.createElement('div');
-        toast.className = 'kirei-toast';
-        toast.dataset.notificacionId = notificacion.id;
-        
+    crearToastBootstrap(notificacion) {
         const icono = this.obtenerIconoNotificacion(notificacion.tipo);
         const color = this.obtenerColorNotificacion(notificacion.tipo);
-        
+        const toast = document.createElement('div');
+        toast.className = 'toast align-items-center text-bg-light border-0 shadow';
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
         toast.innerHTML = `
-            <div class="toast-header" style="background: ${color};">
-                <i class="bi ${icono}"></i>
-                <span class="toast-title">${notificacion.titulo}</span>
-                <button class="toast-close" onclick="sistemaNotificaciones.ocultarToast(this.parentElement.parentElement)">
-                    <i class="bi bi-x"></i>
-                </button>
+            <div class="toast-header" style="background: ${color}; color: #fff;">
+                <i class="bi ${icono} me-2"></i>
+                <strong class="me-auto">${notificacion.titulo}</strong>
+                <small class="text-light">Ahora</small>
+                <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast" aria-label="Cerrar"></button>
             </div>
             <div class="toast-body">
-                <p class="toast-message">${notificacion.mensaje}</p>
-                <div class="toast-actions">
+                <div>${notificacion.mensaje}</div>
+                <div class="mt-2">
                     ${this.obtenerBotonesAccion(notificacion)}
                 </div>
             </div>
         `;
-        
-        toast.style.cssText = `
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            margin-bottom: 12px;
-            overflow: hidden;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            pointer-events: auto;
-            border: 2px solid ${color};
-            max-width: 380px;
-        `;
-        
         return toast;
     }
 
@@ -313,20 +276,6 @@ class SistemaNotificaciones {
     agregarToastAlContainer(toast) {
         const container = document.getElementById('toast-container');
         container.appendChild(toast);
-        
-        // Animación de entrada
-        setTimeout(() => {
-            toast.style.transform = 'translateX(0)';
-        }, 100);
-    }
-
-    ocultarToast(toast) {
-        toast.style.transform = 'translateX(100%)';
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.parentElement.removeChild(toast);
-            }
-        }, 300);
     }
 
     reproducirSonido(tipo) {
