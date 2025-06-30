@@ -1,15 +1,3 @@
--- =====================================================
--- KIREI - Sistema de Monitoreo de Pacientes
--- Base de Datos - Tablas Actualizadas (Medicamentos, Citas, Bienestar, Parentesco)
--- =====================================================
-
--- Crear la base de datos si no existe
-CREATE DATABASE IF NOT EXISTS `kirei` 
-CHARACTER SET utf8mb4 
-COLLATE utf8mb4_unicode_ci;
-
--- Usar la base de datos
-USE `kirei`;
 
 -- Crear tabla de usuarios (ahora con parentesco)
 CREATE TABLE IF NOT EXISTS `usuarios` (

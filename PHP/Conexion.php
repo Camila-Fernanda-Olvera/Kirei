@@ -1,9 +1,9 @@
 <?php
-// Configuración de la base de datos para AwardSpace
-$host = 'fdb1033.awardspace.net';
-$user = '4654255_kirei';
-$pass = '07081214Cf?';
-$db = '4654255_kirei';
+// Configuración de la base de datos
+$host = 'localhost';
+$user = 'root';
+$pass = '';
+$db = 'kirei';
 
 // Crear conexión
 $conexion = new mysqli($host, $user, $pass, $db);

@@ -51,7 +51,7 @@ function procesarRecordatoriosMedicamentos() {
                       VALUES (?, 'medicamento', 'Recordatorio de medicamento', ?, ?, 'alta', ?)";
         
         $stmt_notif = $conexion->prepare($sql_notif);
-        $stmt_notif->bind_param('iss', $row['usuario_id'], $row['medicamento_nombre'], $datos_adicionales, $ahora);
+        $stmt_notif->bind_param('isss', $row['usuario_id'], $row['medicamento_nombre'], $datos_adicionales, $ahora);
         $stmt_notif->execute();
         
         // Actualizar próximo recordatorio
@@ -105,7 +105,7 @@ function procesarNotificacionesCitas() {
                       VALUES (?, 'cita', 'Recordatorio de cita', ?, ?, 'media', ?)";
         
         $stmt_notif = $conexion->prepare($sql_notif);
-        $stmt_notif->bind_param('iss', $row['id_paciente'], $row['medico'], $datos_adicionales, $ahora);
+        $stmt_notif->bind_param('isss', $row['id_paciente'], $row['medico'], $datos_adicionales, $ahora);
         $stmt_notif->execute();
     }
 }

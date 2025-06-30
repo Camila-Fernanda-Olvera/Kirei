@@ -42,6 +42,9 @@ try {
         case 'procesar_recordatorios':
             procesarRecordatoriosMedicamentos();
             break;
+        case 'crear':
+            crearNotificacion($user_id);
+            break;
         default:
             echo json_encode(['success' => false, 'message' => 'Acción no válida']);
     }
@@ -447,5 +450,24 @@ function crearNotificacionCita($usuario_id, $cita_data) {
     $stmt->bind_param('iss', $usuario_id, $cita_data['medico'], $datos_adicionales, $fecha_notificacion);
     
     return $stmt->execute();
+}
+
+function crearNotificacion($user_id) {
+    global $conexion;
+    
+    $tipo = $_POST['tipo'] ?? 'recordatorio';
+    $titulo = $_POST['titulo'] ?? 'Alerta';
+    $mensaje = $_POST['mensaje'] ?? '';
+    $prioridad = $_POST['prioridad'] ?? 'media';
+    
+    $sql = "INSERT INTO notificaciones (usuario_id, tipo, titulo, mensaje, prioridad) VALUES (?,?,?,?,?)";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param('issss', $user_id, $tipo, $titulo, $mensaje, $prioridad);
+    if ($stmt->execute()) {
+        echo json_encode(['success'=>true, 'id'=>$conexion->insert_id]);
+        exit;
+    }
+    echo json_encode(['success'=>false, 'message'=>'Error al crear notificación']);
+    exit;
 }
 ?> 

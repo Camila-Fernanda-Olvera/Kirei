@@ -17,16 +17,16 @@ if (!$medico || !$fecha_hora) {
     echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios']);
     exit();
 }
-$stmt = $conn->prepare('INSERT INTO citas (id_paciente, medico, especialidad, motivo, sede, fecha_hora) VALUES (?, ?, ?, ?, ?, ?)');
+$stmt = $conexion->prepare('INSERT INTO citas (id_paciente, medico, especialidad, motivo, sede, fecha_hora) VALUES (?, ?, ?, ?, ?, ?)');
 $stmt->bind_param('isssss', $user_id, $medico, $especialidad, $motivo, $sede, $fecha_hora);
 if ($stmt->execute()) {
     echo json_encode(['success' => true]);
     $stmt->close();
-    $conn->close();
+    $conexion->close();
     exit();
 } else {
-    echo json_encode(['success' => false, 'message' => 'Error al guardar: ' . $conn->error]);
+    echo json_encode(['success' => false, 'message' => 'Error al guardar: ' . $conexion->error]);
     $stmt->close();
-    $conn->close();
+    $conexion->close();
     exit();
 } 

@@ -19,7 +19,7 @@ $password = $data['password'] ?? '';
 // Validar datos básicos
 if ($email && $password) {
     // Buscar usuario en la base de datos
-    $stmt = $conn->prepare('SELECT id, nombre, email, password, tipo_usuario FROM usuarios WHERE email = ?');
+    $stmt = $conexion->prepare('SELECT id, nombre, email, password, tipo_usuario FROM usuarios WHERE email = ?');
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -38,7 +38,7 @@ if ($email && $password) {
             // Si es paciente, verificar si ya tiene datos completos
             $perfil_completo = false;
             if ($user['tipo_usuario'] === 'paciente') {
-                $stmt2 = $conn->prepare('SELECT id FROM datos_paciente WHERE user_id = ?');
+                $stmt2 = $conexion->prepare('SELECT id FROM datos_paciente WHERE user_id = ?');
                 $stmt2->bind_param('i', $user['id']);
                 $stmt2->execute();
                 $result2 = $stmt2->get_result();
@@ -74,5 +74,5 @@ if ($email && $password) {
     ]);
 }
 
-$conn->close();
+$conexion->close();
 ?> 

@@ -22,7 +22,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Verificar que el usuario sea un paciente
-$stmt = $conn->prepare('SELECT tipo_usuario FROM usuarios WHERE id = ?');
+$stmt = $conexion->prepare('SELECT tipo_usuario FROM usuarios WHERE id = ?');
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -38,7 +38,7 @@ if (!$user || $user['tipo_usuario'] !== 'paciente') {
 }
 
 // Verificar si el paciente ya tiene datos completos
-$stmt = $conn->prepare('SELECT * FROM datos_paciente WHERE user_id = ?');
+$stmt = $conexion->prepare('SELECT * FROM datos_paciente WHERE user_id = ?');
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -47,7 +47,7 @@ $stmt->close();
 
 if ($datos_paciente) {
     // Obtener medicamentos reales del paciente
-    $stmt = $conn->prepare('SELECT * FROM medicamentos WHERE id_paciente = ?');
+    $stmt = $conexion->prepare('SELECT * FROM medicamentos WHERE id_paciente = ?');
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $resultMeds = $stmt->get_result();
@@ -58,7 +58,7 @@ if ($datos_paciente) {
     $stmt->close();
 
     // Obtener el nombre, padecimiento e imagen del usuario
-    $stmt = $conn->prepare('SELECT nombre, padecimiento, imagen FROM usuarios WHERE id = ?');
+    $stmt = $conexion->prepare('SELECT nombre, padecimiento, imagen FROM usuarios WHERE id = ?');
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $resultP = $stmt->get_result();
@@ -90,5 +90,5 @@ if ($datos_paciente) {
     ]);
 }
 
-$conn->close();
+$conexion->close();
 ?> 

@@ -4,91 +4,145 @@ document.addEventListener('DOMContentLoaded', function() {
     cargarBienestar();
     document.getElementById('bienestar-crud').innerHTML = `
         <div class="tarjeta card-pastel-2 p-4 mb-4 shadow">
-            <h3 class="mb-4 d-flex align-items-center" style="font-weight:800;"><i class="bi bi-activity me-2 text-primary"></i>Registros de Bienestar</h3>
-            <form id="formBienestar" class="row g-3 mb-4">
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-droplet-half"></i></span>
-                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="glucosa" placeholder="Glucosa (mg/dL)" required title="Nivel de glucosa en sangre">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-heart-pulse"></i></span>
-                    <input type="text" class="form-control ps-5" id="presion" placeholder="Presión arterial (mmHg)" title="Ejemplo: 120/80">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-activity"></i></span>
-                    <input type="number" min="0" class="form-control ps-5" id="fc" placeholder="Frec. Cardíaca (bpm)" title="Frecuencia cardíaca">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-shoe-prints"></i></span>
-                    <input type="number" min="0" class="form-control ps-5" id="pasos" placeholder="Pasos" title="Cantidad de pasos diarios">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-person-fill"></i></span>
-                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="peso" placeholder="Peso (kg)" title="Peso corporal">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-bar-chart"></i></span>
-                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="imc" placeholder="IMC" title="Índice de Masa Corporal">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-droplet"></i></span>
-                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="saturacion" placeholder="Sat. O2 (%)" title="Saturación de oxígeno">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-thermometer-half"></i></span>
-                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="temp" placeholder="Temp. (°C)" title="Temperatura corporal">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-calendar-event"></i></span>
-                    <input type="date" class="form-control ps-5" id="fecha" required title="Fecha del registro">
-                </div>
-                <div class="col-md-12 d-flex justify-content-end">
-                    <button type="submit" class="btn btn-outline-primary btn-lg px-5 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>Agregar</button>
-                </div>
-            </form>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle tarjeta card-pastel-3" id="tablaBienestar">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Fecha</th><th>Glucosa</th><th>Presión</th><th>FC</th><th>Pasos</th><th>Peso</th><th>IMC</th><th>Sat. O2</th><th>Temp.</th><th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="d-flex align-items-center mb-0" style="font-weight:800;"><i class="bi bi-activity me-2 text-primary"></i>Registros de Bienestar</h3>
+                <button class="btn btn-outline-primary btn-lg px-4 py-2 rounded-pill shadow" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFormBienestar" aria-expanded="false" aria-controls="collapseFormBienestar">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar registro
+                </button>
             </div>
+            <div class="collapse glass-form-bg" id="collapseFormBienestar" style="background:rgba(200,230,255,0.85);border-radius:18px;box-shadow:0 4px 20px rgba(77,191,201,0.10);padding:1.5rem 1rem 1rem 1rem;">
+                <form id="formBienestar" class="row g-3 mb-2">
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-droplet-half"></i></span>
+                        <input type="number" step="0.1" min="0" class="form-control ps-5 glass-input" id="glucosa" placeholder="Glucosa (mg/dL)" required title="Nivel de glucosa en sangre" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-heart-pulse"></i></span>
+                        <input type="text" class="form-control ps-5 glass-input" id="presion" placeholder="Presión arterial (mmHg)" title="Ejemplo: 120/80" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-activity"></i></span>
+                        <input type="number" min="0" class="form-control ps-5 glass-input" id="fc" placeholder="Frec. Cardíaca (bpm)" title="Frecuencia cardíaca" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-shoe-prints"></i></span>
+                        <input type="number" min="0" class="form-control ps-5 glass-input" id="pasos" placeholder="Pasos" title="Cantidad de pasos diarios" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-person-fill"></i></span>
+                        <input type="number" step="0.1" min="0" class="form-control ps-5 glass-input" id="peso" placeholder="Peso (kg)" title="Peso corporal" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-bar-chart"></i></span>
+                        <input type="number" step="0.1" min="0" class="form-control ps-5 glass-input" id="imc" placeholder="IMC" title="Índice de Masa Corporal" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-droplet"></i></span>
+                        <input type="number" step="0.1" min="0" class="form-control ps-5 glass-input" id="saturacion" placeholder="Sat. O2 (%)" title="Saturación de oxígeno" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-thermometer-half"></i></span>
+                        <input type="number" step="0.1" min="0" class="form-control ps-5 glass-input" id="temp" placeholder="Temp. (°C)" title="Temperatura corporal" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-calendar-event"></i></span>
+                        <input type="date" class="form-control ps-5 glass-input" id="fecha" required title="Fecha del registro" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-12 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-outline-primary btn px-4 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>Agregar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="mb-3 d-flex gap-2">
+                <button class="btn btn-outline-primary" id="btnVistaTarjetasBienestar"><i class="bi bi-grid-3x3-gap"></i> Tarjetas</button>
+                <button class="btn btn-outline-secondary" id="btnVistaTablaBienestar"><i class="bi bi-table"></i> Tabla</button>
+            </div>
+            <div id="contenedorBienestarVista"></div>
         </div>
     `;
-    document.getElementById('formBienestar').onsubmit = guardarBienestar;
+    document.getElementById('formBienestar').onsubmit = function(e) {
+        guardarBienestar(e);
+        setTimeout(function() {
+            var collapse = bootstrap.Collapse.getOrCreateInstance(document.getElementById('collapseFormBienestar'));
+            collapse.hide();
+        }, 400);
+    };
+    // Alternancia de vista
+    document.getElementById('btnVistaTarjetasBienestar').onclick = function() {
+        localStorage.setItem('bienestarVista', 'tarjetas');
+        renderBienestarVista();
+    };
+    document.getElementById('btnVistaTablaBienestar').onclick = function() {
+        localStorage.setItem('bienestarVista', 'tabla');
+        renderBienestarVista();
+    };
+    renderBienestarVista();
 });
 
-// Cargar registros de bienestar
-function cargarBienestar() {
+function renderBienestarVista() {
+    const vista = localStorage.getItem('bienestarVista') || 'tarjetas';
+    const btnTarjetas = document.getElementById('btnVistaTarjetasBienestar');
+    const btnTabla = document.getElementById('btnVistaTablaBienestar');
+    if (btnTarjetas) btnTarjetas.classList.toggle('btn-primary', vista==='tarjetas');
+    if (btnTabla) btnTabla.classList.toggle('btn-primary', vista==='tabla');
     fetch('PHP/bienestar.php?action=list')
         .then(r => r.json())
         .then(data => {
-            const tbody = document.querySelector('#tablaBienestar tbody');
-            tbody.innerHTML = '';
-            if (data.success && Array.isArray(data.registros)) {
+            const cont = document.getElementById('contenedorBienestarVista');
+            if (!data.success || !Array.isArray(data.registros) || data.registros.length === 0) {
+                cont.innerHTML = '<div class="text-muted text-center">Sin registros</div>';
+                return;
+            }
+            if (vista === 'tarjetas') {
+                const ul = document.createElement('ul');
+                ul.className = 'lista-bienestar list-unstyled';
                 data.registros.forEach(reg => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${reg.fecha_registro.split(' ')[0]}</td>
-                            <td>${reg.glucosa ?? '-'}</td>
-                            <td>${reg.presion_arterial ?? '-'}</td>
-                            <td>${reg.frecuencia_cardiaca ?? '-'}</td>
-                            <td>${reg.pasos_diarios ?? '-'}</td>
-                            <td>${reg.peso ?? '-'}</td>
-                            <td>${reg.imc ?? '-'}</td>
-                            <td>${reg.saturacion_oxigeno ?? '-'}</td>
-                            <td>${reg.temperatura_corporal ?? '-'}</td>
-                            <td>
-                                <button class='btn btn-outline-warning btn-sm me-1' onclick='editarBienestar(${JSON.stringify(reg)})'><i class='bi bi-pencil'></i></button>
-                                <button class='btn btn-outline-danger btn-sm' onclick='eliminarBienestar(${reg.id})'><i class='bi bi-trash'></i></button>
-                            </td>
-                        </tr>`;
+                    const li = document.createElement('li');
+                    li.className = 'd-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 tarjeta card-pastel-3 p-3';
+                    li.innerHTML = `
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-calendar-event"></i> ${reg.fecha_registro.split(' ')[0]}</span>
+                            <span class="ms-3"><i class="bi bi-droplet-half"></i> Glucosa: <b>${reg.glucosa ?? '-'}</b></span>
+                            <span class="ms-3"><i class="bi bi-heart-pulse"></i> FC: <b>${reg.frecuencia_cardiaca ?? '-'}</b></span>
+                            <span class="ms-3"><i class="bi bi-thermometer-half"></i> Temp: <b>${reg.temperatura_corporal ?? '-'}</b></span>
+                            <span class="ms-3"><i class="bi bi-bar-chart"></i> IMC: <b>${reg.imc ?? '-'}</b></span>
+                            <span class="ms-3"><i class="bi bi-person-fill"></i> Peso: <b>${reg.peso ?? '-'}</b></span>
+                            <span class="ms-3"><i class="bi bi-shoe-prints"></i> Pasos: <b>${reg.pasos_diarios ?? '-'}</b></span>
+                            <span class="ms-3"><i class="bi bi-droplet"></i> Sat. O2: <b>${reg.saturacion_oxigeno ?? '-'}</b></span>
+                            <span class="ms-3"><i class="bi bi-activity"></i> Presión: <b>${reg.presion_arterial ?? '-'}</b></span>
+                        </div>
+                        <div class="mt-2 mt-md-0">
+                            <button class='btn btn-outline-warning btn-sm me-1' onclick='editarBienestar(${JSON.stringify(reg)})'><i class='bi bi-pencil'></i></button>
+                            <button class='btn btn-outline-danger btn-sm' onclick='eliminarBienestar(${reg.id})'><i class='bi bi-trash'></i></button>
+                        </div>
+                    `;
+                    ul.appendChild(li);
                 });
+                cont.innerHTML = '';
+                cont.appendChild(ul);
             } else {
-                tbody.innerHTML = `<tr><td colspan='10' class='text-muted text-center'>Sin registros</td></tr>`;
+                // Tabla
+                let html = `<div class="table-responsive"><table class="table table-striped table-hover align-middle shadow tarjeta card-pastel-3"><thead><tr>
+                    <th>Fecha</th><th>Glucosa</th><th>Presión</th><th>FC</th><th>Temp</th><th>IMC</th><th>Peso</th><th>Pasos</th><th>Sat. O2</th><th>Acciones</th></tr></thead><tbody>`;
+                data.registros.forEach(reg => {
+                    html += `<tr>
+                        <td>${reg.fecha_registro.split(' ')[0]}</td>
+                        <td>${reg.glucosa ?? '-'}</td>
+                        <td>${reg.presion_arterial ?? '-'}</td>
+                        <td>${reg.frecuencia_cardiaca ?? '-'}</td>
+                        <td>${reg.temperatura_corporal ?? '-'}</td>
+                        <td>${reg.imc ?? '-'}</td>
+                        <td>${reg.peso ?? '-'}</td>
+                        <td>${reg.pasos_diarios ?? '-'}</td>
+                        <td>${reg.saturacion_oxigeno ?? '-'}</td>
+                        <td>
+                            <button class='btn btn-outline-warning btn-sm me-1' onclick='editarBienestar(${JSON.stringify(reg)})'><i class='bi bi-pencil'></i></button>
+                            <button class='btn btn-outline-danger btn-sm' onclick='eliminarBienestar(${reg.id})'><i class='bi bi-trash'></i></button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table></div>';
+                cont.innerHTML = html;
             }
         });
 }
@@ -126,8 +180,16 @@ function mostrarAlertaBienestar(datos) {
                 datos_adicionales: null
             });
         } else {
-            // Fallback visual
-            alert('¡Alerta de Bienestar!\n' + alertas.join('\n'));
+            // Fallback visual: usar SweetAlert2 en vez de alert
+            Swal.fire({
+                icon: 'warning',
+                title: '¡Alerta de Bienestar!',
+                html: alertas.join('<br>'),
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#dc3545',
+                background: document.body.classList.contains('modo-oscuro') ? '#223A4E' : '#fff',
+                color: document.body.classList.contains('modo-oscuro') ? '#F8FAFF' : '#23404A'
+            });
         }
         // Registrar en la base de datos (notificaciones)
         fetch('PHP/notificaciones.php', {
@@ -270,85 +332,140 @@ document.addEventListener('DOMContentLoaded', function() {
 function renderMedicamentosUI() {
     document.getElementById('medicamentos-crud').innerHTML = `
         <div class="tarjeta card-pastel-2 p-4 mb-4 shadow">
-            <h3 class="mb-4 d-flex align-items-center" style="font-weight:800;"><i class="bi bi-capsule me-2 text-primary"></i>Mis Medicamentos</h3>
-            <form id="formMedicamento" class="row g-3 mb-4">
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-capsule"></i></span>
-                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medNombre" placeholder="Nombre" required title="Nombre del medicamento">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-clipboard-heart"></i></span>
-                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medTipo" placeholder="Tipo" title="Tipo de medicamento">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-droplet-half"></i></span>
-                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medDosis" placeholder="Dosis" title="Dosis recomendada">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-clock-history"></i></span>
-                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medFrecuencia" placeholder="Frecuencia" title="Frecuencia de toma">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-alarm"></i></span>
-                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medHorarios" placeholder="Horarios" title="Ejemplo: 08:00, 14:00">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-calendar-event"></i></span>
-                    <input type="date" class="form-control ps-5 bg-info bg-opacity-10" id="medInicio" placeholder="Inicio" title="Fecha de inicio">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-calendar-x"></i></span>
-                    <input type="date" class="form-control ps-5 bg-info bg-opacity-10" id="medFin" placeholder="Fin" title="Fecha de fin">
-                </div>
-                <div class="col-md-4 position-relative">
-                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-info-circle"></i></span>
-                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medIndicaciones" placeholder="Indicaciones" title="Indicaciones adicionales">
-                </div>
-                <div class="col-md-12 d-flex justify-content-end">
-                    <button type="submit" class="btn btn-outline-primary btn-lg px-5 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>Agregar</button>
-                </div>
-            </form>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle tarjeta card-pastel-3" id="tablaMedicamentos">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Nombre</th><th>Tipo</th><th>Dosis</th><th>Frecuencia</th><th>Horarios</th><th>Inicio</th><th>Fin</th><th>Indicaciones</th><th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="d-flex align-items-center mb-0" style="font-weight:800;"><i class="bi bi-capsule me-2 text-primary"></i>Mis Medicamentos</h3>
+                <button class="btn btn-outline-primary btn-lg px-4 py-2 rounded-pill shadow" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFormMedicamento" aria-expanded="false" aria-controls="collapseFormMedicamento">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar medicamento
+                </button>
             </div>
+            <div class="collapse glass-form-bg" id="collapseFormMedicamento" style="background:rgba(200,230,255,0.85);border-radius:18px;box-shadow:0 4px 20px rgba(77,191,201,0.10);padding:1.5rem 1rem 1rem 1rem;">
+                <form id="formMedicamento" class="row g-3 mb-2">
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-capsule"></i></span>
+                        <input type="text" class="form-control ps-5 glass-input" id="medNombre" placeholder="Nombre" required title="Nombre del medicamento" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-clipboard-heart"></i></span>
+                        <input type="text" class="form-control ps-5 glass-input" id="medTipo" placeholder="Tipo" title="Tipo de medicamento" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-droplet-half"></i></span>
+                        <input type="text" class="form-control ps-5 glass-input" id="medDosis" placeholder="Dosis" title="Dosis recomendada" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-clock-history"></i></span>
+                        <input type="text" class="form-control ps-5 glass-input" id="medFrecuencia" placeholder="Frecuencia" title="Frecuencia de toma" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-alarm"></i></span>
+                        <input type="text" class="form-control ps-5 glass-input" id="medHorarios" placeholder="Horarios" title="Ejemplo: 08:00, 14:00" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-calendar-event"></i></span>
+                        <input type="date" class="form-control ps-5 glass-input" id="medInicio" placeholder="Inicio" title="Fecha de inicio" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-calendar-x"></i></span>
+                        <input type="date" class="form-control ps-5 glass-input" id="medFin" placeholder="Fin" title="Fecha de fin" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-4 position-relative">
+                        <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;background:transparent;"><i class="bi bi-info-circle"></i></span>
+                        <input type="text" class="form-control ps-5 glass-input" id="medIndicaciones" placeholder="Indicaciones" title="Indicaciones adicionales" style="background:rgba(143,179,226,0.18);">
+                    </div>
+                    <div class="col-md-12 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-outline-primary btn px-4 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>Agregar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="mb-3 d-flex gap-2">
+                <button class="btn btn-outline-primary" id="btnVistaTarjetasMedicamentos"><i class="bi bi-grid-3x3-gap"></i> Tarjetas</button>
+                <button class="btn btn-outline-secondary" id="btnVistaTablaMedicamentos"><i class="bi bi-table"></i> Tabla</button>
+            </div>
+            <div id="contenedorMedicamentosVista"></div>
         </div>
     `;
-    document.getElementById('formMedicamento').onsubmit = guardarMedicamento;
+    document.getElementById('formMedicamento').onsubmit = function(e) {
+        guardarMedicamento(e);
+        setTimeout(function() {
+            var collapse = bootstrap.Collapse.getOrCreateInstance(document.getElementById('collapseFormMedicamento'));
+            collapse.hide();
+        }, 400);
+    };
+    setTimeout(agregarTooltipsMedicamentos, 300);
+    // Alternancia de vista
+    document.getElementById('btnVistaTarjetasMedicamentos').onclick = function() {
+        localStorage.setItem('medicamentosVista', 'tarjetas');
+        renderMedicamentosVista();
+    };
+    document.getElementById('btnVistaTablaMedicamentos').onclick = function() {
+        localStorage.setItem('medicamentosVista', 'tabla');
+        renderMedicamentosVista();
+    };
+    renderMedicamentosVista();
 }
 
-function cargarMedicamentos() {
+function renderMedicamentosVista() {
+    const vista = localStorage.getItem('medicamentosVista') || 'tarjetas';
+    const btnTarjetas = document.getElementById('btnVistaTarjetasMedicamentos');
+    const btnTabla = document.getElementById('btnVistaTablaMedicamentos');
+    if (btnTarjetas) btnTarjetas.classList.toggle('btn-primary', vista==='tarjetas');
+    if (btnTabla) btnTabla.classList.toggle('btn-primary', vista==='tabla');
     fetch('PHP/medicamentos.php?action=list')
         .then(r => r.json())
         .then(data => {
-            const tbody = document.querySelector('#tablaMedicamentos tbody');
-            tbody.innerHTML = '';
-            if (data.success && Array.isArray(data.medicamentos)) {
+            const cont = document.getElementById('contenedorMedicamentosVista');
+            if (!data.success || !Array.isArray(data.medicamentos) || data.medicamentos.length === 0) {
+                cont.innerHTML = '<div class="text-muted text-center">Sin registros</div>';
+                return;
+            }
+            if (vista === 'tarjetas') {
+                const ul = document.createElement('ul');
+                ul.className = 'lista-meds list-unstyled';
                 data.medicamentos.forEach(med => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${med.nombre ?? '-'}</td>
-                            <td>${med.tipo ?? '-'}</td>
-                            <td>${med.dosis ?? '-'}</td>
-                            <td>${med.frecuencia ?? '-'}</td>
-                            <td>${med.horarios ?? '-'}</td>
-                            <td>${med.inicio ?? '-'}</td>
-                            <td>${med.fin ?? '-'}</td>
-                            <td>${med.indicaciones ?? '-'}</td>
-                            <td>
-                                <button class='btn btn-outline-warning btn-sm me-1' onclick='editarMedicamento(${JSON.stringify(med)})'><i class='bi bi-pencil'></i></button>
-                                <button class='btn btn-outline-danger btn-sm' onclick='eliminarMedicamento(${med.id})'><i class='bi bi-trash'></i></button>
-                            </td>
-                        </tr>`;
+                    const li = document.createElement('li');
+                    li.className = 'd-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 tarjeta card-pastel-4 p-3';
+                    li.innerHTML = `
+                        <div>
+                            <span class="fw-bold"><i class="bi bi-capsule"></i> ${med.nombre ?? '-'}</span>
+                            <span class="ms-3"><i class="bi bi-clipboard-heart"></i> ${med.tipo ?? '-'}</span>
+                            <span class="ms-3"><i class="bi bi-droplet-half"></i> ${med.dosis ?? '-'}</span>
+                            <span class="ms-3"><i class="bi bi-clock-history"></i> ${med.frecuencia ?? '-'}</span>
+                            <span class="ms-3"><i class="bi bi-alarm"></i> ${med.horarios ?? '-'}</span>
+                            <span class="ms-3"><i class="bi bi-calendar-event"></i> ${med.inicio ?? '-'}</span>
+                            <span class="ms-3"><i class="bi bi-calendar-x"></i> ${med.fin ?? '-'}</span>
+                            <span class="ms-3"><i class="bi bi-info-circle"></i> ${med.indicaciones ?? '-'}</span>
+                        </div>
+                        <div class="mt-2 mt-md-0">
+                            <button class='btn btn-outline-warning btn-sm me-1' onclick='editarMedicamento(${JSON.stringify(med)})'><i class='bi bi-pencil'></i></button>
+                            <button class='btn btn-outline-danger btn-sm' onclick='eliminarMedicamento(${med.id})'><i class='bi bi-trash'></i></button>
+                        </div>
+                    `;
+                    ul.appendChild(li);
                 });
+                cont.innerHTML = '';
+                cont.appendChild(ul);
             } else {
-                tbody.innerHTML = `<tr><td colspan='9' class='text-muted text-center'>Sin registros</td></tr>`;
+                // Tabla
+                let html = `<div class="table-responsive"><table class="table table-striped table-hover align-middle shadow tarjeta card-pastel-4"><thead><tr>
+                    <th>Nombre</th><th>Tipo</th><th>Dosis</th><th>Frecuencia</th><th>Horarios</th><th>Inicio</th><th>Fin</th><th>Indicaciones</th><th>Acciones</th></tr></thead><tbody>`;
+                data.medicamentos.forEach(med => {
+                    html += `<tr>
+                        <td>${med.nombre ?? '-'}</td>
+                        <td>${med.tipo ?? '-'}</td>
+                        <td>${med.dosis ?? '-'}</td>
+                        <td>${med.frecuencia ?? '-'}</td>
+                        <td>${med.horarios ?? '-'}</td>
+                        <td>${med.inicio ?? '-'}</td>
+                        <td>${med.fin ?? '-'}</td>
+                        <td>${med.indicaciones ?? '-'}</td>
+                        <td>
+                            <button class='btn btn-outline-warning btn-sm me-1' onclick='editarMedicamento(${JSON.stringify(med)})'><i class='bi bi-pencil'></i></button>
+                            <button class='btn btn-outline-danger btn-sm' onclick='eliminarMedicamento(${med.id})'><i class='bi bi-trash'></i></button>
+                        </td>
+                    </tr>`;
+                });
+                html += '</tbody></table></div>';
+                cont.innerHTML = html;
             }
         });
 }
@@ -371,9 +488,25 @@ function guardarMedicamento(e) {
         body: JSON.stringify(datos)
     })
     .then(r => r.json())
-    .then(data => {
+    .then(async data => {
         if (data.success) {
-            Swal.fire('¡Guardado!', 'Medicamento agregado correctamente.', 'success');
+            // Crear recordatorios automáticos para cada horario
+            const horarios = datos.horarios.split(',').map(h => h.trim()).filter(h => h);
+            let recordatoriosCreados = 0;
+            for (const hora of horarios) {
+                const res = await fetch('PHP/notificaciones.php?action=crear_recordatorio_medicamento', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        medicamento_id: data.id || '', // si el backend devuelve el id, úsalo, si no, buscar por nombre
+                        hora: hora,
+                        dias_semana: '1,2,3,4,5,6,7'
+                    })
+                });
+                const resData = await res.json();
+                if (resData.success) recordatoriosCreados++;
+            }
+            Swal.fire('¡Guardado!', 'Medicamento agregado y recordatorio(s) creado(s) correctamente.', 'success');
             cargarMedicamentos();
             document.getElementById('formMedicamento').reset();
         } else {
@@ -466,11 +599,12 @@ function agregarTooltipsBienestar() {
         { id: 'glucosa', text: 'Nivel de glucosa en sangre. Normal: 70-180 mg/dL.' },
         { id: 'presion', text: 'Presión arterial. Ejemplo: 120/80 mmHg.' },
         { id: 'fc', text: 'Frecuencia cardíaca. Normal: 50-100 bpm.' },
+        { id: 'pasos', text: 'Cantidad de pasos diarios.' },
+        { id: 'peso', text: 'Peso en kilogramos.' },
+        { id: 'imc', text: 'Índice de Masa Corporal. Normal: 18.5-30.' },
         { id: 'saturacion', text: 'Saturación de oxígeno. Normal: >92%.' },
         { id: 'temp', text: 'Temperatura corporal. Normal: 36-37°C.' },
-        { id: 'imc', text: 'Índice de Masa Corporal. Normal: 18.5-30.' },
-        { id: 'peso', text: 'Peso en kilogramos.' },
-        { id: 'pasos', text: 'Cantidad de pasos diarios.' }
+        { id: 'fecha', text: 'Fecha del registro de bienestar.' }
     ];
     tooltips.forEach(t => {
         const el = document.getElementById(t.id);
@@ -481,12 +615,221 @@ function agregarTooltipsBienestar() {
     });
     // Inicializar tooltips de Bootstrap
     if (window.bootstrap && window.bootstrap.Tooltip) {
-        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        document.querySelectorAll('#collapseFormBienestar [data-bs-toggle="tooltip"]').forEach(el => {
             new bootstrap.Tooltip(el);
         });
     }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(agregarTooltipsBienestar, 500);
-}); 
+    setTimeout(agregarTooltipsBienestar, 300);
+});
+
+// Añadir función para actualizar el fondo del formulario colapsable según el modo
+function actualizarEstiloFormulariosBienestar() {
+    const esOscuro = document.body.classList.contains('modo-oscuro');
+    // Bienestar
+    const formBienestar = document.getElementById('collapseFormBienestar');
+    if (formBienestar) {
+        if (esOscuro) {
+            formBienestar.style.background = 'rgba(34,58,78,0.92)';
+            formBienestar.style.border = '2px solid #86DDE4';
+        } else {
+            formBienestar.style.background = 'rgba(200,230,255,0.85)';
+            formBienestar.style.border = 'none';
+        }
+    }
+    // Inputs Bienestar
+    document.querySelectorAll('#collapseFormBienestar .glass-input').forEach(input => {
+        if (esOscuro) {
+            input.style.background = '#223A4E';
+            input.style.color = '#F8FAFF';
+            input.style.border = '2px solid #86DDE4';
+            input.style.boxShadow = '';
+            input.onfocus = function() {
+                this.style.border = '2.5px solid #4DBFC9';
+                this.style.boxShadow = '0 0 0 2px #4DBFC955';
+            };
+            input.onblur = function() {
+                this.style.border = '2px solid #86DDE4';
+                this.style.boxShadow = '';
+            };
+        } else {
+            input.style.background = 'rgba(255,255,255,0.92)';
+            input.style.color = '#23404A';
+            input.style.border = '2px solid #B3E5FC';
+            input.style.boxShadow = '';
+            input.onfocus = function() {
+                this.style.border = '2.5px solid #4DBFC9';
+                this.style.boxShadow = '0 0 0 2px #4DBFC955';
+            };
+            input.onblur = function() {
+                this.style.border = '2px solid #B3E5FC';
+                this.style.boxShadow = '';
+            };
+        }
+        // Placeholder más tenue
+        input.style.setProperty('::placeholder', esOscuro ? '#A9C6E2' : '#8FB3E2');
+    });
+    // Medicamentos
+    const formMed = document.getElementById('collapseFormMedicamento');
+    if (formMed) {
+        if (esOscuro) {
+            formMed.style.background = 'rgba(34,58,78,0.92)';
+            formMed.style.border = '2px solid #86DDE4';
+        } else {
+            formMed.style.background = 'rgba(200,230,255,0.85)';
+            formMed.style.border = 'none';
+        }
+    }
+    // Inputs Medicamentos
+    document.querySelectorAll('#collapseFormMedicamento .glass-input').forEach(input => {
+        if (esOscuro) {
+            input.style.background = '#223A4E';
+            input.style.color = '#F8FAFF';
+            input.style.border = '2px solid #86DDE4';
+            input.style.boxShadow = '';
+            input.onfocus = function() {
+                this.style.border = '2.5px solid #4DBFC9';
+                this.style.boxShadow = '0 0 0 2px #4DBFC955';
+            };
+            input.onblur = function() {
+                this.style.border = '2px solid #86DDE4';
+                this.style.boxShadow = '';
+            };
+        } else {
+            input.style.background = 'rgba(255,255,255,0.92)';
+            input.style.color = '#23404A';
+            input.style.border = '2px solid #B3E5FC';
+            input.style.boxShadow = '';
+            input.onfocus = function() {
+                this.style.border = '2.5px solid #4DBFC9';
+                this.style.boxShadow = '0 0 0 2px #4DBFC955';
+            };
+            input.onblur = function() {
+                this.style.border = '2px solid #B3E5FC';
+                this.style.boxShadow = '';
+            };
+        }
+        // Placeholder más tenue
+        input.style.setProperty('::placeholder', esOscuro ? '#A9C6E2' : '#8FB3E2');
+    });
+}
+// Llamar al cargar y al cambiar el modo
+setTimeout(actualizarEstiloFormulariosBienestar, 500);
+document.addEventListener('DOMContentLoaded', function() {
+    const switchDark = document.getElementById('switchDarkMode');
+    if (switchDark) {
+        switchDark.addEventListener('change', function() {
+            setTimeout(actualizarEstiloFormulariosBienestar, 200);
+        });
+    }
+    // Por si el modo cambia por otro script
+    const observer = new MutationObserver(actualizarEstiloFormulariosBienestar);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+});
+
+// Inyectar CSS para mejorar contraste de inputs y placeholder en modo claro/oscuro
+(function(){
+    const style = document.createElement('style');
+    style.innerHTML = `
+    #collapseFormBienestar .glass-input, #collapseFormMedicamento .glass-input {
+        transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    #collapseFormBienestar .glass-input::placeholder,
+    #collapseFormMedicamento .glass-input::placeholder {
+        color: #8FB3E2;
+        opacity: 1;
+        font-weight: 500;
+    }
+    body.modo-oscuro #collapseFormBienestar .glass-input,
+    body.modo-oscuro #collapseFormMedicamento .glass-input {
+        background: #223A4E !important;
+        color: #F8FAFF !important;
+        border: 2px solid #86DDE4 !important;
+    }
+    body.modo-oscuro #collapseFormBienestar .glass-input:focus,
+    body.modo-oscuro #collapseFormMedicamento .glass-input:focus {
+        border: 2.5px solid #4DBFC9 !important;
+        box-shadow: 0 0 0 2px #4DBFC955 !important;
+        background: #223A4E !important;
+    }
+    body.modo-oscuro #collapseFormBienestar .glass-input::placeholder,
+    body.modo-oscuro #collapseFormMedicamento .glass-input::placeholder {
+        color: #A9C6E2 !important;
+        opacity: 1;
+    }
+    #collapseFormBienestar .glass-input:focus,
+    #collapseFormMedicamento .glass-input:focus {
+        border: 2.5px solid #4DBFC9 !important;
+        box-shadow: 0 0 0 2px #4DBFC955 !important;
+        background: #fff !important;
+        color: #23404A !important;
+    }
+    #collapseFormBienestar .glass-input,
+    #collapseFormMedicamento .glass-input {
+        background: rgba(255,255,255,0.92) !important;
+        color: #23404A !important;
+        border: 2px solid #B3E5FC !important;
+    }
+    `;
+    document.head.appendChild(style);
+})();
+
+function agregarTooltipsMedicamentos() {
+    const tooltips = [
+        { id: 'medNombre', text: 'Nombre comercial o genérico del medicamento.' },
+        { id: 'medTipo', text: 'Tipo: tableta, cápsula, jarabe, etc.' },
+        { id: 'medDosis', text: 'Dosis recomendada, ej: 500mg.' },
+        { id: 'medFrecuencia', text: 'Frecuencia: cada 8h, diaria, etc.' },
+        { id: 'medHorarios', text: 'Horarios de toma, ej: 08:00, 14:00.' },
+        { id: 'medInicio', text: 'Fecha de inicio del tratamiento.' },
+        { id: 'medFin', text: 'Fecha de fin del tratamiento (opcional).' },
+        { id: 'medIndicaciones', text: 'Indicaciones adicionales del médico.' }
+    ];
+    tooltips.forEach(t => {
+        const el = document.getElementById(t.id);
+        if (el) {
+            el.setAttribute('data-bs-toggle', 'tooltip');
+            el.setAttribute('title', t.text);
+        }
+    });
+    // Inicializar tooltips de Bootstrap
+    if (window.bootstrap && window.bootstrap.Tooltip) {
+        document.querySelectorAll('#collapseFormMedicamento [data-bs-toggle="tooltip"]').forEach(el => {
+            new bootstrap.Tooltip(el);
+        });
+    }
+}
+
+// Inyectar CSS para la etiqueta Emergencia de notificaciones
+(function(){
+    const style = document.createElement('style');
+    style.innerHTML = `
+    .tipo-emergencia {
+        background: rgba(220,53,69,0.92) !important;
+        color: #fff !important;
+        font-weight: 700;
+        border-radius: 1.2em;
+        padding: 0.3em 1.1em;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(220,53,69,0.13);
+        border: none;
+        display: inline-block;
+    }
+    body.modo-oscuro .tipo-emergencia {
+        background: #C43556 !important;
+        color: #fff !important;
+        border: none;
+    }
+    `;
+    document.head.appendChild(style);
+})();
+
+// Solución de error: definir funciones de recarga para compatibilidad
+function cargarBienestar() {
+    renderBienestarVista();
+}
+function cargarMedicamentos() {
+    renderMedicamentosVista();
+} 

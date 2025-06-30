@@ -142,12 +142,6 @@ async function completarRegistro() {
     try {
         // Recopilar todos los datos del wizard
         datosCompletos = {
-            // Paso 1: Datos personales
-            fecha_nac: document.getElementById('fecha_nac').value,
-            genero: document.getElementById('genero').value,
-            pais: document.getElementById('pais').value,
-            idioma: document.getElementById('idioma').value,
-            
             // Paso 2: Información médica
             fecha_diagnostico: document.getElementById('fecha_diagnostico').value,
             medico: document.getElementById('medico').value,
@@ -156,17 +150,13 @@ async function completarRegistro() {
             tipo_sangre: document.getElementById('tipo_sangre').value,
             dieta: document.getElementById('dieta').value,
             alergias: document.getElementById('alergias').value || 'Ninguna',
-            
-            // Paso 3: Contactos (sin medicacion)
+            // Paso 3: Contactos
             contacto_nombre: document.getElementById('contacto_nombre').value,
             contacto_telefono: document.getElementById('contacto_telefono').value,
             contacto_relacion: document.getElementById('contacto_relacion').value,
-            
             // Paso 4: Vinculación y permisos
             familiar_email: document.getElementById('vinculacion_si').checked ? 'Vinculado' : 'No vinculado',
             codigo_vinculacion: document.getElementById('vinculacion_si').checked ? document.getElementById('codigo_texto').textContent : 'No generado',
-            
-            // Permisos (solo si quiere vincular)
             sintomas: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_sintomas').checked : false,
             medicacion_permiso: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_medicacion').checked : false,
             citas: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_citas').checked : false,

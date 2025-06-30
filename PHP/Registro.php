@@ -20,7 +20,7 @@ $padecimiento = $data['padecimiento'] ?? '';
 // Validar datos básicos
 if ($nombre && $email && $password && $tipo_usuario && ($tipo_usuario !== 'paciente' || $padecimiento)) {
     // Verificar si el email ya existe
-    $stmt = $conn->prepare('SELECT id FROM usuarios WHERE email = ?');
+    $stmt = $conexion->prepare('SELECT id FROM usuarios WHERE email = ?');
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -31,7 +31,7 @@ if ($nombre && $email && $password && $tipo_usuario && ($tipo_usuario !== 'pacie
             'message' => 'El email ya está registrado'
         ]);
         $stmt->close();
-        $conn->close();
+        $conexion->close();
         exit();
     }
     $stmt->close();
@@ -40,7 +40,7 @@ if ($nombre && $email && $password && $tipo_usuario && ($tipo_usuario !== 'pacie
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
     
     // Insertar en la base de datos
-    $stmt = $conn->prepare('INSERT INTO usuarios (nombre, email, password, tipo_usuario, padecimiento) VALUES (?, ?, ?, ?, ?)');
+    $stmt = $conexion->prepare('INSERT INTO usuarios (nombre, email, password, tipo_usuario, padecimiento) VALUES (?, ?, ?, ?, ?)');
     $stmt->bind_param('sssss', $nombre, $email, $password_hash, $tipo_usuario, $padecimiento);
     
     if ($stmt->execute()) {
@@ -51,7 +51,7 @@ if ($nombre && $email && $password && $tipo_usuario && ($tipo_usuario !== 'pacie
     } else {
         echo json_encode([
             'success' => false,
-            'message' => 'Error al registrar el usuario: ' . $conn->error
+            'message' => 'Error al registrar el usuario: ' . $conexion->error
         ]);
     }
     $stmt->close();
@@ -62,5 +62,5 @@ if ($nombre && $email && $password && $tipo_usuario && ($tipo_usuario !== 'pacie
     ]);
 }
 
-$conn->close();
+$conexion->close();
 ?>

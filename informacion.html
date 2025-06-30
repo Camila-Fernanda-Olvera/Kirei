@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información de Salud - Kirei</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/dashboard-paciente.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="dashboard-paciente-bg">
+    <header class="paciente-header position-relative">
+        <div class="logo-area">
+            <i class="bi bi-info-circle"></i> Información de Salud
+        </div>
+        <div class="d-flex align-items-center gap-3 position-absolute top-0 end-0 pe-4 pt-3" style="z-index: 1051;">
+            <a href="dashboard-paciente.html" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-left"></i> Volver</a>
+        </div>
+    </header>
+    <main class="container py-4">
+        <div id="infoSaludCard"></div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Diccionario de información de salud por padecimiento
+    const infoPadecimientos = {
+        'Diabetes': {
+            titulo: '<i class="bi bi-heart-pulse"></i> ¿Qué es la Diabetes?',
+            descripcion: 'La diabetes es una enfermedad crónica que afecta la forma en que el cuerpo convierte los alimentos en energía. Se caracteriza por niveles elevados de glucosa (azúcar) en la sangre debido a problemas en la producción o el uso de insulina.',
+            sintomas: [
+                'Sed y hambre excesiva',
+                'Orinar con frecuencia',
+                'Pérdida de peso inexplicada',
+                'Cansancio extremo',
+                'Visión borrosa'
+            ],
+            riesgos: [
+                'Antecedentes familiares de diabetes',
+                'Sobrepeso u obesidad',
+                'Estilo de vida sedentario',
+                'Alimentación poco saludable',
+                'Edad avanzada'
+            ],
+            cuidados: [
+                'Controlar regularmente los niveles de glucosa',
+                'Seguir una dieta equilibrada y saludable',
+                'Realizar actividad física regularmente',
+                'Tomar la medicación según indicación médica',
+                'Acudir a revisiones médicas periódicas'
+            ],
+            recursos: [
+                {nombre: 'Fundación Diabetes', url: 'https://www.fundaciondiabetes.org/'},
+                {nombre: 'CDC - Diabetes', url: 'https://www.cdc.gov/diabetes/spanish/index.html'}
+            ],
+            ia: [
+                {
+                    pregunta: '¿Qué puedo hacer si tengo un episodio de hipoglucemia?',
+                    respuesta: 'Si experimentas síntomas como sudoración, temblores, confusión o debilidad, consume inmediatamente una fuente de azúcar rápida (como jugo o caramelos) y consulta a tu médico si los síntomas persisten.'
+                },
+                {
+                    pregunta: '¿Cuándo debo acudir al médico?',
+                    respuesta: 'Si tienes fiebre alta, vómitos persistentes, dificultad para respirar o dolor en el pecho, busca atención médica de inmediato.'
+                }
+            ]
+        }
+        // Aquí se pueden agregar más padecimientos en el futuro
+    };
+
+    // Obtener el padecimiento del usuario
+    function cargarInfoSalud() {
+        fetch('PHP/verificar-perfil.php')
+            .then(r => r.json())
+            .then(data => {
+                let padecimiento = 'Diabetes'; // Por defecto
+                if (data.success && data.datos && data.datos.padecimiento) {
+                    padecimiento = data.datos.padecimiento;
+                }
+                mostrarInfoSalud(padecimiento);
+            })
+            .catch(() => mostrarInfoSalud('Diabetes'));
+    }
+
+    function mostrarInfoSalud(padecimiento) {
+        const info = infoPadecimientos[padecimiento] || infoPadecimientos['Diabetes'];
+        const card = document.createElement('div');
+        card.className = 'tarjeta card-pastel-2 p-4 mb-4 shadow';
+        card.innerHTML = `
+            <h2 class="mb-3">${info.titulo}</h2>
+            <p>${info.descripcion}</p>
+            <h4 class="mt-4"><i class="bi bi-exclamation-triangle"></i> Síntomas comunes</h4>
+            <ul>${info.sintomas.map(s => `<li>${s}</li>`).join('')}</ul>
+            <h4 class="mt-4"><i class="bi bi-activity"></i> Factores de riesgo</h4>
+            <ul>${info.riesgos.map(r => `<li>${r}</li>`).join('')}</ul>
+            <h4 class="mt-4"><i class="bi bi-shield-check"></i> Cuidados y recomendaciones</h4>
+            <ul>${info.cuidados.map(c => `<li>${c}</li>`).join('')}</ul>
+            <h4 class="mt-4"><i class="bi bi-link-45deg"></i> Recursos útiles</h4>
+            <ul>${info.recursos.map(r => `<li><a href="${r.url}" target="_blank">${r.nombre}</a></li>`).join('')}</ul>
+            <div class="mt-4 text-center">
+                <button class="btn btn-outline-primary btn-lg px-4 py-2 rounded-pill shadow" id="btnConsultarIA"><i class="bi bi-robot"></i> Consultar a la IA</button>
+            </div>
+        `;
+        document.getElementById('infoSaludCard').innerHTML = '';
+        document.getElementById('infoSaludCard').appendChild(card);
+        // Botón IA
+        document.getElementById('btnConsultarIA').onclick = function() {
+            let html = info.ia.map(qr => `<b>${qr.pregunta}</b><br>${qr.respuesta}`).join('<br><br>');
+            Swal.fire({
+                title: 'Respuesta de la IA',
+                html,
+                icon: 'info',
+                confirmButtonText: 'Cerrar',
+                confirmButtonColor: '#197074',
+                background: document.body.classList.contains('modo-oscuro') ? '#223A4E' : '#fff',
+                color: document.body.classList.contains('modo-oscuro') ? '#F8FAFF' : '#23404A'
+            });
+        };
+    }
+
+    // Sincronizar modo oscuro
+    if (localStorage.getItem('modoOscuro') === 'true') {
+        document.body.classList.add('modo-oscuro');
+    }
+    // Al cargar
+    cargarInfoSalud();
+    </script>
+</body>
+</html> 

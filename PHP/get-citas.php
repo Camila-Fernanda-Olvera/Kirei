@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare('SELECT * FROM citas WHERE id_paciente = ?');
+$stmt = $conexion->prepare('SELECT * FROM citas WHERE id_paciente = ?');
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -16,6 +16,6 @@ while ($row = $result->fetch_assoc()) {
     $citas[] = $row;
 }
 $stmt->close();
-$conn->close();
+$conexion->close();
 echo json_encode(['success' => true, 'citas' => $citas]);
 exit(); 

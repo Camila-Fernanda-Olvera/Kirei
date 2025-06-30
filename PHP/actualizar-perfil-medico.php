@@ -24,7 +24,7 @@ $user_id = $_SESSION['user_id'];
 file_put_contents(__DIR__ . '/debug_actualizar_perfil.txt', "User ID: $user_id\n", FILE_APPEND);
 
 // Verificar que el usuario sea paciente y obtener su nombre
-$stmt = $conn->prepare('SELECT nombre, tipo_usuario FROM usuarios WHERE id = ?');
+$stmt = $conexion->prepare('SELECT nombre, tipo_usuario FROM usuarios WHERE id = ?');
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -73,40 +73,40 @@ if ($imagen_base64) {
 }
 
 // Iniciar transacción para asegurar consistencia
-$conn->begin_transaction();
+$conexion->begin_transaction();
 
 try {
     // Guardar imagen si se envía
     if ($imagen_base64) {
-        $stmt = $conn->prepare('UPDATE usuarios SET imagen = ? WHERE id = ?');
+        $stmt = $conexion->prepare('UPDATE usuarios SET imagen = ? WHERE id = ?');
         $stmt->bind_param('si', $imagen_base64, $user_id);
         if (!$stmt->execute()) {
-            throw new Exception('Error al guardar imagen: ' . $conn->error);
+            throw new Exception('Error al guardar imagen: ' . $conexion->error);
         }
         $stmt->close();
         file_put_contents(__DIR__ . '/debug_actualizar_perfil.txt', "Imagen guardada correctamente\n", FILE_APPEND);
     }
 
     // Actualizar datos médicos
-    $stmt = $conn->prepare('UPDATE datos_paciente SET fecha_diagnostico=?, tipo_sangre=?, dieta=?, alergias=? WHERE user_id=?');
+    $stmt = $conexion->prepare('UPDATE datos_paciente SET fecha_diagnostico=?, tipo_sangre=?, dieta=?, alergias=? WHERE user_id=?');
     $stmt->bind_param('ssssi', $fecha_diagnostico, $tipo_sangre, $dieta, $alergias, $user_id);
     if (!$stmt->execute()) {
-        throw new Exception('Error al guardar datos médicos: ' . $conn->error);
+        throw new Exception('Error al guardar datos médicos: ' . $conexion->error);
     }
     $stmt->close();
     file_put_contents(__DIR__ . '/debug_actualizar_perfil.txt', "Datos médicos guardados correctamente\n", FILE_APPEND);
 
     // Actualizar padecimiento en tabla usuarios
-    $stmt = $conn->prepare('UPDATE usuarios SET padecimiento=? WHERE id=?');
+    $stmt = $conexion->prepare('UPDATE usuarios SET padecimiento=? WHERE id=?');
     $stmt->bind_param('si', $padecimiento, $user_id);
     if (!$stmt->execute()) {
-        throw new Exception('Error al guardar padecimiento: ' . $conn->error);
+        throw new Exception('Error al guardar padecimiento: ' . $conexion->error);
     }
     $stmt->close();
     file_put_contents(__DIR__ . '/debug_actualizar_perfil.txt', "Padecimiento guardado correctamente\n", FILE_APPEND);
 
     // Confirmar transacción
-    $conn->commit();
+    $conexion->commit();
     
     file_put_contents(__DIR__ . '/debug_actualizar_perfil.txt', "PROCESO COMPLETADO EXITOSAMENTE\n", FILE_APPEND);
 
@@ -117,10 +117,10 @@ try {
     
 } catch (Exception $e) {
     // Revertir transacción en caso de error
-    $conn->rollback();
+    $conexion->rollback();
     file_put_contents(__DIR__ . '/debug_actualizar_perfil.txt', "ERROR: " . $e->getMessage() . "\n", FILE_APPEND);
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 } finally {
-    $conn->close();
+    $conexion->close();
 }
 ?> 

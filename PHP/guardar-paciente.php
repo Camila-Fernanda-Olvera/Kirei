@@ -25,7 +25,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Verificar que el usuario sea un paciente
-$stmt = $conn->prepare('SELECT tipo_usuario FROM usuarios WHERE id = ?');
+$stmt = $conexion->prepare('SELECT tipo_usuario FROM usuarios WHERE id = ?');
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -72,7 +72,7 @@ $permisos_data = [
 $permisos = json_encode($permisos_data);
 
 // Insertar o actualizar datos del paciente (sin medicacion)
-$stmt = $conn->prepare("INSERT INTO datos_paciente (
+$stmt = $conexion->prepare("INSERT INTO datos_paciente (
     user_id, fecha_nac, genero, pais, idioma, fecha_diagnostico, 
     medico, especialidad_medico, telefono_medico, tipo_sangre, dieta, alergias, 
     contacto_nombre, contacto_telefono, contacto_relacion, 
@@ -113,10 +113,10 @@ if ($stmt->execute()) {
 } else {
     echo json_encode([
         'success' => false,
-        'message' => 'Error al guardar datos: ' . $conn->error
+        'message' => 'Error al guardar datos: ' . $conexion->error
     ]);
 }
 
 $stmt->close();
-$conn->close();
+$conexion->close();
 ?> 
