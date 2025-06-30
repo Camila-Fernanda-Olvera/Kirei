@@ -188,47 +188,6 @@
             </div>
         </div>
 
-        <!-- Configuración -->
-        <div class="configuracion-card">
-            <h4 class="mb-3"><i class="bi bi-gear"></i> Configuración</h4>
-            <div class="config-item">
-                <div>
-                    <strong>Notificaciones de medicamentos</strong>
-                    <small class="d-block text-muted">Recordatorios para tomar medicamentos</small>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="configMedicamentos" checked>
-                </div>
-            </div>
-            <div class="config-item">
-                <div>
-                    <strong>Notificaciones de citas</strong>
-                    <small class="d-block text-muted">Recordatorios de citas médicas</small>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="configCitas" checked>
-                </div>
-            </div>
-            <div class="config-item">
-                <div>
-                    <strong>Mensajes de familiares</strong>
-                    <small class="d-block text-muted">Notificaciones de chat familiar</small>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="configMensajes" checked>
-                </div>
-            </div>
-            <div class="config-item">
-                <div>
-                    <strong>Modo silencioso</strong>
-                    <small class="d-block text-muted">22:00 - 07:00</small>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="configSilencio">
-                </div>
-            </div>
-        </div>
-
         <!-- Lista de notificaciones -->
         <div class="notificaciones-container">
             <h4 class="mb-3"><i class="bi bi-list-ul"></i> Notificaciones</h4>
@@ -252,7 +211,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             cargarNotificaciones();
             configurarFiltros();
-            configurarConfiguracion();
             aplicarModoOscuro();
         });
 
@@ -309,6 +267,7 @@
         function filtrarNotificaciones(notificaciones, filtro) {
             if (filtro === 'todas') return notificaciones;
             if (filtro === 'pendiente') return notificaciones.filter(n => n.estado === 'pendiente');
+            if (filtro === 'emergencia') return notificaciones.filter(n => n.tipo === 'emergencia');
             return notificaciones.filter(n => n.tipo === filtro);
         }
 
@@ -325,91 +284,6 @@
                     renderizarNotificaciones();
                 });
             });
-        }
-
-        // Configurar configuración
-        function configurarConfiguracion() {
-            // Cargar configuración actual
-            cargarConfiguracionActual();
-            
-            // Event listeners para cambios
-            document.getElementById('configMedicamentos').addEventListener('change', function() {
-                actualizarConfiguracion('medicamento', { activo: this.checked ? 1 : 0 });
-            });
-            
-            document.getElementById('configCitas').addEventListener('change', function() {
-                actualizarConfiguracion('cita', { activo: this.checked ? 1 : 0 });
-            });
-            
-            document.getElementById('configMensajes').addEventListener('change', function() {
-                actualizarConfiguracion('mensaje_familiar', { activo: this.checked ? 1 : 0 });
-            });
-            
-            document.getElementById('configSilencio').addEventListener('change', function() {
-                // Actualizar configuración de silencio para todos los tipos
-                const tipos = ['medicamento', 'cita', 'mensaje_familiar', 'recordatorio', 'emergencia'];
-                tipos.forEach(tipo => {
-                    actualizarConfiguracion(tipo, { 
-                        hora_silencio_inicio: this.checked ? '22:00:00' : null,
-                        hora_silencio_fin: this.checked ? '07:00:00' : null
-                    });
-                });
-            });
-        }
-
-        // Cargar configuración actual
-        async function cargarConfiguracionActual() {
-            try {
-                const response = await fetch('PHP/notificaciones.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'action=configuracion'
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    const config = data.configuracion;
-                    
-                    document.getElementById('configMedicamentos').checked = config.medicamento?.activo || true;
-                    document.getElementById('configCitas').checked = config.cita?.activo || true;
-                    document.getElementById('configMensajes').checked = config.mensaje_familiar?.activo || true;
-                    
-                    // Verificar si hay horario de silencio configurado
-                    const tieneSilencio = config.medicamento?.hora_silencio_inicio && config.medicamento?.hora_silencio_fin;
-                    document.getElementById('configSilencio').checked = tieneSilencio;
-                }
-            } catch (error) {
-                console.error('Error al cargar configuración:', error);
-            }
-        }
-
-        // Actualizar configuración
-        async function actualizarConfiguracion(tipo, config) {
-            try {
-                const formData = new URLSearchParams();
-                formData.append('action', 'actualizar_configuracion');
-                formData.append('tipo', tipo);
-                
-                for (const [key, value] of Object.entries(config)) {
-                    formData.append(key, value);
-                }
-                
-                const response = await fetch('PHP/notificaciones.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formData.toString()
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    // Actualizar configuración en el sistema de notificaciones
-                    if (window.sistemaNotificaciones) {
-                        await window.sistemaNotificaciones.cargarConfiguracion();
-                    }
-                }
-            } catch (error) {
-                console.error('Error al actualizar configuración:', error);
-            }
         }
 
         // Manejar click en notificación
