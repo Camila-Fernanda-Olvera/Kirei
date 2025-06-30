@@ -3,47 +3,59 @@
 document.addEventListener('DOMContentLoaded', function() {
     cargarBienestar();
     document.getElementById('bienestar-crud').innerHTML = `
-        <form id="formBienestar" class="row g-3 mb-4">
-            <div class="col-md-3">
-                <input type="number" step="0.1" min="0" class="form-control" id="glucosa" placeholder="Glucosa (mg/dL)" required>
+        <div class="tarjeta card-pastel-2 p-4 mb-4 shadow">
+            <h3 class="mb-4 d-flex align-items-center" style="font-weight:800;"><i class="bi bi-activity me-2 text-primary"></i>Registros de Bienestar</h3>
+            <form id="formBienestar" class="row g-3 mb-4">
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-droplet-half"></i></span>
+                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="glucosa" placeholder="Glucosa (mg/dL)" required title="Nivel de glucosa en sangre">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-heart-pulse"></i></span>
+                    <input type="text" class="form-control ps-5" id="presion" placeholder="Presión arterial (mmHg)" title="Ejemplo: 120/80">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-activity"></i></span>
+                    <input type="number" min="0" class="form-control ps-5" id="fc" placeholder="Frec. Cardíaca (bpm)" title="Frecuencia cardíaca">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-shoe-prints"></i></span>
+                    <input type="number" min="0" class="form-control ps-5" id="pasos" placeholder="Pasos" title="Cantidad de pasos diarios">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-person-fill"></i></span>
+                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="peso" placeholder="Peso (kg)" title="Peso corporal">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-bar-chart"></i></span>
+                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="imc" placeholder="IMC" title="Índice de Masa Corporal">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-droplet"></i></span>
+                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="saturacion" placeholder="Sat. O2 (%)" title="Saturación de oxígeno">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-thermometer-half"></i></span>
+                    <input type="number" step="0.1" min="0" class="form-control ps-5" id="temp" placeholder="Temp. (°C)" title="Temperatura corporal">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-calendar-event"></i></span>
+                    <input type="date" class="form-control ps-5" id="fecha" required title="Fecha del registro">
+                </div>
+                <div class="col-md-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-outline-primary btn-lg px-5 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>Agregar</button>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle tarjeta card-pastel-3" id="tablaBienestar">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Fecha</th><th>Glucosa</th><th>Presión</th><th>FC</th><th>Pasos</th><th>Peso</th><th>IMC</th><th>Sat. O2</th><th>Temp.</th><th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            <div class="col-md-3">
-                <input type="text" class="form-control" id="presion" placeholder="Presión arterial (mmHg)">
-            </div>
-            <div class="col-md-2">
-                <input type="number" min="0" class="form-control" id="fc" placeholder="Frec. Cardíaca (bpm)">
-            </div>
-            <div class="col-md-2">
-                <input type="number" min="0" class="form-control" id="pasos" placeholder="Pasos">
-            </div>
-            <div class="col-md-2">
-                <input type="number" step="0.1" min="0" class="form-control" id="peso" placeholder="Peso (kg)">
-            </div>
-            <div class="col-md-2">
-                <input type="number" step="0.1" min="0" class="form-control" id="imc" placeholder="IMC">
-            </div>
-            <div class="col-md-2">
-                <input type="number" step="0.1" min="0" class="form-control" id="saturacion" placeholder="Sat. O2 (%)">
-            </div>
-            <div class="col-md-2">
-                <input type="number" step="0.1" min="0" class="form-control" id="temp" placeholder="Temp. (°C)">
-            </div>
-            <div class="col-md-3">
-                <input type="date" class="form-control" id="fecha" required>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-plus-circle"></i> Agregar</button>
-            </div>
-        </form>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle" id="tablaBienestar">
-                <thead class="table-light">
-                    <tr>
-                        <th>Fecha</th><th>Glucosa</th><th>Presión</th><th>FC</th><th>Pasos</th><th>Peso</th><th>IMC</th><th>Sat. O2</th><th>Temp.</th><th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
         </div>
     `;
     document.getElementById('formBienestar').onsubmit = guardarBienestar;
