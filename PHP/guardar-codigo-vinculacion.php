@@ -50,36 +50,60 @@ if (!$user || $user['tipo_usuario'] !== 'familiar') {
 }
 $email_familiar = $user['email'];
 
-// Buscar paciente con ese código de vinculación válido
-$stmt = $conn->prepare('SELECT user_id FROM datos_paciente WHERE codigo_vinculacion = ?');
+// Buscar código en codigos_vinculacion (no expirado, no usado)
+$stmt = $conn->prepare('SELECT user_id, fecha_expiracion, usado FROM codigos_vinculacion WHERE codigo = ?');
 $stmt->bind_param('s', $codigo);
 $stmt->execute();
 $result = $stmt->get_result();
-$paciente = $result->fetch_assoc();
+$codigo_row = $result->fetch_assoc();
 $stmt->close();
 
-if (!$paciente) {
+if (!$codigo_row) {
     echo json_encode([
         'success' => false,
-        'message' => 'Código de vinculación incorrecto o expirado.'
+        'message' => 'Código de vinculación incorrecto.'
     ]);
     exit();
 }
-
-// Actualizar familiar_email y eliminar el código de vinculación para que no se reutilice
-$stmt = $conn->prepare('UPDATE datos_paciente SET familiar_email = ?, codigo_vinculacion = NULL WHERE user_id = ?');
-$stmt->bind_param('si', $email_familiar, $paciente['user_id']);
-if ($stmt->execute()) {
+if ($codigo_row['usado']) {
     echo json_encode([
-        'success' => true,
-        'message' => 'Vinculación exitosa.'
+        'success' => false,
+        'message' => 'Este código ya fue utilizado.'
     ]);
-} else {
+    exit();
+}
+if (strtotime($codigo_row['fecha_expiracion']) < time()) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'El código ha expirado.'
+    ]);
+    exit();
+}
+$paciente_id = $codigo_row['user_id'];
+
+// Actualizar familiar_email en datos_paciente
+$stmt = $conn->prepare('UPDATE datos_paciente SET familiar_email = ? WHERE user_id = ?');
+$stmt->bind_param('si', $email_familiar, $paciente_id);
+if (!$stmt->execute()) {
     echo json_encode([
         'success' => false,
         'message' => 'No se pudo vincular el familiar.'
     ]);
+    $stmt->close();
+    $conn->close();
+    exit();
 }
 $stmt->close();
+
+// Marcar el código como usado
+$stmt = $conn->prepare('UPDATE codigos_vinculacion SET usado = 1 WHERE codigo = ?');
+$stmt->bind_param('s', $codigo);
+$stmt->execute();
+$stmt->close();
+
 $conn->close();
+echo json_encode([
+    'success' => true,
+    'message' => 'Vinculación exitosa.'
+]);
 ?> 
