@@ -34,7 +34,7 @@ if (empty($codigo)) {
 }
 
 // Verificar que el usuario es familiar
-$stmt = $conn->prepare('SELECT email, tipo_usuario FROM usuarios WHERE id = ?');
+$stmt = $conexion->prepare('SELECT email, tipo_usuario FROM usuarios WHERE id = ?');
 $stmt->bind_param('i', $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -51,7 +51,7 @@ if (!$user || $user['tipo_usuario'] !== 'familiar') {
 $email_familiar = $user['email'];
 
 // Buscar código en codigos_vinculacion (no expirado, no usado)
-$stmt = $conn->prepare('SELECT user_id, fecha_expiracion, usado FROM codigos_vinculacion WHERE codigo = ?');
+$stmt = $conexion->prepare('SELECT user_id, fecha_expiracion, usado FROM codigos_vinculacion WHERE codigo = ?');
 $stmt->bind_param('s', $codigo);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -82,7 +82,7 @@ if (strtotime($codigo_row['fecha_expiracion']) < time()) {
 $paciente_id = $codigo_row['user_id'];
 
 // Actualizar familiar_email en datos_paciente
-$stmt = $conn->prepare('UPDATE datos_paciente SET familiar_email = ? WHERE user_id = ?');
+$stmt = $conexion->prepare('UPDATE datos_paciente SET familiar_email = ? WHERE user_id = ?');
 $stmt->bind_param('si', $email_familiar, $paciente_id);
 if (!$stmt->execute()) {
     echo json_encode([
@@ -90,18 +90,18 @@ if (!$stmt->execute()) {
         'message' => 'No se pudo vincular el familiar.'
     ]);
     $stmt->close();
-    $conn->close();
+    $conexion->close();
     exit();
 }
 $stmt->close();
 
 // Marcar el código como usado
-$stmt = $conn->prepare('UPDATE codigos_vinculacion SET usado = 1 WHERE codigo = ?');
+$stmt = $conexion->prepare('UPDATE codigos_vinculacion SET usado = 1 WHERE codigo = ?');
 $stmt->bind_param('s', $codigo);
 $stmt->execute();
 $stmt->close();
 
-$conn->close();
+$conexion->close();
 echo json_encode([
     'success' => true,
     'message' => 'Vinculación exitosa.'
