@@ -119,4 +119,13 @@ function mostrarError(msg) {
     document.querySelector('main').style.display = 'none';
 }
 
-document.querySelector('main').style.display = 'none'; 
+document.querySelector('main').style.display = 'none';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cerrarSesionBtn = document.getElementById('cerrarSesionBtn');
+    if (cerrarSesionBtn) {
+        cerrarSesionBtn.onclick = () => {
+            fetch('PHP/cerrar-sesion.php').then(() => window.location.href = 'Index.html');
+        };
+    }
+}); 

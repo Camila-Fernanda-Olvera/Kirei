@@ -9,46 +9,13 @@ let ultimaFechaExpiracion = null;
 // Inicializar el wizard cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
     inicializarWizard();
-    actualizarIdiomaSelector();
-    // Listener para el select de idioma preferido
-    const idiomaSelect = document.getElementById('idioma');
-    if (idiomaSelect) {
-        idiomaSelect.addEventListener('change', function() {
-            window.i18n.setLanguage(this.value);
-            actualizarIdiomaSelector();
-        });
-    }
+    // Todos los textos y mensajes deben estar en español fijo
 });
 
 // Función para inicializar el wizard
 function inicializarWizard() {
     updateProgress();
     setupVinculacionListener();
-}
-
-// Función para actualizar el selector de idioma
-function actualizarIdiomaSelector() {
-    const currentLanguageSpan = document.getElementById('currentLanguage');
-    if (currentLanguageSpan) {
-        currentLanguageSpan.textContent = window.i18n.getCurrentLanguage().toUpperCase();
-    }
-}
-
-// Función para cambiar idioma
-function toggleLanguage() {
-    const newLanguage = window.i18n.toggleLanguage();
-    actualizarIdiomaSelector();
-    
-    // Mostrar notificación de cambio de idioma
-    Swal.fire({
-        title: newLanguage === 'es' ? 'Idioma Cambiado' : 'Language Changed',
-        text: newLanguage === 'es' ? 'El idioma ha sido cambiado a Español' : 'Language has been changed to English',
-        icon: 'success',
-        confirmButtonText: newLanguage === 'es' ? 'Entendido' : 'Understood',
-        confirmButtonColor: '#d72660',
-        timer: 2000,
-        timerProgressBar: true
-    });
 }
 
 // Función para actualizar la barra de progreso
@@ -107,10 +74,10 @@ function validateCurrentStep() {
     
     if (!isValid) {
         Swal.fire({
-            title: window.i18n.t('messages.required.fields'),
-            text: window.i18n.t('messages.required.fields.text'),
+            title: 'Por favor, complete todos los campos requeridos',
+            text: 'Por favor, complete todos los campos requeridos',
             icon: 'warning',
-            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonText: 'Entendido',
             confirmButtonColor: '#d72660'
         });
     }
@@ -157,16 +124,12 @@ function generarCodigoVinculacion() {
 // Nueva función para mostrar la fecha de expiración en el idioma actual
 function mostrarFechaExpiracion() {
     if (!ultimaFechaExpiracion) return;
-    const locale = window.i18n.isSpanish() ? 'es-ES' : 'en-US';
+    const locale = 'es-ES';
     const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
-    const opcionesHora = window.i18n.isSpanish()
-        ? { hour: '2-digit', minute: '2-digit', hour12: false }
-        : { hour: '2-digit', minute: '2-digit', hour12: true };
+    const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: false };
     const fecha = ultimaFechaExpiracion.toLocaleDateString(locale, opcionesFecha);
     const hora = ultimaFechaExpiracion.toLocaleTimeString(locale, opcionesHora);
-    const texto = window.i18n.isSpanish()
-        ? `${fecha} a las ${hora}`
-        : `${fecha} at ${hora}`;
+    const texto = `${fecha} a las ${hora}`;
     document.getElementById('fecha_expiracion').textContent = texto;
 }
 
@@ -192,7 +155,7 @@ async function completarRegistro() {
             telefono_medico: document.getElementById('telefono_medico').value || '',
             tipo_sangre: document.getElementById('tipo_sangre').value,
             dieta: document.getElementById('dieta').value,
-            alergias: document.getElementById('alergias').value || (window.i18n.isSpanish() ? 'Ninguna' : 'None'),
+            alergias: document.getElementById('alergias').value || 'Ninguna',
             
             // Paso 3: Contactos (sin medicacion)
             contacto_nombre: document.getElementById('contacto_nombre').value,
@@ -200,21 +163,15 @@ async function completarRegistro() {
             contacto_relacion: document.getElementById('contacto_relacion').value,
             
             // Paso 4: Vinculación y permisos
-            familiar_email: document.getElementById('vinculacion_si').checked ? 
-                (window.i18n.isSpanish() ? 'Vinculado' : 'Linked') : 
-                (window.i18n.isSpanish() ? 'No vinculado' : 'Not linked'),
-            codigo_vinculacion: document.getElementById('vinculacion_si').checked ? 
-                document.getElementById('codigo_texto').textContent : 
-                (window.i18n.isSpanish() ? 'No generado' : 'Not generated'),
+            familiar_email: document.getElementById('vinculacion_si').checked ? 'Vinculado' : 'No vinculado',
+            codigo_vinculacion: document.getElementById('vinculacion_si').checked ? document.getElementById('codigo_texto').textContent : 'No generado',
             
             // Permisos (solo si quiere vincular)
             sintomas: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_sintomas').checked : false,
             medicacion_permiso: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_medicacion').checked : false,
             citas: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_citas').checked : false,
-            ubicacion: document.getElementById('vinculacion_si').checked ? document.getElementById('permiso_ubicacion').checked : false,
             notif_recordatorios: document.getElementById('notif_recordatorios').checked,
-            notif_citas: document.getElementById('notif_citas').checked,
-            notif_sugerencias: document.getElementById('notif_sugerencias').checked
+            notif_citas: document.getElementById('notif_citas').checked
         };
         
         // Mostrar loading

@@ -38,26 +38,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 function actualizarIdiomaSelector() {
     const currentLanguageSpan = document.getElementById('currentLanguage');
     if (currentLanguageSpan) {
-        currentLanguageSpan.textContent = window.i18n.getCurrentLanguage().toUpperCase();
+        currentLanguageSpan.textContent = 'ESPAÑOL';
     }
 }
 
-// Función para cambiar idioma
-function toggleLanguage() {
-    const newLanguage = window.i18n.toggleLanguage();
-    actualizarIdiomaSelector();
-    
-    // Mostrar notificación de cambio de idioma
-    Swal.fire({
-        title: newLanguage === 'es' ? 'Idioma Cambiado' : 'Language Changed',
-        text: newLanguage === 'es' ? 'El idioma ha sido cambiado a Español' : 'Language has been changed to English',
-        icon: 'success',
-        confirmButtonText: newLanguage === 'es' ? 'Entendido' : 'Understood',
-        confirmButtonColor: '#d72660',
-        timer: 2000,
-        timerProgressBar: true
-    });
-}
+
 
 // Función para actualizar la interfaz con los datos del paciente
 function actualizarInterfaz(datos) {
@@ -71,14 +56,14 @@ function actualizarInterfaz(datos) {
     // Utilidad para setear texto si existe el elemento
     function setText(id, value) {
         const el = document.getElementById(id);
-        if (el) el.textContent = value && value.trim() !== '' ? value : (window.i18n.isSpanish() ? 'No especificado' : 'Not specified');
+        if (el) el.textContent = value && value.trim() !== '' ? value : 'No especificado';
     }
 
     setText('patientName', datos.nombre || '');
-    setText('patientAge', `${edadFinal} ${window.i18n.isSpanish() ? 'años' : 'years'}`);
-    setText('patientGender', datos.genero || '');
+    setText('patientAge', `${edadFinal} años`);
+    setText('patientGender', traducirGenero(datos.genero));
     setText('patientCountry', datos.pais || '');
-    setText('patientLanguage', datos.idioma === 'en' ? 'Inglés' : 'Español');
+    setText('patientLanguage', datos.idioma === 'en' ? 'Inglés' : 'Spanish');
     setText('bloodType', datos.tipo_sangre || '');
     setText('condition', datos.padecimiento || '');
     setText('diagnosisDate', datos.fecha_diagnostico || '');
@@ -87,7 +72,7 @@ function actualizarInterfaz(datos) {
     setText('doctorPhone', datos.telefono_medico || '');
     // Traducir dieta
     setText('patientDiet', traducirDieta(datos.dieta));
-    setText('allergies', datos.alergias || (window.i18n.isSpanish() ? 'Ninguna' : 'None'));
+    setText('allergies', datos.alergias || 'Ninguna');
     setText('emergencyContact', `${datos.contacto_nombre || ''} (${datos.contacto_relacion || ''})`);
     setText('emergencyPhone', datos.contacto_telefono || '');
     // Imagen de perfil en el dashboard
@@ -108,17 +93,31 @@ function actualizarInterfaz(datos) {
 
 // Traducción de valores de dieta
 function traducirDieta(valor) {
-    if (!valor || valor.trim() === '') return window.i18n.isSpanish() ? 'No especificado' : 'Not specified';
+    if (!valor || valor.trim() === '') return 'No especificado';
     const map = {
-        'normal': window.i18n.isSpanish() ? 'Dieta normal' : 'Normal diet',
-        'baja_sodio': window.i18n.isSpanish() ? 'Baja en sodio' : 'Low sodium',
-        'baja_azucar': window.i18n.isSpanish() ? 'Baja en azúcar' : 'Low sugar',
-        'sin_gluten': window.i18n.isSpanish() ? 'Sin gluten' : 'Gluten free',
-        'vegetariana': window.i18n.isSpanish() ? 'Vegetariana' : 'Vegetarian',
-        'vegana': window.i18n.isSpanish() ? 'Vegana' : 'Vegan',
-        'otra': window.i18n.isSpanish() ? 'Otra' : 'Other'
+        'normal': 'Dieta normal',
+        'baja_sodio': 'Baja en sodio',
+        'baja_azucar': 'Baja en azúcar',
+        'sin_gluten': 'Sin gluten',
+        'vegetariana': 'Vegetariana',
+        'vegana': 'Vegana',
+        'otra': 'Otra'
     };
     return map[valor] || valor;
+}
+
+// Traducción de valores de género
+function traducirGenero(valor) {
+    if (!valor || valor.trim() === '') return 'No especificado';
+    const map = {
+        'masculino': 'masculino',
+        'femenino': 'femenino',
+        'otro': 'otro',
+        'male': 'masculino',
+        'female': 'femenino',
+        'other': 'otro'
+    };
+    return map[valor.toLowerCase()] || valor;
 }
 
 // Función para editar perfil médico (modal propio)
@@ -250,40 +249,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function configuracion() {
     Swal.fire({
-        title: window.i18n.t('functions.settings'),
-        text: window.i18n.t('functions.settings.text'),
+        title: 'Configuración',
+        text: 'Esta es la sección de configuración del dashboard.',
         icon: 'info',
-        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonText: 'Entendido',
         confirmButtonColor: '#d72660'
     });
 }
 
 function agregarCita() {
     Swal.fire({
-        title: window.i18n.t('functions.add.appointment'),
-        text: window.i18n.t('functions.add.appointment.text'),
+        title: 'Agregar Cita',
+        text: 'Esta es la sección para agregar una nueva cita.',
         icon: 'info',
-        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonText: 'Entendido',
         confirmButtonColor: '#d72660'
     });
 }
 
 function agregarMedicamento() {
     Swal.fire({
-        title: window.i18n.t('functions.add.medication'),
-        text: window.i18n.t('functions.add.medication.text'),
+        title: 'Agregar Medicamento',
+        text: 'Esta es la sección para agregar un nuevo medicamento.',
         icon: 'info',
-        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonText: 'Entendido',
         confirmButtonColor: '#d72660'
     });
 }
 
 function emergencia() {
     Swal.fire({
-        title: window.i18n.t('functions.emergency'),
-        text: window.i18n.t('functions.emergency.text'),
+        title: 'Emergencia',
+        text: 'Esta es la sección para notificar una emergencia.',
         icon: 'warning',
-        confirmButtonText: window.i18n.t('messages.understood'),
+        confirmButtonText: 'Entendido',
         confirmButtonColor: '#dc3545',
         background: '#fff3cd',
         showClass: {
@@ -297,12 +296,12 @@ function emergencia() {
 
 function cerrarSesion() {
     Swal.fire({
-        title: window.i18n.t('functions.logout'),
-        text: window.i18n.t('functions.logout.text'),
+        title: 'Cerrar Sesión',
+        text: '¿Estás seguro de que quieres cerrar sesión?',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: window.i18n.isSpanish() ? 'Sí, Salir' : 'Yes, Exit',
-        cancelButtonText: window.i18n.t('functions.cancel'),
+        confirmButtonText: 'Sí, Salir',
+        cancelButtonText: 'Cancelar',
         confirmButtonColor: '#d72660',
         cancelButtonColor: '#6c757d'
     }).then(async (result) => {
@@ -338,12 +337,10 @@ document.addEventListener('click', function(e) {
         const appointmentItem = e.target.closest('.appointment-item');
         const appointmentTitle = appointmentItem.querySelector('h6').textContent;
         Swal.fire({
-            title: window.i18n.isSpanish() ? 'Recordatorio Configurado' : 'Reminder Set',
-            text: window.i18n.isSpanish() ? 
-                `Se configuró un recordatorio para: ${appointmentTitle}` : 
-                `Reminder set for: ${appointmentTitle}`,
+            title: 'Recordatorio Configurado',
+            text: `Se configuró un recordatorio para: ${appointmentTitle}`,
             icon: 'success',
-            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonText: 'Entendido',
             confirmButtonColor: '#d72660'
         });
     }
@@ -354,26 +351,22 @@ document.addEventListener('click', function(e) {
         const appointmentTitle = appointmentItem.querySelector('h6').textContent;
         
         Swal.fire({
-            title: window.i18n.isSpanish() ? '¿Eliminar Cita?' : 'Delete Appointment?',
-            text: window.i18n.isSpanish() ? 
-                `¿Estás seguro de eliminar: ${appointmentTitle}?` : 
-                `Are you sure you want to delete: ${appointmentTitle}?`,
+            title: '¿Eliminar Cita?',
+            text: `¿Estás seguro de eliminar: ${appointmentTitle}?`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: window.i18n.isSpanish() ? 'Sí, Eliminar' : 'Yes, Delete',
-            cancelButtonText: window.i18n.t('functions.cancel'),
+            confirmButtonText: 'Sí, Eliminar',
+            cancelButtonText: 'Cancelar',
             confirmButtonColor: '#dc3545',
             cancelButtonColor: '#6c757d'
         }).then((result) => {
             if (result.isConfirmed) {
                 appointmentItem.remove();
                 Swal.fire({
-                    title: window.i18n.isSpanish() ? 'Cita Eliminada' : 'Appointment Deleted',
-                    text: window.i18n.isSpanish() ? 
-                        'La cita ha sido eliminada correctamente' : 
-                        'The appointment has been deleted successfully',
+                    title: 'Cita Eliminada',
+                    text: 'La cita ha sido eliminada correctamente',
                     icon: 'success',
-                    confirmButtonText: window.i18n.t('messages.understood'),
+                    confirmButtonText: 'Entendido',
                     confirmButtonColor: '#d72660'
                 });
             }
@@ -386,16 +379,14 @@ document.addEventListener('click', function(e) {
         const medicationName = medicationItem.querySelector('h6').textContent;
         const statusBadge = medicationItem.querySelector('.badge');
         
-        statusBadge.textContent = window.i18n.t('status.taken');
+        statusBadge.textContent = 'Tomado';
         statusBadge.className = 'badge bg-success';
         
         Swal.fire({
-            title: window.i18n.isSpanish() ? 'Medicamento Registrado' : 'Medication Recorded',
-            text: window.i18n.isSpanish() ? 
-                `${medicationName} marcado como tomado` : 
-                `${medicationName} marked as taken`,
+            title: 'Medicamento Registrado',
+            text: `${medicationName} marcado como tomado`,
             icon: 'success',
-            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonText: 'Entendido',
             confirmButtonColor: '#d72660'
         });
     }
@@ -406,12 +397,10 @@ document.addEventListener('click', function(e) {
         const medicationName = medicationItem.querySelector('h6').textContent;
         
         Swal.fire({
-            title: window.i18n.isSpanish() ? 'Editar Medicamento' : 'Edit Medication',
-            text: window.i18n.isSpanish() ? 
-                `Editar configuración de: ${medicationName}` : 
-                `Edit configuration for: ${medicationName}`,
+            title: 'Editar Medicamento',
+            text: `Editar configuración de: ${medicationName}`,
             icon: 'info',
-            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonText: 'Entendido',
             confirmButtonColor: '#d72660'
         });
     }
@@ -422,12 +411,10 @@ document.addEventListener('click', function(e) {
         const memberName = memberItem.querySelector('h6').textContent;
         
         Swal.fire({
-            title: window.i18n.isSpanish() ? 'Chat Familiar' : 'Family Chat',
-            text: window.i18n.isSpanish() ? 
-                `Iniciar chat con ${memberName}` : 
-                `Start chat with ${memberName}`,
+            title: 'Chat Familiar',
+            text: `Iniciar chat con ${memberName}`,
             icon: 'info',
-            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonText: 'Entendido',
             confirmButtonColor: '#d72660'
         });
     }
@@ -439,12 +426,10 @@ document.addEventListener('click', function(e) {
             notification.classList.remove('unread');
         });
         Swal.fire({
-            title: window.i18n.isSpanish() ? 'Notificaciones Marcadas' : 'Notifications Marked',
-            text: window.i18n.isSpanish() ? 
-                'Todas las notificaciones han sido marcadas como leídas' : 
-                'All notifications have been marked as read',
+            title: 'Notificaciones Marcadas',
+            text: 'Todas las notificaciones han sido marcadas como leídas',
             icon: 'success',
-            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonText: 'Entendido',
             confirmButtonColor: '#d72660'
         });
     }
@@ -482,7 +467,7 @@ function renderizarMedicamentos(medicamentos) {
     if (!lista) return;
     lista.innerHTML = '';
     if (medicamentos.length === 0) {
-        lista.innerHTML = `<li class="text-muted">${window.i18n.isSpanish() ? 'Sin medicamentos registrados' : 'No medications registered'}</li>`;
+        lista.innerHTML = `<li class="text-muted">Sin medicamentos registrados</li>`;
         return;
     }
     medicamentos.forEach(med => {
@@ -502,7 +487,7 @@ function renderizarNotificaciones(notificaciones) {
     if (!lista) return;
     lista.innerHTML = '';
     if (!Array.isArray(notificaciones) || notificaciones.length === 0) {
-        lista.innerHTML = `<li class="text-muted">${window.i18n.isSpanish() ? 'Sin información' : 'No information'}</li>`;
+        lista.innerHTML = `<li class="text-muted">Sin información</li>`;
         return;
     }
     notificaciones.forEach(notif => {
@@ -522,7 +507,7 @@ function renderizarFamilia(familia) {
     if (!lista) return;
     lista.innerHTML = '';
     if (!Array.isArray(familia) || familia.length === 0) {
-        lista.innerHTML = `<li class="text-muted">${window.i18n.isSpanish() ? 'Sin información' : 'No information'}</li>`;
+        lista.innerHTML = `<li class="text-muted">Sin información</li>`;
         return;
     }
     familia.forEach(fam => {
@@ -530,7 +515,7 @@ function renderizarFamilia(familia) {
         li.className = 'd-flex justify-content-between align-items-center mb-2';
         li.innerHTML = `
             <span class="fam-nombre">${fam.nombre || ''}${fam.parentesco ? ' (' + fam.parentesco + ')' : ''}</span>
-            <span class="fam-estado ${fam.en_linea ? 'text-success' : 'text-muted'}">${fam.en_linea ? (window.i18n.isSpanish() ? 'En línea' : 'Online') : (fam.ultimo_acceso || '')}</span>
+            <span class="fam-estado ${fam.en_linea ? 'text-success' : 'text-muted'}">${fam.en_linea ? 'En línea' : (fam.ultimo_acceso || '')}</span>
         `;
         lista.appendChild(li);
     });
@@ -586,12 +571,12 @@ function removerClasesTarjetasOscuras() {
 async function cargarCitasProximas() {
     const lista = document.querySelector('.lista-citas-proximas');
     if (!lista) return;
-    lista.innerHTML = '<li class="text-muted">Cargando citas...</li>';
+    lista.innerHTML = `<li class="text-muted">Cargando citas...</li>`;
     try {
         const res = await fetch('PHP/get-citas.php');
         const data = await res.json();
         if (!data.success || !Array.isArray(data.citas)) {
-            lista.innerHTML = '<li class="text-muted">Sin citas próximas</li>';
+            lista.innerHTML = `<li class="text-muted">Sin citas próximas</li>`;
             return;
         }
         const ahora = new Date();
@@ -600,7 +585,7 @@ async function cargarCitasProximas() {
             return fechaHora > ahora;
         });
         if (citasFuturas.length === 0) {
-            lista.innerHTML = '<li class="text-muted">Sin citas próximas</li>';
+            lista.innerHTML = `<li class="text-muted">Sin citas próximas</li>`;
             return;
         }
         lista.innerHTML = '';
@@ -616,11 +601,11 @@ async function cargarCitasProximas() {
                     <span><i class="bi bi-calendar2-week"></i> <b>${fecha}</b> <i class="bi bi-clock"></i> <b>${hora}</b></span>
                     <span><i class="bi bi-person"></i> ${cita.medico}</span>
                     <span><i class="bi bi-briefcase"></i> ${cita.especialidad || '-'}</span>
-                    <span><span class="cita-estado-badge ${estadoClass}">${cita.estado}</span></span>
+                    <span><span class="cita-estado-badge ${estadoClass}">${cita.estado === 'Pendiente' ? 'Pendiente' : (cita.estado === 'Atendida' ? 'Atendida' : 'Cancelada')}</span></span>
                 </li>`;
         });
     } catch (e) {
-        lista.innerHTML = '<li class="text-muted">Error al cargar citas</li>';
+        lista.innerHTML = `<li class="text-muted">Error al cargar citas</li>`;
     }
 }
 
@@ -634,4 +619,13 @@ cargarCitasProximas();
     } else {
         document.body.classList.remove('modo-oscuro');
     }
-})(); 
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cerrarSesionBtn = document.getElementById('cerrarSesionBtn');
+    if (cerrarSesionBtn) {
+        cerrarSesionBtn.onclick = () => {
+            fetch('PHP/cerrar-sesion.php').then(() => window.location.href = 'Index.html');
+        };
+    }
+}); 

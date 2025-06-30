@@ -53,9 +53,9 @@ function getNotificacionesPaciente($paciente_id) {
     global $conexion;
     $sql = "SELECT n.*, 
             CASE 
-                WHEN n.tipo = 'medicamento' THEN CONCAT('Es hora de tomar ', JSON_UNQUOTE(JSON_EXTRACT(n.datos_adicionales, '$.medicamento')), ' - ', JSON_UNQUOTE(JSON_EXTRACT(n.datos_adicionales, '$.dosis')))
-                WHEN n.tipo = 'cita' THEN CONCAT('Tienes cita en 30 min con ', JSON_UNQUOTE(JSON_EXTRACT(n.datos_adicionales, '$.medico')))
-                WHEN n.tipo = 'mensaje_familiar' THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(n.datos_adicionales, '$.remitente')), ' te envió un mensaje')
+                WHEN n.tipo = 'medicamento' THEN CONCAT('Debe tomar ', JSON_UNQUOTE(JSON_EXTRACT(n.datos_adicionales, '$.medicamento')), ' - ', JSON_UNQUOTE(JSON_EXTRACT(n.datos_adicionales, '$.dosis')))
+                WHEN n.tipo = 'cita' THEN CONCAT('Tiene cita en 30 min con ', JSON_UNQUOTE(JSON_EXTRACT(n.datos_adicionales, '$.medico')))
+                WHEN n.tipo = 'mensaje_familiar' THEN CONCAT(JSON_UNQUOTE(JSON_EXTRACT(n.datos_adicionales, '$.remitente')), ' envió un mensaje')
                 WHEN n.tipo = 'recordatorio' THEN n.mensaje
                 ELSE n.mensaje
             END as mensaje_formateado

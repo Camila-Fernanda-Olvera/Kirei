@@ -3,11 +3,14 @@ class SistemaNotificacionesFamiliar {
         this.notificaciones = [];
         this.intervalo = null;
         this.ultimaNotificacion = null;
+        this.filtro = 'todas';
         this.init();
     }
 
     async init() {
         this.iniciarPolling();
+        this.configurarFiltros();
+        this.sincronizarModoOscuro();
     }
 
     iniciarPolling() {
@@ -26,7 +29,8 @@ class SistemaNotificacionesFamiliar {
             });
             const data = await response.json();
             if (data.success && Array.isArray(data.notificaciones)) {
-                this.mostrarNotificaciones(data.notificaciones);
+                this.notificaciones = data.notificaciones;
+                this.mostrarNotificaciones();
             } else {
                 this.mostrarError(data.message || 'No se pudieron cargar notificaciones');
             }
@@ -35,15 +39,20 @@ class SistemaNotificacionesFamiliar {
         }
     }
 
-    mostrarNotificaciones(notificaciones) {
+    mostrarNotificaciones() {
         const lista = document.getElementById('listaNotificaciones');
         if (!lista) return;
-        if (notificaciones.length === 0) {
+        const filtradas = this.notificaciones.filter(n => {
+            if (this.filtro === 'todas') return true;
+            if (['pendiente','leida','completada'].includes(this.filtro)) return n.estado === this.filtro;
+            return n.tipo === this.filtro;
+        });
+        if (filtradas.length === 0) {
             lista.innerHTML = '<div class="text-center py-4"><i class="bi bi-inbox" style="font-size: 2.5rem; color: #4DBFC9;"></i><p class="mt-2">No hay notificaciones para mostrar.</p></div>';
             return;
         }
         lista.innerHTML = '';
-        notificaciones.forEach(notif => {
+        filtradas.forEach(notif => {
             const item = this.crearItemNotificacion(notif);
             lista.appendChild(item);
         });
@@ -84,6 +93,32 @@ class SistemaNotificacionesFamiliar {
     mostrarError(msg) {
         const lista = document.getElementById('listaNotificaciones');
         if (lista) lista.innerHTML = `<div class='alert alert-danger'>${msg}</div>`;
+    }
+
+    configurarFiltros() {
+        document.querySelectorAll('.filtro-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+                btn.classList.add('activo');
+                this.filtro = btn.getAttribute('data-filtro');
+                this.mostrarNotificaciones();
+            };
+        });
+    }
+
+    sincronizarModoOscuro() {
+        const root = document.body;
+        const darkSwitch = document.getElementById('switchDarkMode');
+        if (darkSwitch) {
+            darkSwitch.addEventListener('change', () => {
+                root.classList.toggle('modo-oscuro', darkSwitch.checked);
+                localStorage.setItem('modoOscuro', darkSwitch.checked ? '1' : '0');
+            });
+            // Estado inicial
+            const dark = localStorage.getItem('modoOscuro') === '1';
+            darkSwitch.checked = dark;
+            root.classList.toggle('modo-oscuro', dark);
+        }
     }
 }
 

@@ -484,6 +484,12 @@ class SistemaNotificaciones {
 // Inicializar sistema de notificaciones cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     window.sistemaNotificaciones = new SistemaNotificaciones();
+    const cerrarSesionBtn = document.getElementById('cerrarSesionBtn');
+    if (cerrarSesionBtn) {
+        cerrarSesionBtn.onclick = () => {
+            fetch('PHP/cerrar-sesion.php').then(() => window.location.href = 'Index.html');
+        };
+    }
 });
 
 // Exportar para uso en otros módulos
