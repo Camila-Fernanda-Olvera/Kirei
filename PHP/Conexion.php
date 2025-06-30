@@ -1,9 +1,9 @@
 <?php
-// Configuración de la base de datos para InfinityFree
-$host = 'sql113.infinityfree.com';
-$user = 'if0_39358312';
-$pass = '9CoAFO1dPjrvdWL';
-$db = 'if0_39358312_XXX'; // Cambia XXX por el nombre real de tu base de datos
+// Configuración de la base de datos para AwardSpace
+$host = 'fdb1033.awardspace.net';
+$user = '4654255_kirei';
+$pass = '07081214Cf?';
+$db = '4654255_kirei';
 
 // Crear conexión
 $conexion = new mysqli($host, $user, $pass, $db);
