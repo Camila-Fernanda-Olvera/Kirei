@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones - Kirei</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/dashboard-paciente.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .notificacion-item {
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 20px rgba(77,191,201,0.10);
+            border: 2px solid #4DBFC9;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .notificacion-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(77,191,201,0.18);
+        }
+        .notificacion-item.pendiente {
+            border-left: 4px solid #FFC107;
+            background: linear-gradient(135deg, rgba(255,193,7,0.05) 0%, rgba(255,255,255,0.95) 100%);
+        }
+        .notificacion-item.leida {
+            border-left: 4px solid #28A745;
+            opacity: 0.8;
+        }
+        .notificacion-item.completada {
+            border-left: 4px solid #6C757D;
+            opacity: 0.6;
+        }
+        .notificacion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .notificacion-titulo {
+            font-weight: 700;
+            color: #197074;
+            font-size: 1.1rem;
+        }
+        .notificacion-fecha {
+            font-size: 0.9rem;
+            color: #6C757D;
+        }
+        .notificacion-mensaje {
+            color: #23404A;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        .notificacion-tipo {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .tipo-medicamento { background: rgba(77,191,201,0.15); color: #197074; }
+        .tipo-cita { background: rgba(25,112,116,0.15); color: #197074; }
+        .tipo-mensaje_familiar { background: rgba(255,143,177,0.15); color: #C43556; }
+        .tipo-recordatorio { background: rgba(255,193,7,0.15); color: #856404; }
+        .tipo-emergencia { background: rgba(220,53,69,0.15); color: #721C24; }
+        
+        .filtros-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(77,191,201,0.10);
+            border: 2px solid #4DBFC9;
+        }
+        .filtro-btn {
+            background: rgba(77,191,201,0.1);
+            border: 2px solid #4DBFC9;
+            color: #197074;
+            border-radius: 25px;
+            padding: 0.5rem 1.2rem;
+            margin: 0.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .filtro-btn:hover, .filtro-btn.activo {
+            background: #4DBFC9;
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .configuracion-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(77,191,201,0.10);
+            border: 2px solid #4DBFC9;
+        }
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(77,191,201,0.2);
+        }
+        .config-item:last-child {
+            border-bottom: none;
+        }
+        .form-switch .form-check-input {
+            width: 3rem;
+            height: 1.5rem;
+            background: #E9ECEF;
+            border: none;
+        }
+        .form-switch .form-check-input:checked {
+            background: #4DBFC9;
+        }
+        
+        /* Modo oscuro */
+        .modo-oscuro .notificacion-item {
+            background: rgba(34,58,78,0.95);
+            border-color: #86DDE4;
+            color: #F8FAFF;
+        }
+        .modo-oscuro .notificacion-titulo {
+            color: #86DDE4;
+        }
+        .modo-oscuro .notificacion-mensaje {
+            color: #D9E1F1;
+        }
+        .modo-oscuro .filtros-container,
+        .modo-oscuro .configuracion-card {
+            background: rgba(34,58,78,0.95);
+            border-color: #86DDE4;
+            color: #F8FAFF;
+        }
+        .modo-oscuro .filtro-btn {
+            background: rgba(134,221,228,0.1);
+            border-color: #86DDE4;
+            color: #86DDE4;
+        }
+        .modo-oscuro .filtro-btn:hover,
+        .modo-oscuro .filtro-btn.activo {
+            background: #86DDE4;
+            color: #223A4E;
+        }
+    </style>
+</head>
+<body class="dashboard-paciente-bg">
+    <header class="paciente-header position-relative">
+        <div class="logo-area">
+            <i class="bi bi-bell"></i> Notificaciones Kirei
+        </div>
+        <div class="d-flex align-items-center gap-3 position-absolute top-0 end-0 pe-4 pt-3" style="z-index: 1051;">
+            <a href="dashboard-paciente.html" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-left"></i> Volver</a>
+        </div>
+    </header>
+
+    <main class="container py-4">
+        <!-- Filtros -->
+        <div class="filtros-container">
+            <h4 class="mb-3"><i class="bi bi-funnel"></i> Filtros</h4>
+            <div class="d-flex flex-wrap">
+                <button class="filtro-btn activo" data-filtro="todas">
+                    <i class="bi bi-bell"></i> Todas
+                </button>
+                <button class="filtro-btn" data-filtro="pendiente">
+                    <i class="bi bi-clock"></i> Pendientes
+                </button>
+                <button class="filtro-btn" data-filtro="medicamento">
+                    <i class="bi bi-capsule"></i> Medicamentos
+                </button>
+                <button class="filtro-btn" data-filtro="cita">
+                    <i class="bi bi-calendar-event"></i> Citas
+                </button>
+                <button class="filtro-btn" data-filtro="mensaje_familiar">
+                    <i class="bi bi-chat-dots"></i> Mensajes
+                </button>
+                <button class="filtro-btn" data-filtro="emergencia">
+                    <i class="bi bi-exclamation-triangle"></i> Emergencias
+                </button>
+            </div>
+        </div>
+
+        <!-- Configuración -->
+        <div class="configuracion-card">
+            <h4 class="mb-3"><i class="bi bi-gear"></i> Configuración</h4>
+            <div class="config-item">
+                <div>
+                    <strong>Notificaciones de medicamentos</strong>
+                    <small class="d-block text-muted">Recordatorios para tomar medicamentos</small>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="configMedicamentos" checked>
+                </div>
+            </div>
+            <div class="config-item">
+                <div>
+                    <strong>Notificaciones de citas</strong>
+                    <small class="d-block text-muted">Recordatorios de citas médicas</small>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="configCitas" checked>
+                </div>
+            </div>
+            <div class="config-item">
+                <div>
+                    <strong>Mensajes de familiares</strong>
+                    <small class="d-block text-muted">Notificaciones de chat familiar</small>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="configMensajes" checked>
+                </div>
+            </div>
+            <div class="config-item">
+                <div>
+                    <strong>Modo silencioso</strong>
+                    <small class="d-block text-muted">22:00 - 07:00</small>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="configSilencio">
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de notificaciones -->
+        <div class="notificaciones-container">
+            <h4 class="mb-3"><i class="bi bi-list-ul"></i> Notificaciones</h4>
+            <div id="listaNotificaciones">
+                <div class="text-center py-4">
+                    <i class="bi bi-hourglass-split" style="font-size: 3rem; color: #4DBFC9;"></i>
+                    <p class="mt-2">Cargando notificaciones...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="JS/notificaciones.js"></script>
+    <script>
+        // Variables globales
+        let notificaciones = [];
+        let filtroActual = 'todas';
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarNotificaciones();
+            configurarFiltros();
+            configurarConfiguracion();
+            aplicarModoOscuro();
+        });
+
+        // Cargar notificaciones
+        async function cargarNotificaciones() {
+            try {
+                const response = await fetch('PHP/notificaciones.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'action=get_notificaciones'
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    notificaciones = data.notificaciones;
+                    renderizarNotificaciones();
+                } else {
+                    mostrarError('Error al cargar notificaciones');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarError('Error de conexión');
+            }
+        }
+
+        // Renderizar notificaciones
+        function renderizarNotificaciones() {
+            const container = document.getElementById('listaNotificaciones');
+            const notificacionesFiltradas = filtrarNotificaciones(notificaciones, filtroActual);
+            
+            if (notificacionesFiltradas.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="bi bi-bell-slash" style="font-size: 3rem; color: #6C757D;"></i>
+                        <p class="mt-2">No hay notificaciones ${filtroActual !== 'todas' ? 'de este tipo' : ''}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = notificacionesFiltradas.map(notif => `
+                <div class="notificacion-item ${notif.estado}" onclick="manejarClickNotificacion(${notif.id}, '${notif.tipo}')">
+                    <div class="notificacion-header">
+                        <div class="notificacion-titulo">${notif.titulo}</div>
+                        <div class="notificacion-fecha">${formatearFecha(notif.fecha_creacion)}</div>
+                    </div>
+                    <div class="notificacion-mensaje">${notif.mensaje}</div>
+                    <span class="notificacion-tipo tipo-${notif.tipo}">${obtenerNombreTipo(notif.tipo)}</span>
+                </div>
+            `).join('');
+        }
+
+        // Filtrar notificaciones
+        function filtrarNotificaciones(notificaciones, filtro) {
+            if (filtro === 'todas') return notificaciones;
+            if (filtro === 'pendiente') return notificaciones.filter(n => n.estado === 'pendiente');
+            return notificaciones.filter(n => n.tipo === filtro);
+        }
+
+        // Configurar filtros
+        function configurarFiltros() {
+            document.querySelectorAll('.filtro-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remover clase activo de todos los botones
+                    document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+                    // Agregar clase activo al botón clickeado
+                    this.classList.add('activo');
+                    
+                    filtroActual = this.dataset.filtro;
+                    renderizarNotificaciones();
+                });
+            });
+        }
+
+        // Configurar configuración
+        function configurarConfiguracion() {
+            // Cargar configuración actual
+            cargarConfiguracionActual();
+            
+            // Event listeners para cambios
+            document.getElementById('configMedicamentos').addEventListener('change', function() {
+                actualizarConfiguracion('medicamento', { activo: this.checked ? 1 : 0 });
+            });
+            
+            document.getElementById('configCitas').addEventListener('change', function() {
+                actualizarConfiguracion('cita', { activo: this.checked ? 1 : 0 });
+            });
+            
+            document.getElementById('configMensajes').addEventListener('change', function() {
+                actualizarConfiguracion('mensaje_familiar', { activo: this.checked ? 1 : 0 });
+            });
+            
+            document.getElementById('configSilencio').addEventListener('change', function() {
+                // Actualizar configuración de silencio para todos los tipos
+                const tipos = ['medicamento', 'cita', 'mensaje_familiar', 'recordatorio', 'emergencia'];
+                tipos.forEach(tipo => {
+                    actualizarConfiguracion(tipo, { 
+                        hora_silencio_inicio: this.checked ? '22:00:00' : null,
+                        hora_silencio_fin: this.checked ? '07:00:00' : null
+                    });
+                });
+            });
+        }
+
+        // Cargar configuración actual
+        async function cargarConfiguracionActual() {
+            try {
+                const response = await fetch('PHP/notificaciones.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'action=configuracion'
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    const config = data.configuracion;
+                    
+                    document.getElementById('configMedicamentos').checked = config.medicamento?.activo || true;
+                    document.getElementById('configCitas').checked = config.cita?.activo || true;
+                    document.getElementById('configMensajes').checked = config.mensaje_familiar?.activo || true;
+                    
+                    // Verificar si hay horario de silencio configurado
+                    const tieneSilencio = config.medicamento?.hora_silencio_inicio && config.medicamento?.hora_silencio_fin;
+                    document.getElementById('configSilencio').checked = tieneSilencio;
+                }
+            } catch (error) {
+                console.error('Error al cargar configuración:', error);
+            }
+        }
+
+        // Actualizar configuración
+        async function actualizarConfiguracion(tipo, config) {
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'actualizar_configuracion');
+                formData.append('tipo', tipo);
+                
+                for (const [key, value] of Object.entries(config)) {
+                    formData.append(key, value);
+                }
+                
+                const response = await fetch('PHP/notificaciones.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    // Actualizar configuración en el sistema de notificaciones
+                    if (window.sistemaNotificaciones) {
+                        await window.sistemaNotificaciones.cargarConfiguracion();
+                    }
+                }
+            } catch (error) {
+                console.error('Error al actualizar configuración:', error);
+            }
+        }
+
+        // Manejar click en notificación
+        function manejarClickNotificacion(id, tipo) {
+            if (tipo === 'medicamento') {
+                Swal.fire({
+                    title: '¿Tomar medicamento?',
+                    text: '¿Confirmas que has tomado el medicamento?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, tomado',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#28A745'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        marcarCompletada(id, 'tomar_ahora');
+                    }
+                });
+            } else if (tipo === 'mensaje_familiar') {
+                Swal.fire({
+                    title: 'Mensaje familiar',
+                    text: '¿Quieres abrir el chat para responder?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Abrir chat',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#4DBFC9'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Aquí se abriría el chat
+                        Swal.fire('Chat', 'Funcionalidad de chat en desarrollo', 'info');
+                    }
+                });
+            } else {
+                marcarLeida(id);
+            }
+        }
+
+        // Marcar como leída
+        async function marcarLeida(id) {
+            try {
+                const response = await fetch('PHP/notificaciones.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=marcar_leida&notificacion_id=${id}`
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    cargarNotificaciones(); // Recargar lista
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Marcar como completada
+        async function marcarCompletada(id, respuesta) {
+            try {
+                const response = await fetch('PHP/notificaciones.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=marcar_completada&notificacion_id=${id}&respuesta=${respuesta}`
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    Swal.fire('¡Listo!', 'Acción completada correctamente', 'success');
+                    cargarNotificaciones(); // Recargar lista
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Utilidades
+        function formatearFecha(fecha) {
+            const f = new Date(fecha);
+            const ahora = new Date();
+            const diff = ahora - f;
+            
+            if (diff < 60000) return 'Hace un momento';
+            if (diff < 3600000) return `Hace ${Math.floor(diff/60000)} min`;
+            if (diff < 86400000) return `Hace ${Math.floor(diff/3600000)}h`;
+            return f.toLocaleDateString('es-ES');
+        }
+
+        function obtenerNombreTipo(tipo) {
+            const nombres = {
+                'medicamento': 'Medicamento',
+                'cita': 'Cita',
+                'mensaje_familiar': 'Mensaje familiar',
+                'recordatorio': 'Recordatorio',
+                'emergencia': 'Emergencia'
+            };
+            return nombres[tipo] || tipo;
+        }
+
+        function mostrarError(mensaje) {
+            Swal.fire('Error', mensaje, 'error');
+        }
+
+        // Aplicar modo oscuro
+        function aplicarModoOscuro() {
+            if (localStorage.getItem('modoOscuro') === 'true') {
+                document.body.classList.add('modo-oscuro');
+            }
+        }
+    </script>
+</body>
+</html> 
