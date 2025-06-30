@@ -489,4 +489,9 @@ document.addEventListener('DOMContentLoaded', function() {
 // Exportar para uso en otros módulos
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = SistemaNotificaciones;
+}
+
+// Después de renderizar notificaciones (en la función que pinta las tarjetas)
+if (typeof aplicarClasesTarjetasOscuras === 'function') {
+    aplicarClasesTarjetasOscuras();
 } 
