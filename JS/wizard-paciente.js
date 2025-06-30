@@ -176,8 +176,8 @@ async function completarRegistro() {
         
         // Mostrar loading
         Swal.fire({
-            title: window.i18n.t('messages.saving'),
-            text: window.i18n.t('messages.please.wait'),
+            title: 'Guardando información',
+            text: 'Por favor espera...',
             allowOutsideClick: false,
             allowEscapeKey: false,
             showConfirmButton: false,
@@ -192,10 +192,10 @@ async function completarRegistro() {
     } catch (error) {
         console.error('Error en el registro:', error);
         Swal.fire({
-            title: window.i18n.t('messages.error'),
-            text: window.i18n.t('messages.error.text'),
+            title: 'Error',
+            text: 'Ocurrió un error al guardar los datos.',
             icon: 'error',
-            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonText: 'Entendido',
             confirmButtonColor: '#d72660'
         });
     }
@@ -217,15 +217,15 @@ async function guardarDatosPaciente() {
 
         if (data.success) {
             // Si se generó un código de vinculación, guardarlo en la base de datos
-            if (datosCompletos.codigo_vinculacion !== (window.i18n.isSpanish() ? 'No generado' : 'Not generated')) {
+            if (datosCompletos.codigo_vinculacion !== 'No generado') {
                 await guardarCodigoVinculacion(datosCompletos.codigo_vinculacion);
             }
             
             Swal.fire({
-                title: window.i18n.t('messages.registration.complete'),
-                text: window.i18n.t('messages.registration.complete.text'),
+                title: 'Registro completo',
+                text: '¡Tu registro se ha completado exitosamente!',
                 icon: 'success',
-                confirmButtonText: window.i18n.t('messages.start'),
+                confirmButtonText: 'Comenzar',
                 confirmButtonColor: '#d72660',
                 timer: 5000,
                 timerProgressBar: true
@@ -239,10 +239,10 @@ async function guardarDatosPaciente() {
     } catch (error) {
         console.error('Error:', error);
         Swal.fire({
-            title: window.i18n.t('messages.error'),
-            text: window.i18n.t('messages.error.text'),
+            title: 'Error',
+            text: 'Ocurrió un error al guardar los datos.',
             icon: 'error',
-            confirmButtonText: window.i18n.t('messages.understood'),
+            confirmButtonText: 'Entendido',
             confirmButtonColor: '#d72660'
         });
     }
