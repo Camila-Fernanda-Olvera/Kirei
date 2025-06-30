@@ -81,20 +81,73 @@ function cargarBienestar() {
         });
 }
 
-// Guardar nuevo registro
+// Utilidad: mostrar toast de alerta y registrar notificación si hay valores de riesgo
+function mostrarAlertaBienestar(datos) {
+    // Rangos estándar
+    const alertas = [];
+    if (datos.glucosa > 180) alertas.push('Glucosa alta (>180 mg/dL)');
+    if (datos.glucosa < 70) alertas.push('Glucosa baja (<70 mg/dL)');
+    if (datos.presion) {
+        const presion = datos.presion.split('/');
+        if (presion.length === 2) {
+            const sist = parseInt(presion[0]);
+            const diast = parseInt(presion[1]);
+            if (sist > 140 || diast > 90) alertas.push('Presión arterial alta (>140/90 mmHg)');
+            if (sist < 90 || diast < 60) alertas.push('Presión arterial baja (<90/60 mmHg)');
+        }
+    }
+    if (datos.fc > 100) alertas.push('Frecuencia cardíaca alta (>100 bpm)');
+    if (datos.fc && datos.fc < 50) alertas.push('Frecuencia cardíaca baja (<50 bpm)');
+    if (datos.saturacion && datos.saturacion < 92) alertas.push('Saturación de oxígeno baja (<92%)');
+    if (datos.temp && datos.temp > 37) alertas.push('Temperatura elevada (>37°C)');
+    if (datos.imc && datos.imc < 18.5) alertas.push('IMC bajo (<18.5)');
+    if (datos.imc && datos.imc > 30) alertas.push('IMC alto (>30)');
+    // Peso: solo tooltip, no alerta
+    if (alertas.length > 0) {
+        // Mostrar toast usando sistema de notificaciones
+        if (window.sistemaNotificaciones && typeof window.sistemaNotificaciones.mostrarNotificacion === 'function') {
+            window.sistemaNotificaciones.mostrarNotificacion({
+                tipo: 'recordatorio',
+                titulo: '¡Alerta de Bienestar!',
+                mensaje: alertas.join('<br>'),
+                prioridad: 'alta',
+                datos_adicionales: null
+            });
+        } else {
+            // Fallback visual
+            alert('¡Alerta de Bienestar!\n' + alertas.join('\n'));
+        }
+        // Registrar en la base de datos (notificaciones)
+        fetch('PHP/notificaciones.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'crear',
+                tipo: 'emergencia',
+                titulo: 'Alerta de Bienestar',
+                mensaje: alertas.join(', '),
+                prioridad: 'alta'
+            })
+        });
+    }
+}
+
+// Modificar guardarBienestar para usar la función de alerta y tooltips
 function guardarBienestar(e) {
     e.preventDefault();
     const datos = {
-        glucosa: document.getElementById('glucosa').value,
+        glucosa: parseFloat(document.getElementById('glucosa').value),
         presion: document.getElementById('presion').value,
-        fc: document.getElementById('fc').value,
-        pasos: document.getElementById('pasos').value,
-        peso: document.getElementById('peso').value,
-        imc: document.getElementById('imc').value,
-        saturacion: document.getElementById('saturacion').value,
-        temp: document.getElementById('temp').value,
+        fc: parseInt(document.getElementById('fc').value),
+        pasos: parseInt(document.getElementById('pasos').value),
+        peso: parseFloat(document.getElementById('peso').value),
+        imc: parseFloat(document.getElementById('imc').value),
+        saturacion: parseFloat(document.getElementById('saturacion').value),
+        temp: parseFloat(document.getElementById('temp').value),
         fecha: document.getElementById('fecha').value
     };
+    // Mostrar alerta si hay valores de riesgo
+    mostrarAlertaBienestar(datos);
     fetch('PHP/bienestar.php?action=add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -382,4 +435,35 @@ function eliminarMedicamento(id) {
             });
         }
     });
-} 
+}
+
+// Tooltips en los campos del formulario de bienestar
+function agregarTooltipsBienestar() {
+    const tooltips = [
+        { id: 'glucosa', text: 'Nivel de glucosa en sangre. Normal: 70-180 mg/dL.' },
+        { id: 'presion', text: 'Presión arterial. Ejemplo: 120/80 mmHg.' },
+        { id: 'fc', text: 'Frecuencia cardíaca. Normal: 50-100 bpm.' },
+        { id: 'saturacion', text: 'Saturación de oxígeno. Normal: >92%.' },
+        { id: 'temp', text: 'Temperatura corporal. Normal: 36-37°C.' },
+        { id: 'imc', text: 'Índice de Masa Corporal. Normal: 18.5-30.' },
+        { id: 'peso', text: 'Peso en kilogramos.' },
+        { id: 'pasos', text: 'Cantidad de pasos diarios.' }
+    ];
+    tooltips.forEach(t => {
+        const el = document.getElementById(t.id);
+        if (el) {
+            el.setAttribute('data-bs-toggle', 'tooltip');
+            el.setAttribute('title', t.text);
+        }
+    });
+    // Inicializar tooltips de Bootstrap
+    if (window.bootstrap && window.bootstrap.Tooltip) {
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+            new bootstrap.Tooltip(el);
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(agregarTooltipsBienestar, 500);
+}); 
