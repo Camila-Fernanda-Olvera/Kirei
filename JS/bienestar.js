@@ -269,44 +269,55 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function renderMedicamentosUI() {
     document.getElementById('medicamentos-crud').innerHTML = `
-        <form id="formMedicamento" class="row g-3 mb-4">
-            <div class="col-md-3">
-                <input type="text" class="form-control" id="medNombre" placeholder="Nombre" required>
+        <div class="tarjeta card-pastel-2 p-4 mb-4 shadow">
+            <h3 class="mb-4 d-flex align-items-center" style="font-weight:800;"><i class="bi bi-capsule me-2 text-primary"></i>Mis Medicamentos</h3>
+            <form id="formMedicamento" class="row g-3 mb-4">
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-capsule"></i></span>
+                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medNombre" placeholder="Nombre" required title="Nombre del medicamento">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-clipboard-heart"></i></span>
+                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medTipo" placeholder="Tipo" title="Tipo de medicamento">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-droplet-half"></i></span>
+                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medDosis" placeholder="Dosis" title="Dosis recomendada">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-clock-history"></i></span>
+                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medFrecuencia" placeholder="Frecuencia" title="Frecuencia de toma">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-alarm"></i></span>
+                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medHorarios" placeholder="Horarios" title="Ejemplo: 08:00, 14:00">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-calendar-event"></i></span>
+                    <input type="date" class="form-control ps-5 bg-info bg-opacity-10" id="medInicio" placeholder="Inicio" title="Fecha de inicio">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-calendar-x"></i></span>
+                    <input type="date" class="form-control ps-5 bg-info bg-opacity-10" id="medFin" placeholder="Fin" title="Fecha de fin">
+                </div>
+                <div class="col-md-4 position-relative">
+                    <span class="input-group-text position-absolute top-0 start-0" style="z-index:2;"><i class="bi bi-info-circle"></i></span>
+                    <input type="text" class="form-control ps-5 bg-info bg-opacity-10" id="medIndicaciones" placeholder="Indicaciones" title="Indicaciones adicionales">
+                </div>
+                <div class="col-md-12 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-outline-primary btn-lg px-5 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>Agregar</button>
+                </div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle tarjeta card-pastel-3" id="tablaMedicamentos">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombre</th><th>Tipo</th><th>Dosis</th><th>Frecuencia</th><th>Horarios</th><th>Inicio</th><th>Fin</th><th>Indicaciones</th><th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control" id="medTipo" placeholder="Tipo">
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control" id="medDosis" placeholder="Dosis">
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control" id="medFrecuencia" placeholder="Frecuencia">
-            </div>
-            <div class="col-md-2">
-                <input type="text" class="form-control" id="medHorarios" placeholder="Horarios">
-            </div>
-            <div class="col-md-2">
-                <input type="date" class="form-control" id="medInicio" placeholder="Inicio">
-            </div>
-            <div class="col-md-2">
-                <input type="date" class="form-control" id="medFin" placeholder="Fin">
-            </div>
-            <div class="col-md-3">
-                <input type="text" class="form-control" id="medIndicaciones" placeholder="Indicaciones">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-plus-circle"></i> Agregar</button>
-            </div>
-        </form>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle" id="tablaMedicamentos">
-                <thead class="table-light">
-                    <tr>
-                        <th>Nombre</th><th>Tipo</th><th>Dosis</th><th>Frecuencia</th><th>Horarios</th><th>Inicio</th><th>Fin</th><th>Indicaciones</th><th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
         </div>
     `;
     document.getElementById('formMedicamento').onsubmit = guardarMedicamento;
