@@ -1,4 +1,3 @@
-// Dashboard del Paciente - Kirei
 document.addEventListener('DOMContentLoaded', async function() {
     actualizarIdiomaSelector();
     try {
@@ -10,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
         const data = await response.json();
         if (data.success && data.perfil_completo && data.datos) {
+            window.datosPaciente = data.datos;
             actualizarInterfaz(data.datos);
             // Medicamentos
             if (Array.isArray(data.medicamentos)) {
@@ -90,6 +90,20 @@ function actualizarInterfaz(datos) {
     setText('allergies', datos.alergias || (window.i18n.isSpanish() ? 'Ninguna' : 'None'));
     setText('emergencyContact', `${datos.contacto_nombre || ''} (${datos.contacto_relacion || ''})`);
     setText('emergencyPhone', datos.contacto_telefono || '');
+    // Imagen de perfil en el dashboard
+    const perfilImg = document.querySelector('.perfil-img img');
+    if (perfilImg) {
+        let src = datos.imagen && datos.imagen.trim() !== '' ? datos.imagen : 'https://ui-avatars.com/api/?name=Perfil&background=cccccc&color=222222&size=200';
+        if (src.startsWith('data:image/')) {
+            perfilImg.src = src;
+        } else {
+            perfilImg.src = src;
+            perfilImg.onerror = function() {
+                this.onerror = null;
+                this.src = 'https://ui-avatars.com/api/?name=Perfil&background=cccccc&color=222222&size=200';
+            };
+        }
+    }
 }
 
 // Traducción de valores de dieta
@@ -107,109 +121,132 @@ function traducirDieta(valor) {
     return map[valor] || valor;
 }
 
-// Función para editar perfil médico
+// Función para editar perfil médico (modal propio)
 function editarPerfil() {
-    // Obtener datos actuales del paciente (puedes ajustar según tu estructura)
+    console.log('Función editarPerfil() ejecutada');
     const datos = window.datosPaciente || {};
-    Swal.fire({
-        title: 'Editar información médica',
-        html: `
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 1.2rem;">
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <img id="preview-img" src="${datos.imagen || 'https://via.placeholder.com/110'}" alt="Foto de perfil" style="width: 110px; height: 110px; border-radius: 50%; border: 4px solid #ff9800; object-fit: cover; margin-bottom: 0.5rem;">
-                    <input type="file" id="input-img" accept="image/*" style="display:none">
-                    <button type="button" id="btn-img" class="btn btn-outline-primary" style="margin-top: 0.2rem; font-size: 1rem; padding: 0.4rem 1.2rem;">Cambiar foto</button>
-                </div>
-                <input type="date" id="fechaDiagnostico" class="swal2-input" value="${datos.fecha_diagnostico || ''}" placeholder="Fecha de diagnóstico">
-                <input type="text" id="padecimiento" class="swal2-input" value="${datos.padecimiento || ''}" placeholder="Padecimiento">
-                <select id="tipoSangre" class="swal2-input">
-                    <option value="">Tipo de sangre</option>
-                    <option value="A+">A+</option><option value="A-">A-</option>
-                    <option value="B+">B+</option><option value="B-">B-</option>
-                    <option value="O+">O+</option><option value="O-">O-</option>
-                    <option value="AB+">AB+</option><option value="AB-">AB-</option>
-                </select>
-                <select id="tipoDieta" class="swal2-input">
-                    <option value="">Tipo de dieta</option>
-                    <option value="normal">Normal</option>
-                    <option value="baja_azucar">Baja en azúcar</option>
-                    <option value="baja_grasa">Baja en grasa</option>
-                    <option value="baja_sal">Baja en sal</option>
-                    <option value="vegetariana">Vegetariana</option>
-                    <option value="otra">Otra</option>
-                </select>
-                <input type="text" id="alergias" class="swal2-input" value="${datos.alergias || ''}" placeholder="Alergias">
-            </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Guardar',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-            popup: 'swal2-large-modal',
-            confirmButton: 'btn btn-outline-primary',
-            cancelButton: 'btn btn-secondary'
-        },
-        didOpen: () => {
-            // Preseleccionar valores
-            document.getElementById('tipoSangre').value = datos.tipo_sangre || '';
-            document.getElementById('tipoDieta').value = datos.dieta || '';
-            // Imagen de perfil
-            document.getElementById('btn-img').onclick = () => document.getElementById('input-img').click();
-            document.getElementById('input-img').onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                        document.getElementById('preview-img').src = ev.target.result;
-                    };
-                    reader.readAsDataURL(file);
+    document.getElementById('modalEditarPerfilError').style.display = 'none';
+    document.getElementById('modalEditarPerfilError').textContent = '';
+    document.getElementById('modalFechaDiagnostico').value = datos.fecha_diagnostico || '';
+    document.getElementById('modalPadecimiento').value = datos.padecimiento || '';
+    document.getElementById('modalTipoSangre').value = datos.tipo_sangre || '';
+    document.getElementById('modalTipoDieta').value = datos.dieta || '';
+    document.getElementById('modalAlergias').value = datos.alergias || '';
+    // Imagen de perfil en el modal
+    let src = datos.imagen && datos.imagen.trim() !== '' ? datos.imagen : 'https://ui-avatars.com/api/?name=Perfil&background=cccccc&color=222222&size=200';
+    if (src.startsWith('data:image/')) {
+        document.getElementById('modalPerfilImg').src = src;
+    } else {
+        document.getElementById('modalPerfilImg').src = src;
+        document.getElementById('modalPerfilImg').onerror = function() {
+            this.onerror = null;
+            this.src = 'https://ui-avatars.com/api/?name=Perfil&background=cccccc&color=222222&size=200';
+        };
+    }
+    document.getElementById('modalInputImg').value = '';
+    window.imagenBase64Temp = null;
+    document.getElementById('modalEditarPerfil').style.display = 'flex';
+}
+
+// Cerrar modal propio
+function cerrarModalEditarPerfil() {
+    document.getElementById('modalEditarPerfil').style.display = 'none';
+    window.imagenBase64Temp = null;
+}
+
+// Previsualizar imagen y validar formato/tamaño, y guardar base64 temporal
+window.imagenBase64Temp = null;
+document.addEventListener('DOMContentLoaded', function() {
+    const inputImg = document.getElementById('modalInputImg');
+    if (inputImg) {
+        inputImg.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const errorDiv = document.getElementById('modalEditarPerfilError');
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+            window.imagenBase64Temp = null;
+            if (file) {
+                const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    errorDiv.textContent = 'Formato no permitido. Solo JPG, PNG o WEBP.';
+                    errorDiv.style.display = 'block';
+                    inputImg.value = '';
+                    return;
                 }
-            };
-        },
-        preConfirm: async () => {
-            const fechaDiagnostico = document.getElementById('fechaDiagnostico').value;
-            const tipoSangre = document.getElementById('tipoSangre').value;
-            const tipoDieta = document.getElementById('tipoDieta').value;
-            const alergias = document.getElementById('alergias').value;
-            const padecimiento = document.getElementById('padecimiento').value;
-            const imgInput = document.getElementById('input-img');
-            let imagen = null;
-            if (imgInput.files && imgInput.files[0]) {
-                imagen = imgInput.files[0];
+                if (file.size > 2 * 1024 * 1024) {
+                    errorDiv.textContent = 'La imagen es demasiado grande (máx. 2MB).';
+                    errorDiv.style.display = 'block';
+                    inputImg.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    document.getElementById('modalPerfilImg').src = ev.target.result;
+                    window.imagenBase64Temp = ev.target.result;
+                };
+                reader.readAsDataURL(file);
             }
-            if (!fechaDiagnostico || !tipoSangre || !tipoDieta || !padecimiento) {
-                Swal.showValidationMessage('Por favor completa todos los campos obligatorios');
+        });
+    }
+
+    // Enviar datos al backend al guardar
+    const formEditarPerfil = document.getElementById('formEditarPerfil');
+    if (formEditarPerfil) {
+        formEditarPerfil.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            console.log('Formulario enviado');
+            const errorDiv = document.getElementById('modalEditarPerfilError');
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
+            // Validar campos
+            const fechaDiagnostico = document.getElementById('modalFechaDiagnostico').value;
+            const padecimiento = document.getElementById('modalPadecimiento').value.trim();
+            const tipoSangre = document.getElementById('modalTipoSangre').value;
+            const tipoDieta = document.getElementById('modalTipoDieta').value;
+            const alergias = document.getElementById('modalAlergias').value.trim();
+            if (!fechaDiagnostico || !padecimiento || !tipoSangre || !tipoDieta) {
+                errorDiv.textContent = 'Por favor completa todos los campos obligatorios.';
+                errorDiv.style.display = 'block';
                 return false;
             }
             // Enviar datos al backend
             const formData = new FormData();
             formData.append('fecha_diagnostico', fechaDiagnostico);
+            formData.append('padecimiento', padecimiento);
             formData.append('tipo_sangre', tipoSangre);
             formData.append('dieta', tipoDieta);
             formData.append('alergias', alergias);
-            formData.append('padecimiento', padecimiento);
-            if (imagen) formData.append('imagen', imagen);
+            if (window.imagenBase64Temp) formData.append('imagen_base64', window.imagenBase64Temp);
             try {
+                console.log('Enviando datos al backend...');
                 const res = await fetch('PHP/actualizar-perfil-medico.php', {
                     method: 'POST',
                     body: formData
                 });
                 const result = await res.json();
+                console.log('Respuesta del backend:', result);
                 if (!result.success) throw new Error(result.message || 'Error al guardar');
-                return true;
+                cerrarModalEditarPerfil();
+                // Actualizar datos en pantalla sin recargar
+                if (window.datosPaciente) {
+                    window.datosPaciente.fecha_diagnostico = fechaDiagnostico;
+                    window.datosPaciente.padecimiento = padecimiento;
+                    window.datosPaciente.tipo_sangre = tipoSangre;
+                    window.datosPaciente.dieta = tipoDieta;
+                    window.datosPaciente.alergias = alergias;
+                    if (result.imagen) window.datosPaciente.imagen = result.imagen;
+                    actualizarInterfaz(window.datosPaciente);
+                }
+                Swal.fire('¡Guardado!', 'Tu información médica ha sido actualizada.', 'success');
             } catch (err) {
-                Swal.showValidationMessage('Error al guardar: ' + err.message);
-                return false;
+                console.error('Error al guardar:', err);
+                errorDiv.textContent = 'Error al guardar: ' + err.message;
+                errorDiv.style.display = 'block';
             }
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire('¡Guardado!', 'Tu información médica ha sido actualizada.', 'success').then(() => {
-                location.reload();
-            });
-        }
-    });
-}
+            return false;
+        });
+    }
+});
 
 function configuracion() {
     Swal.fire({
@@ -395,13 +432,12 @@ document.addEventListener('click', function(e) {
         });
     }
     
-    // Botón de marcar todas las notificaciones
-    if (e.target.closest('#notificationsBtn') || e.target.closest('.btn-outline-secondary')) {
+    // Botón de marcar todas las notificaciones (solo el botón de notificaciones, no todos los secundarios)
+    if (e.target.closest('#notificationsBtn')) {
         const unreadNotifications = document.querySelectorAll('.notification-item.unread');
         unreadNotifications.forEach(notification => {
             notification.classList.remove('unread');
         });
-        
         Swal.fire({
             title: window.i18n.isSpanish() ? 'Notificaciones Marcadas' : 'Notifications Marked',
             text: window.i18n.isSpanish() ? 
@@ -544,4 +580,58 @@ function removerClasesTarjetasOscuras() {
         const pastelClass = `card-pastel-${(index % 4) + 1}`;
         tarjeta.classList.add(pastelClass);
     });
-} 
+}
+
+// Cargar y mostrar citas próximas
+async function cargarCitasProximas() {
+    const lista = document.querySelector('.lista-citas-proximas');
+    if (!lista) return;
+    lista.innerHTML = '<li class="text-muted">Cargando citas...</li>';
+    try {
+        const res = await fetch('PHP/get-citas.php');
+        const data = await res.json();
+        if (!data.success || !Array.isArray(data.citas)) {
+            lista.innerHTML = '<li class="text-muted">Sin citas próximas</li>';
+            return;
+        }
+        const ahora = new Date();
+        const citasFuturas = data.citas.filter(cita => {
+            const fechaHora = new Date(cita.fecha_hora.replace(' ', 'T'));
+            return fechaHora > ahora;
+        });
+        if (citasFuturas.length === 0) {
+            lista.innerHTML = '<li class="text-muted">Sin citas próximas</li>';
+            return;
+        }
+        lista.innerHTML = '';
+        citasFuturas.sort((a, b) => new Date(a.fecha_hora) - new Date(b.fecha_hora));
+        citasFuturas.forEach(cita => {
+            let estadoClass = 'pendiente';
+            if (cita.estado === 'Atendida') estadoClass = 'atendida';
+            if (cita.estado === 'Cancelada') estadoClass = 'cancelada';
+            const fecha = cita.fecha_hora.split(' ')[0];
+            const hora = cita.fecha_hora.split(' ')[1].substring(0,5);
+            lista.innerHTML += `
+                <li>
+                    <span><i class="bi bi-calendar2-week"></i> <b>${fecha}</b> <i class="bi bi-clock"></i> <b>${hora}</b></span>
+                    <span><i class="bi bi-person"></i> ${cita.medico}</span>
+                    <span><i class="bi bi-briefcase"></i> ${cita.especialidad || '-'}</span>
+                    <span><span class="cita-estado-badge ${estadoClass}">${cita.estado}</span></span>
+                </li>`;
+        });
+    } catch (e) {
+        lista.innerHTML = '<li class="text-muted">Error al cargar citas</li>';
+    }
+}
+
+// Llamar al cargar
+cargarCitasProximas();
+
+// Sincronizar modo oscuro/claro en todas las páginas
+(function sincronizarModoOscuro() {
+    if (localStorage.getItem('modoOscuro') === 'true') {
+        document.body.classList.add('modo-oscuro');
+    } else {
+        document.body.classList.remove('modo-oscuro');
+    }
+})(); 

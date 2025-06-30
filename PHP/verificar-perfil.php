@@ -57,20 +57,23 @@ if ($datos_paciente) {
     }
     $stmt->close();
 
-    // Obtener el nombre y padecimiento del usuario
-    $stmt = $conn->prepare('SELECT nombre, padecimiento FROM usuarios WHERE id = ?');
+    // Obtener el nombre, padecimiento e imagen del usuario
+    $stmt = $conn->prepare('SELECT nombre, padecimiento, imagen FROM usuarios WHERE id = ?');
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
     $resultP = $stmt->get_result();
     $nombre = '';
     $padecimiento = '';
+    $imagen = '';
     if ($row = $resultP->fetch_assoc()) {
         $nombre = $row['nombre'];
         $padecimiento = $row['padecimiento'];
+        $imagen = $row['imagen'];
     }
     $stmt->close();
     $datos_paciente['nombre'] = $nombre;
     $datos_paciente['padecimiento'] = $padecimiento;
+    $datos_paciente['imagen'] = $imagen;
 
     // El paciente ya tiene datos completos
     echo json_encode([

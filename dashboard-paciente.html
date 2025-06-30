@@ -36,7 +36,9 @@
       </div>
       <div class="offcanvas-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item list-group-item-action py-3"><i class="bi bi-calendar-event me-2"></i>Calendario</li>
+          <li class="list-group-item list-group-item-action py-3">
+            <a href="calendario-paciente.html" style="text-decoration:none;color:inherit;display:block;width:100%"><i class="bi bi-calendar-event me-2"></i>Calendario</a>
+          </li>
           <li class="list-group-item list-group-item-action py-3"><i class="bi bi-bell me-2"></i>Notificaciones</li>
           <li class="list-group-item list-group-item-action py-3"><i class="bi bi-chat-dots me-2"></i>Chat</li>
           <li class="list-group-item list-group-item-action py-3"><i class="bi bi-heart-pulse me-2"></i>Bienestar</li>
@@ -121,16 +123,81 @@
                         </li>
                     </ul>
                 </section>
+                <section class="tarjeta citas-proximas p-4 mb-4 card-pastel-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0"><i class="bi bi-calendar-event"></i> Citas próximas</h3>
+                        <a href="calendario-paciente.html" class="btn btn-outline-primary"><i class="bi bi-calendar2-plus"></i> Ver calendario</a>
+                    </div>
+                    <ul class="lista-citas-proximas list-unstyled">
+                        <li class="text-muted">Cargando citas...</li>
+                    </ul>
+                </section>
             </div>
         </div>
     </main>
 
-    <button class="btn btn-danger btn-lg position-fixed bottom-0 end-0 m-4 shadow-lg" style="z-index:9999; border-radius: 2rem;" onclick="emergencia()">
+    <button class="btn btn-danger btn-lg position-fixed bottom-0 end-0 m-4 shadow-lg" style="z-index:9999; border-radius: 2rem; background: #dc3545; color: #fff;" onclick="emergencia()">
         <i class="bi bi-exclamation-triangle"></i> Emergencia
     </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="JS/i18n.js"></script>
     <script src="JS/dashboard-paciente.js"></script>
+
+    <!-- Modal propio para editar datos médicos -->
+    <div id="modalEditarPerfil" class="kirei-modal-bg" style="display:none;">
+      <div class="kirei-modal-card">
+        <button class="kirei-modal-close" onclick="cerrarModalEditarPerfil()"><i class="bi bi-x-lg"></i></button>
+        <h2 class="kirei-modal-title"><i class="bi bi-pencil-square"></i> Editar información médica</h2>
+        <form id="formEditarPerfil" enctype="multipart/form-data" autocomplete="off" onsubmit="return false;">
+          <div class="kirei-modal-img-container">
+            <img id="modalPerfilImg" src="https://ui-avatars.com/api/?name=Perfil&background=cccccc&color=222222&size=200" alt="Foto de perfil" class="kirei-modal-img">
+            <label for="modalInputImg" class="kirei-modal-img-overlay" title="Cambiar foto"><i class="bi bi-camera"></i></label>
+            <input type="file" id="modalInputImg" accept=".jpg,.jpeg,.png,.webp" style="display:none">
+          </div>
+          <div class="kirei-modal-fields">
+            <label>Fecha de diagnóstico</label>
+            <input type="date" id="modalFechaDiagnostico" required>
+            <label>Padecimiento</label>
+            <select id="modalPadecimiento" required>
+              <option value="">Selecciona</option>
+              <option value="Diabetes">Diabetes</option>
+              <option value="Hipertensión">Hipertensión</option>
+              <option value="Asma">Asma</option>
+              <option value="Cáncer">Cáncer</option>
+              <option value="Enfermedad cardíaca">Enfermedad cardíaca</option>
+              <option value="Epilepsia">Epilepsia</option>
+            </select>
+            <label>Tipo de sangre</label>
+            <select id="modalTipoSangre" required>
+              <option value="">Selecciona</option>
+              <option value="A+">A+</option><option value="A-">A-</option>
+              <option value="B+">B+</option><option value="B-">B-</option>
+              <option value="O+">O+</option><option value="O-">O-</option>
+              <option value="AB+">AB+</option><option value="AB-">AB-</option>
+            </select>
+            <label>Tipo de dieta</label>
+            <select id="modalTipoDieta" required>
+              <option value="">Selecciona</option>
+              <option value="normal">Normal</option>
+              <option value="baja_sodio">Baja en sodio</option>
+              <option value="baja_azucar">Baja en azúcar</option>
+              <option value="sin_gluten">Sin gluten</option>
+              <option value="vegetariana">Vegetariana</option>
+              <option value="vegana">Vegana</option>
+              <option value="otra">Otra</option>
+            </select>
+            <label>Alergias</label>
+            <input type="text" id="modalAlergias" maxlength="255">
+          </div>
+          <div class="kirei-modal-actions">
+            <button type="submit" class="btn btn-outline-primary">Guardar</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="cerrarModalEditarPerfil()">Cancelar</button>
+          </div>
+          <div id="modalEditarPerfilError" class="kirei-modal-error" style="display:none;"></div>
+        </form>
+      </div>
+    </div>
+    <!-- Fin modal propio -->
 </body>
 </html> 

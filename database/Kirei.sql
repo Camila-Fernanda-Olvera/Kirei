@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `tipo_usuario` enum('paciente','familiar') NOT NULL,
   `padecimiento` varchar(100) DEFAULT NULL,
   `parentesco` varchar(50) DEFAULT NULL, -- Nuevo campo
-  `imagen` varchar(255) DEFAULT NULL,
+  `imagen` LONGTEXT DEFAULT NULL,
   `fecha_registro` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`email`)
