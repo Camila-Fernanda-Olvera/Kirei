@@ -10,7 +10,6 @@ class SistemaNotificacionesFamiliar {
     async init() {
         this.iniciarPolling();
         this.configurarFiltros();
-        this.sincronizarModoOscuro();
     }
 
     iniciarPolling() {
@@ -104,21 +103,6 @@ class SistemaNotificacionesFamiliar {
                 this.mostrarNotificaciones();
             };
         });
-    }
-
-    sincronizarModoOscuro() {
-        const root = document.body;
-        const darkSwitch = document.getElementById('switchDarkMode');
-        if (darkSwitch) {
-            darkSwitch.addEventListener('change', () => {
-                root.classList.toggle('modo-oscuro', darkSwitch.checked);
-                localStorage.setItem('modoOscuro', darkSwitch.checked ? '1' : '0');
-            });
-            // Estado inicial
-            const dark = localStorage.getItem('modoOscuro') === '1';
-            darkSwitch.checked = dark;
-            root.classList.toggle('modo-oscuro', dark);
-        }
     }
 }
 
