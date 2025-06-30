@@ -19,18 +19,14 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
             // Notificaciones (simulado, reemplazar por datos reales si existen)
             renderizarNotificaciones(data.notificaciones || []);
-            // Familia (simulado, reemplazar por datos reales si existen)
-            renderizarFamilia(data.familia || []);
         } else {
             // Si no hay datos, mostrar "Sin información" en cada sección
             renderizarMedicamentos([]);
             renderizarNotificaciones([]);
-            renderizarFamilia([]);
         }
     } catch (error) {
         renderizarMedicamentos([]);
         renderizarNotificaciones([]);
-        renderizarFamilia([]);
     }
 });
 
@@ -41,8 +37,6 @@ function actualizarIdiomaSelector() {
         currentLanguageSpan.textContent = 'ESPAÑOL';
     }
 }
-
-
 
 // Función para actualizar la interfaz con los datos del paciente
 function actualizarInterfaz(datos) {
@@ -496,26 +490,6 @@ function renderizarNotificaciones(notificaciones) {
         li.innerHTML = `
             <span class="noti-txt">${notif.texto || ''}</span>
             <span class="noti-hora">${notif.tiempo || ''}</span>
-        `;
-        lista.appendChild(li);
-    });
-}
-
-// Renderizar familia
-function renderizarFamilia(familia) {
-    const lista = document.querySelector('.lista-familia');
-    if (!lista) return;
-    lista.innerHTML = '';
-    if (!Array.isArray(familia) || familia.length === 0) {
-        lista.innerHTML = `<li class="text-muted">Sin información</li>`;
-        return;
-    }
-    familia.forEach(fam => {
-        const li = document.createElement('li');
-        li.className = 'd-flex justify-content-between align-items-center mb-2';
-        li.innerHTML = `
-            <span class="fam-nombre">${fam.nombre || ''}${fam.parentesco ? ' (' + fam.parentesco + ')' : ''}</span>
-            <span class="fam-estado ${fam.en_linea ? 'text-success' : 'text-muted'}">${fam.en_linea ? 'En línea' : (fam.ultimo_acceso || '')}</span>
         `;
         lista.appendChild(li);
     });
