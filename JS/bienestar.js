@@ -192,4 +192,194 @@ function eliminarBienestar(id) {
             });
         }
     });
+}
+
+// ========== CRUD MEDICAMENTOS =============
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('medicamentos-crud')) {
+        renderMedicamentosUI();
+        cargarMedicamentos();
+    }
+});
+
+function renderMedicamentosUI() {
+    document.getElementById('medicamentos-crud').innerHTML = `
+        <form id="formMedicamento" class="row g-3 mb-4">
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="medNombre" placeholder="Nombre" required>
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="medTipo" placeholder="Tipo">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="medDosis" placeholder="Dosis">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="medFrecuencia" placeholder="Frecuencia">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="medHorarios" placeholder="Horarios">
+            </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" id="medInicio" placeholder="Inicio">
+            </div>
+            <div class="col-md-2">
+                <input type="date" class="form-control" id="medFin" placeholder="Fin">
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="medIndicaciones" placeholder="Indicaciones">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-plus-circle"></i> Agregar</button>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tablaMedicamentos">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nombre</th><th>Tipo</th><th>Dosis</th><th>Frecuencia</th><th>Horarios</th><th>Inicio</th><th>Fin</th><th>Indicaciones</th><th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    `;
+    document.getElementById('formMedicamento').onsubmit = guardarMedicamento;
+}
+
+function cargarMedicamentos() {
+    fetch('PHP/medicamentos.php?action=list')
+        .then(r => r.json())
+        .then(data => {
+            const tbody = document.querySelector('#tablaMedicamentos tbody');
+            tbody.innerHTML = '';
+            if (data.success && Array.isArray(data.medicamentos)) {
+                data.medicamentos.forEach(med => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${med.nombre ?? '-'}</td>
+                            <td>${med.tipo ?? '-'}</td>
+                            <td>${med.dosis ?? '-'}</td>
+                            <td>${med.frecuencia ?? '-'}</td>
+                            <td>${med.horarios ?? '-'}</td>
+                            <td>${med.inicio ?? '-'}</td>
+                            <td>${med.fin ?? '-'}</td>
+                            <td>${med.indicaciones ?? '-'}</td>
+                            <td>
+                                <button class='btn btn-outline-warning btn-sm me-1' onclick='editarMedicamento(${JSON.stringify(med)})'><i class='bi bi-pencil'></i></button>
+                                <button class='btn btn-outline-danger btn-sm' onclick='eliminarMedicamento(${med.id})'><i class='bi bi-trash'></i></button>
+                            </td>
+                        </tr>`;
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan='9' class='text-muted text-center'>Sin registros</td></tr>`;
+            }
+        });
+}
+
+function guardarMedicamento(e) {
+    e.preventDefault();
+    const datos = {
+        nombre: document.getElementById('medNombre').value,
+        tipo: document.getElementById('medTipo').value,
+        dosis: document.getElementById('medDosis').value,
+        frecuencia: document.getElementById('medFrecuencia').value,
+        horarios: document.getElementById('medHorarios').value,
+        inicio: document.getElementById('medInicio').value,
+        fin: document.getElementById('medFin').value,
+        indicaciones: document.getElementById('medIndicaciones').value
+    };
+    fetch('PHP/medicamentos.php?action=add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire('¡Guardado!', 'Medicamento agregado correctamente.', 'success');
+            cargarMedicamentos();
+            document.getElementById('formMedicamento').reset();
+        } else {
+            Swal.fire('Error', data.message || 'No se pudo guardar', 'error');
+        }
+    });
+}
+
+function editarMedicamento(med) {
+    Swal.fire({
+        title: 'Editar medicamento',
+        html: `
+            <input id="swalMedNombre" type="text" class="swal2-input" placeholder="Nombre" value="${med.nombre ?? ''}">
+            <input id="swalMedTipo" type="text" class="swal2-input" placeholder="Tipo" value="${med.tipo ?? ''}">
+            <input id="swalMedDosis" type="text" class="swal2-input" placeholder="Dosis" value="${med.dosis ?? ''}">
+            <input id="swalMedFrecuencia" type="text" class="swal2-input" placeholder="Frecuencia" value="${med.frecuencia ?? ''}">
+            <input id="swalMedHorarios" type="text" class="swal2-input" placeholder="Horarios" value="${med.horarios ?? ''}">
+            <input id="swalMedInicio" type="date" class="swal2-input" value="${med.inicio ?? ''}">
+            <input id="swalMedFin" type="date" class="swal2-input" value="${med.fin ?? ''}">
+            <input id="swalMedIndicaciones" type="text" class="swal2-input" placeholder="Indicaciones" value="${med.indicaciones ?? ''}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            return {
+                id: med.id,
+                nombre: document.getElementById('swalMedNombre').value,
+                tipo: document.getElementById('swalMedTipo').value,
+                dosis: document.getElementById('swalMedDosis').value,
+                frecuencia: document.getElementById('swalMedFrecuencia').value,
+                horarios: document.getElementById('swalMedHorarios').value,
+                inicio: document.getElementById('swalMedInicio').value,
+                fin: document.getElementById('swalMedFin').value,
+                indicaciones: document.getElementById('swalMedIndicaciones').value
+            };
+        }
+    }).then(res => {
+        if (res.isConfirmed && res.value) {
+            fetch('PHP/medicamentos.php?action=edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(res.value)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('¡Actualizado!', 'Medicamento editado correctamente.', 'success');
+                    cargarMedicamentos();
+                } else {
+                    Swal.fire('Error', data.message || 'No se pudo editar', 'error');
+                }
+            });
+        }
+    });
+}
+
+function eliminarMedicamento(id) {
+    Swal.fire({
+        title: '¿Eliminar medicamento?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+    }).then(res => {
+        if (res.isConfirmed) {
+            fetch('PHP/medicamentos.php?action=delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Eliminado', '', 'success');
+                    cargarMedicamentos();
+                } else {
+                    Swal.fire('Error', data.message || 'No se pudo eliminar', 'error');
+                }
+            });
+        }
+    });
 } 
